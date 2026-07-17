@@ -178,14 +178,13 @@ def neo4j_upload(
                 "MERGE (d:Document {id: $id}) "
                 "SET d.name = $name, "
                 "d.type = $type, "
-                "d.entityType = $entityType, "
                 "d.description = $description, "
                 "d.source = $source, "
-                "d.chunk_count = $chunk_count",
+                "d.chunk_count = $chunk_count "
+                "REMOVE d.entityType",
                 name=doc["name"],
                 id=doc["id"],
                 type=doc.get("type", "Document"),
-                entityType=doc.get("entityType", "Document"),
                 description=doc.get("description", ""),
                 source=doc.get("source", []),
                 chunk_count=doc.get("chunk_count", 0),
@@ -198,15 +197,14 @@ def neo4j_upload(
                 "MERGE (n:Entity {id: $id}) "
                 "SET n.name = $name, "
                 "n.type = $type, "
-                "n.entityType = $entityType, "
                 "n.description = $description, "
                 "n.importanceScore = $importanceScore, "
                 "n.confidenceScore = $confidenceScore, "
-                "n.embedding = $embedding",
+                "n.embedding = $embedding "
+                "REMOVE n.entityType",
                 name=node["name"],
                 id=node["id"],
                 type=node.get("type", "Entity"),
-                entityType=node.get("entityType", "Entity"),
                 description=node.get("description", ""),
                 importanceScore=node.get("importanceScore", 0.0),
                 confidenceScore=node.get("confidenceScore", 1.0),
@@ -222,7 +220,8 @@ def neo4j_upload(
                 "c.source = $source, "
                 "c.text = $text, "
                 "c.tokenCount = $tokenCount, "
-                "c.index = $index",
+                "c.index = $index "
+                "REMOVE c.entityType",
                 id=chunk["id"],
                 type=chunk.get("type", "Chunk"),
                 source=chunk.get("source", ""),

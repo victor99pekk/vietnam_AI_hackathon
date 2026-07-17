@@ -53,7 +53,7 @@ class GraphExporter:
         node_type = data.get("type", "")
         cleaned: dict[str, Any] = {
             "id": data.get("id", ""),
-            "type": node_type,  # kept for upload categorization; not stored in Neo4j
+            "type": node_type,
         }
 
         if node_type == "Chunk":
@@ -67,14 +67,12 @@ class GraphExporter:
             cleaned["index"] = data.get("index", 0)
         elif node_type == "Document":
             cleaned["name"] = data.get("name", data.get("id", ""))
-            cleaned["entityType"] = "Document"
             cleaned["description"] = data.get("description", "")
             cleaned["source"] = data.get("source", [])
             cleaned["chunk_count"] = data.get("chunk_count", 0)
         else:
             # Entity node
             cleaned["name"] = data.get("name", data.get("id", ""))
-            cleaned["entityType"] = data.get("type", "Entity")
             cleaned["description"] = data.get("description", "")
             cleaned["importanceScore"] = data.get("importanceScore", 0.0)
             cleaned["confidenceScore"] = data.get("confidenceScore", 1.0)

@@ -77,6 +77,7 @@ def upload_graph(json_path: str | Path, clear: bool = False) -> None:
                         n.tokenCount = $tokenCount,
                         n.index = $index,
                         n.type = $type
+                    REMOVE n.entityType
                     """,
                     id=node_id,
                     source=source_str,
@@ -91,15 +92,14 @@ def upload_graph(json_path: str | Path, clear: bool = False) -> None:
                     MERGE (n:Document {id: $id})
                     SET n.name = $name,
                         n.type = $type,
-                        n.entityType = $entity_type,
                         n.description = $description,
                         n.source = $source,
                         n.chunk_count = $chunk_count
+                    REMOVE n.entityType
                     """,
                     id=node_id,
                     name=node.get("name", ""),
                     type=node_type,
-                    entity_type=node.get("entityType", "Document"),
                     description=node.get("description", ""),
                     source=node.get("source", []),
                     chunk_count=node.get("chunk_count", 0),
@@ -110,16 +110,15 @@ def upload_graph(json_path: str | Path, clear: bool = False) -> None:
                     MERGE (n:Entity {id: $id})
                     SET n.name = $name,
                         n.type = $type,
-                        n.entityType = $entity_type,
                         n.description = $description,
                         n.importanceScore = $importance_score,
                         n.confidenceScore = $confidence_score,
                         n.embedding = $embedding
+                    REMOVE n.entityType
                     """,
                     id=node_id,
                     name=node.get("name", ""),
                     type=node_type,
-                    entity_type=node.get("entityType", node_type),
                     description=node.get("description", ""),
                     importance_score=node.get("importanceScore", 0.0),
                     confidence_score=node.get("confidenceScore", 1.0),
@@ -218,7 +217,7 @@ def download_graph(output_path: str | Path) -> None:
         # ── Fetch Entity nodes ──
         entity_result = session.run(
             "MATCH (n:Entity) "
-            "RETURN n.id AS id, n.entityType AS entityType, "
+            "RETURN n.id AS id, n.type AS type, "
             "n.description AS description, n.importanceScore AS importanceScore, "
             "n.confidenceScore AS confidenceScore, n.embedding AS embedding"
         )
@@ -227,7 +226,7 @@ def download_graph(output_path: str | Path) -> None:
         # ── Fetch Document nodes ──
         doc_result = session.run(
             "MATCH (d:Document) "
-            "RETURN d.id AS id, d.name AS name, d.entityType AS entityType, "
+            "RETURN d.id AS id, d.name AS name, d.type AS type, "
             "d.description AS description, d.source AS source, "
             "d.chunk_count AS chunk_count"
         )
@@ -265,8 +264,7 @@ def download_graph(output_path: str | Path) -> None:
     for en in entity_nodes:
         node: dict = {
             "id": en["id"],
-            "type": en.get("entityType", "Entity"),
-            "entityType": en.get("entityType", "Entity"),
+            "type": en.get("type", "Entity"),
             "description": en.get("description", ""),
             "importanceScore": en.get("importanceScore", 0.0),
             "confidenceScore": en.get("confidenceScore", 1.0),
@@ -278,9 +276,8 @@ def download_graph(output_path: str | Path) -> None:
     for dn in doc_nodes:
         graph_nodes.append({
             "id": dn["id"],
-            "type": "Document",
+            "type": dn.get("type", "Document"),
             "name": dn.get("name", dn["id"]),
-            "entityType": dn.get("entityType", "Document"),
             "description": dn.get("description", ""),
             "source": dn.get("source", ""),
             "chunk_count": dn.get("chunk_count", 0),
@@ -314,7 +311,7 @@ def download_graph(output_path: str | Path) -> None:
     for en in entity_nodes:
         entities.append({
             "name": en["id"],
-            "type": en.get("entityType", "Entity"),
+            "type": en.get("type", "Entity"),
             "description": en.get("description", ""),
         })
 

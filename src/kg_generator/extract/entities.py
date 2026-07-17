@@ -48,10 +48,6 @@ class Entity:
     def displayName(self) -> str:
         return self.name
 
-    @property
-    def entityType(self) -> str:
-        return self.label
-
     def to_dict(self) -> dict[str, Any]:
         """Clean GraphRAG-ready dict with no legacy keys."""
         return {
