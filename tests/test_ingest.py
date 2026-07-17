@@ -38,4 +38,4 @@ def test_cleaner_normalizes_whitespace():
     cleaner = TextCleaner()
     result = cleaner.clean(doc)
     assert "  " not in result.content
-    assert result.content == "Hello world! Extra spaces."
+    assert result.content == "Hello world!\n\nExtra spaces."

@@ -38,7 +38,7 @@ class Pipeline:
             threshold=config.dedup_threshold,
             method=config.dedup_method,
         )
-        self.quality_filter = QualityFilter()
+        self.quality_filter = QualityFilter(language=config.language.value)
 
         # --- Stage 2: Extract ---
         self.entity_extractor = self._build_entity_extractor()

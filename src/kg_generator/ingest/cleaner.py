@@ -23,8 +23,12 @@ class EnglishCleaner(TextCleanerBackend):
 
     def clean(self, text: str) -> str:
         text = text.strip()
-        # Normalize whitespace
-        text = re.sub(r"\s+", " ", text)
+        # Normalize line endings while preserving paragraph and line structure.
+        # Quality filtering uses line boundaries to identify copied boilerplate.
+        text = text.replace("\r\n", "\n").replace("\r", "\n")
+        text = re.sub(r"[\t\f\v ]+", " ", text)
+        text = re.sub(r" *\n *", "\n", text)
+        text = re.sub(r"\n{3,}", "\n\n", text)
         # Normalize quotes
         text = text.replace("\u201c", '"').replace("\u201d", '"')
         text = text.replace("\u2018", "'").replace("\u2019", "'")

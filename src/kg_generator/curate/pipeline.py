@@ -12,7 +12,7 @@ from typing import Any
 
 from kg_generator.config import Language
 from kg_generator.curate.manifest import SourceManifest, sha256_file, sha256_text, stable_json_hash
-from kg_generator.dedup.near_dedup import GlobalDeduplicator
+from kg_generator.dedup.near_dedup import DuplicateMatch, GlobalDeduplicator, SemanticDeduplicator
 from kg_generator.dedup.quality import QualityProfiler, QualityThresholds
 from kg_generator.ingest.cleaner import TextCleaner
 from kg_generator.ingest.loader import DataLoader, Document
@@ -24,6 +24,9 @@ class CurationConfig:
     output_root: Path
     source_manifest_path: Path
     dedup_threshold: float = 0.85
+    dedup_method: str = "minhash"
+    semantic_model: str = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
+    experiment_id: str | None = None
     min_chars: int = 50
     min_words: int = 10
 
@@ -36,7 +39,15 @@ class DatasetCurationPipeline:
         self.source_manifest = SourceManifest.from_file(config.source_manifest_path)
         self.output_dir = config.output_root / self._safe_name(self.source_manifest.dataset_name) / self._safe_name(self.source_manifest.version)
         self.profiler = QualityProfiler(QualityThresholds(min_chars=config.min_chars, min_words=config.min_words))
-        self.deduplicator = GlobalDeduplicator(threshold=config.dedup_threshold)
+        if config.dedup_method == "minhash":
+            self.deduplicator = GlobalDeduplicator(threshold=config.dedup_threshold)
+        elif config.dedup_method == "semantic":
+            self.deduplicator = SemanticDeduplicator(
+                threshold=config.dedup_threshold,
+                model_name=config.semantic_model,
+            )
+        else:
+            raise ValueError("Curation dedup_method must be 'minhash' or 'semantic'.")
 
     def execute(self) -> Path:
         """Run curation once. Existing version directories are never overwritten."""
@@ -46,7 +57,7 @@ class DatasetCurationPipeline:
 
         documents = self._load_clean_documents()
         records = self._profile_documents(documents)
-        eligible = [record for record in records if not record["quality_reasons"]]
+        eligible = [record for record in records if not record["quality_rejection_reasons"]]
         assignments = self.deduplicator.cluster(eligible)
 
         for record in records:
@@ -54,6 +65,9 @@ class DatasetCurationPipeline:
             if assignment:
                 record["duplicate_cluster_id"] = assignment.cluster_id or ""
                 record["canonical_id"] = assignment.canonical_id or ""
+                record["dedup_method"] = assignment.method or ""
+                record["dedup_similarity"] = assignment.similarity if assignment.similarity is not None else ""
+                record["matched_record_id"] = assignment.matched_record_id or ""
                 if assignment.is_duplicate:
                     record["decision"] = "rejected"
                     record["reasons"] = ["near_duplicate"]
@@ -63,11 +77,14 @@ class DatasetCurationPipeline:
             else:
                 record["duplicate_cluster_id"] = ""
                 record["canonical_id"] = ""
+                record["dedup_method"] = ""
+                record["dedup_similarity"] = ""
+                record["matched_record_id"] = ""
                 record["decision"] = "rejected"
-                record["reasons"] = list(record["quality_reasons"])
+                record["reasons"] = list(record["quality_rejection_reasons"])
 
         accepted = [record for record in records if record["decision"] == "accepted"]
-        artifacts = self._write_artifacts(records, accepted)
+        artifacts = self._write_artifacts(records, accepted, self.deduplicator.last_matches)
         self._write_manifest(records, accepted, artifacts)
         return self.output_dir
 
@@ -96,7 +113,7 @@ class DatasetCurationPipeline:
     def _profile_documents(self, documents: list[Document]) -> list[dict[str, Any]]:
         records: list[dict[str, Any]] = []
         for document in documents:
-            profile = self.profiler.profile(document.content)
+            profile = self.profiler.profile(document.content, language=self.source_manifest.language)
             records.append({
                 "doc_id": document.doc_id,
                 "content": document.content,
@@ -104,7 +121,8 @@ class DatasetCurationPipeline:
                 "metadata": document.metadata,
                 "content_hash": sha256_text(document.content),
                 "quality_score": profile.score,
-                "quality_reasons": list(profile.reasons),
+                "quality_rejection_reasons": list(profile.rejection_reasons),
+                "quality_review_flags": list(profile.review_flags),
                 "char_count": profile.char_count,
                 "word_count": profile.word_count,
                 "symbol_ratio": profile.symbol_ratio,
@@ -113,7 +131,12 @@ class DatasetCurationPipeline:
             })
         return records
 
-    def _write_artifacts(self, records: list[dict[str, Any]], accepted: list[dict[str, Any]]) -> dict[str, Path]:
+    def _write_artifacts(
+        self,
+        records: list[dict[str, Any]],
+        accepted: list[dict[str, Any]],
+        matches: list[DuplicateMatch],
+    ) -> dict[str, Path]:
         curated_path = self.output_dir / "curated.jsonl"
         with open(curated_path, "w", encoding="utf-8") as handle:
             for record in accepted:
@@ -125,21 +148,40 @@ class DatasetCurationPipeline:
                 handle.write(json.dumps(payload, ensure_ascii=False, sort_keys=True) + "\n")
 
         audit_path = self.output_dir / "audit.csv"
-        fields = ["doc_id", "source", "content_hash", "quality_score", "char_count", "word_count", "symbol_ratio", "repeated_line_ratio", "short_token_ratio", "decision", "reasons", "duplicate_cluster_id", "canonical_id", "metadata"]
+        fields = ["doc_id", "source", "content_hash", "quality_score", "char_count", "word_count", "symbol_ratio", "repeated_line_ratio", "short_token_ratio", "quality_rejection_reasons", "quality_review_flags", "decision", "reasons", "duplicate_cluster_id", "canonical_id", "dedup_method", "dedup_similarity", "matched_record_id", "metadata"]
         with open(audit_path, "w", encoding="utf-8", newline="") as handle:
             writer = csv.DictWriter(handle, fieldnames=fields)
             writer.writeheader()
             for record in records:
                 writer.writerow({
                     **{field: record.get(field, "") for field in fields},
+                    "quality_rejection_reasons": ";".join(record["quality_rejection_reasons"]),
+                    "quality_review_flags": ";".join(record["quality_review_flags"]),
                     "reasons": ";".join(record["reasons"]),
                     "metadata": json.dumps(record["metadata"], ensure_ascii=False, sort_keys=True),
+                })
+
+        matches_path = self.output_dir / "duplicate_matches.csv"
+        with open(matches_path, "w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=["record_id", "matched_record_id", "method", "similarity"])
+            writer.writeheader()
+            for match in matches:
+                writer.writerow({
+                    "record_id": match.record_id,
+                    "matched_record_id": match.matched_record_id,
+                    "method": match.method,
+                    "similarity": match.similarity,
                 })
 
         report_path = self.output_dir / "quality_report.json"
         report = self._report(records, accepted)
         report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        return {"curated.jsonl": curated_path, "audit.csv": audit_path, "quality_report.json": report_path}
+        return {
+            "curated.jsonl": curated_path,
+            "audit.csv": audit_path,
+            "duplicate_matches.csv": matches_path,
+            "quality_report.json": report_path,
+        }
 
     def _report(self, records: list[dict[str, Any]], accepted: list[dict[str, Any]]) -> dict[str, Any]:
         total = len(records)
@@ -155,7 +197,7 @@ class DatasetCurationPipeline:
             all_grams.update(grams)
             gram_total += len(grams)
         score_values = [float(record["quality_score"]) for record in records]
-        malformed = sum(1 for record in records if "empty_content" in record["quality_reasons"])
+        malformed = sum(1 for record in records if "empty_content" in record["quality_rejection_reasons"])
         return {
             "record_counts": {"input": total, "accepted": len(accepted), "rejected": total - len(accepted)},
             "preliminary_quality": {
@@ -171,13 +213,19 @@ class DatasetCurationPipeline:
                 "unique_character_ngram_ratio": len(all_grams) / max(gram_total, 1),
                 "duplicate_cluster_sizes": dict(sorted((cluster, count) for cluster, count in clusters.items())),
             },
+            "quality_review_flags": dict(sorted(Counter(
+                flag for record in records for flag in record["quality_review_flags"]
+            ).items())),
             "rejection_reasons": dict(sorted(Counter(reason for record in records for reason in record["reasons"]).items())),
         }
 
     def _write_manifest(self, records: list[dict[str, Any]], accepted: list[dict[str, Any]], artifacts: dict[str, Path]) -> None:
         input_files = sorted({file for path in self.config.input_paths for file in self._files_for_path(path)})
         settings = {
+            "experiment_id": self.config.experiment_id,
+            "dedup_method": self.config.dedup_method,
             "dedup_threshold": self.config.dedup_threshold,
+            "semantic_model": self.config.semantic_model if self.config.dedup_method == "semantic" else None,
             "quality_thresholds": asdict(self.profiler.thresholds),
             "normalization": "unicode-safe whitespace and punctuation normalization",
         }

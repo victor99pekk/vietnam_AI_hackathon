@@ -2,8 +2,9 @@
 
 import hashlib
 import logging
+import math
 from dataclasses import dataclass
-from typing import Sequence
+from typing import Callable, Sequence
 
 try:
     from datasketch import MinHash, MinHashLSH
@@ -26,16 +27,30 @@ class DuplicateAssignment:
     cluster_id: str | None
     canonical_id: str | None
     is_duplicate: bool
+    method: str | None = None
+    similarity: float | None = None
+    matched_record_id: str | None = None
+
+
+@dataclass(frozen=True)
+class DuplicateMatch:
+    """Direct evidence that connected two records in a duplicate cluster."""
+
+    record_id: str
+    matched_record_id: str
+    method: str
+    similarity: float
 
 
 class GlobalDeduplicator:
-    """Cluster all documents and choose a deterministic canonical member."""
+    """Cluster exact and surface-level near duplicates with MinHash candidates."""
 
     def __init__(self, threshold: float = LSH_THRESHOLD_DEFAULT, num_perm: int = MINHASH_PERMUTATIONS) -> None:
         if not 0 <= threshold <= 1:
             raise ValueError("Deduplication threshold must be between 0 and 1.")
         self.threshold = threshold
         self.num_perm = num_perm
+        self.last_matches: list[DuplicateMatch] = []
 
     def cluster(self, records: Sequence[dict[str, object]]) -> dict[str, DuplicateAssignment]:
         parent = list(range(len(records)))
@@ -51,13 +66,19 @@ class GlobalDeduplicator:
             if first_root != second_root:
                 parent[max(first_root, second_root)] = min(first_root, second_root)
 
+        matches: dict[tuple[int, int], DuplicateMatch] = {}
         exact: dict[str, int] = {}
         signatures: list[object] = []
+        gram_sets: list[set[str]] = []
         for index, record in enumerate(records):
             content = str(record["content"])
             content_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
+            grams = self._grams(content)
+            gram_sets.append(grams)
             if content_hash in exact:
-                union(index, exact[content_hash])
+                existing = exact[content_hash]
+                union(index, existing)
+                self._record_match(matches, records, index, existing, "exact_hash", 1.0)
             else:
                 exact[content_hash] = index
             signatures.append(self._minhash(content))
@@ -68,28 +89,25 @@ class GlobalDeduplicator:
                 lsh.insert(str(index), signature)
             for index, signature in enumerate(signatures):
                 for candidate in lsh.query(signature):
-                    if int(candidate) < index:
-                        union(index, int(candidate))
+                    candidate_index = int(candidate)
+                    if candidate_index < index:
+                        similarity = self._jaccard(gram_sets[index], gram_sets[candidate_index])
+                        if similarity >= self.threshold:
+                            union(index, candidate_index)
+                            self._record_match(matches, records, index, candidate_index, "minhash_jaccard", similarity)
         else:
-            gram_sets = [self._grams(str(record["content"])) for record in records]
             for index, grams in enumerate(gram_sets):
                 for candidate_index, candidate_grams in enumerate(gram_sets[:index]):
                     similarity = len(grams & candidate_grams) / max(len(grams | candidate_grams), 1)
                     if similarity >= self.threshold:
                         union(index, candidate_index)
+                        self._record_match(matches, records, index, candidate_index, "ngram_jaccard_fallback", similarity)
 
         groups: dict[int, list[int]] = {}
         for index in range(len(records)):
             groups.setdefault(find(index), []).append(index)
-        assignments: dict[str, DuplicateAssignment] = {}
-        for members in groups.values():
-            canonical_index = sorted(members, key=lambda i: (-float(records[i]["quality_score"]), str(records[i]["doc_id"])))[0]
-            canonical_id = str(records[canonical_index]["doc_id"])
-            cluster_id = f"dup-{min(str(records[i]['doc_id']) for i in members)}" if len(members) > 1 else None
-            for index in members:
-                record_id = str(records[index]["doc_id"])
-                assignments[record_id] = DuplicateAssignment(cluster_id, canonical_id, len(members) > 1 and index != canonical_index)
-        return assignments
+        self.last_matches = sorted(matches.values(), key=lambda match: (match.record_id, match.matched_record_id, match.method))
+        return self._assignments(records, groups, self.last_matches)
 
     def _minhash(self, text: str) -> object:
         if MinHash is None:
@@ -102,6 +120,143 @@ class GlobalDeduplicator:
     @staticmethod
     def _grams(text: str) -> set[str]:
         return {text[index:index + 3] for index in range(max(len(text) - 2, 1))}
+
+    @staticmethod
+    def _jaccard(first: set[str], second: set[str]) -> float:
+        return len(first & second) / max(len(first | second), 1)
+
+    @staticmethod
+    def _record_match(
+        matches: dict[tuple[int, int], DuplicateMatch],
+        records: Sequence[dict[str, object]],
+        first: int,
+        second: int,
+        method: str,
+        similarity: float,
+    ) -> None:
+        key = tuple(sorted((first, second)))
+        current = matches.get(key)
+        if current and current.similarity >= similarity:
+            return
+        matches[key] = DuplicateMatch(
+            record_id=str(records[first]["doc_id"]),
+            matched_record_id=str(records[second]["doc_id"]),
+            method=method,
+            similarity=similarity,
+        )
+
+    @staticmethod
+    def _assignments(
+        records: Sequence[dict[str, object]],
+        groups: dict[int, list[int]],
+        matches: Sequence[DuplicateMatch],
+    ) -> dict[str, DuplicateAssignment]:
+        assignments: dict[str, DuplicateAssignment] = {}
+        matches_by_record: dict[str, list[DuplicateMatch]] = {}
+        for match in matches:
+            matches_by_record.setdefault(match.record_id, []).append(match)
+            matches_by_record.setdefault(match.matched_record_id, []).append(match)
+        for members in groups.values():
+            canonical_index = sorted(members, key=lambda i: (-float(records[i]["quality_score"]), str(records[i]["doc_id"])))[0]
+            canonical_id = str(records[canonical_index]["doc_id"])
+            cluster_id = f"dup-{min(str(records[i]['doc_id']) for i in members)}" if len(members) > 1 else None
+            for index in members:
+                record_id = str(records[index]["doc_id"])
+                evidence = sorted(matches_by_record.get(record_id, []), key=lambda match: (-match.similarity, match.method, match.matched_record_id))[0:1]
+                assignments[record_id] = DuplicateAssignment(
+                    cluster_id=cluster_id,
+                    canonical_id=canonical_id,
+                    is_duplicate=len(members) > 1 and index != canonical_index,
+                    method=evidence[0].method if evidence else None,
+                    similarity=evidence[0].similarity if evidence else None,
+                    matched_record_id=(
+                        evidence[0].matched_record_id if evidence and evidence[0].record_id == record_id
+                        else evidence[0].record_id if evidence else None
+                    ),
+                )
+        return assignments
+
+
+class SemanticDeduplicator:
+    """Embedding-based semantic duplicate clustering for small and medium datasets.
+
+    This is an opt-in semantic baseline inspired by SemDeDup. It evaluates all
+    document pairs, so it is intentionally capped and is not a web-scale ANN
+    implementation.
+    """
+
+    def __init__(
+        self,
+        threshold: float = 0.92,
+        model_name: str = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        max_records: int = 5_000,
+        encoder: Callable[[list[str]], Sequence[Sequence[float]]] | None = None,
+    ) -> None:
+        if not 0 <= threshold <= 1:
+            raise ValueError("Semantic deduplication threshold must be between 0 and 1.")
+        self.threshold = threshold
+        self.model_name = model_name
+        self.max_records = max_records
+        self.encoder = encoder
+        self.last_matches: list[DuplicateMatch] = []
+
+    def cluster(self, records: Sequence[dict[str, object]]) -> dict[str, DuplicateAssignment]:
+        if len(records) > self.max_records:
+            raise ValueError(
+                f"Semantic deduplication supports at most {self.max_records} records per run; "
+                "use MinHash or add an ANN index for larger datasets."
+            )
+        parent = list(range(len(records)))
+
+        def find(index: int) -> int:
+            while parent[index] != index:
+                parent[index] = parent[parent[index]]
+                index = parent[index]
+            return index
+
+        def union(first: int, second: int) -> None:
+            first_root, second_root = find(first), find(second)
+            if first_root != second_root:
+                parent[max(first_root, second_root)] = min(first_root, second_root)
+
+        embeddings = self._encode([str(record["content"]) for record in records])
+        matches: list[DuplicateMatch] = []
+        for index, embedding in enumerate(embeddings):
+            for candidate_index, candidate_embedding in enumerate(embeddings[:index]):
+                similarity = self._cosine_similarity(embedding, candidate_embedding)
+                if similarity >= self.threshold:
+                    union(index, candidate_index)
+                    matches.append(DuplicateMatch(
+                        record_id=str(records[index]["doc_id"]),
+                        matched_record_id=str(records[candidate_index]["doc_id"]),
+                        method="semantic_cosine",
+                        similarity=similarity,
+                    ))
+        groups: dict[int, list[int]] = {}
+        for index in range(len(records)):
+            groups.setdefault(find(index), []).append(index)
+        self.last_matches = sorted(matches, key=lambda match: (match.record_id, match.matched_record_id))
+        return GlobalDeduplicator._assignments(records, groups, self.last_matches)
+
+    def _encode(self, texts: list[str]) -> Sequence[Sequence[float]]:
+        if self.encoder:
+            return self.encoder(texts)
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError as error:
+            raise RuntimeError(
+                "Semantic deduplication requires sentence-transformers. Install it with: "
+                "uv pip install -e '.[embeddings]'"
+            ) from error
+        model = SentenceTransformer(self.model_name)
+        return model.encode(texts, normalize_embeddings=True, show_progress_bar=False)
+
+    @staticmethod
+    def _cosine_similarity(first: Sequence[float], second: Sequence[float]) -> float:
+        dot_product = sum(left * right for left, right in zip(first, second))
+        first_norm = math.sqrt(sum(value * value for value in first))
+        second_norm = math.sqrt(sum(value * value for value in second))
+        return dot_product / max(first_norm * second_norm, 1e-12)
 
 
 class Deduplicator:

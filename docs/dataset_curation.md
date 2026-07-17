@@ -31,7 +31,8 @@ The tool records these values but does not infer or validate licensing. Curate o
 ## Artifacts
 
 - `curated.jsonl` contains accepted documents, source metadata, content hashes, and quality scores.
-- `audit.csv` contains every input record, its quality signals, decision, rejection reasons, and duplicate provenance.
+- `audit.csv` contains every input record, its quality signals, hard rejection reasons, review flags, decision, and duplicate provenance. It includes the matching method and score when a duplicate is found.
+- `duplicate_matches.csv` records every direct duplicate match: the two document IDs, method, and measured similarity.
 - `quality_report.json` summarizes preliminary completeness, format/missing-content errors, duplicate rate, source composition, and language-agnostic diversity diagnostics.
 - `dataset_manifest.json` records provenance, input and artifact hashes, settings, timestamps, counts, and a deterministic configuration hash.
 
@@ -39,8 +40,8 @@ The tool records these values but does not infer or validate licensing. Curate o
 
 1. Confirm that every source is legally reusable; create one source manifest for the intended dataset version.
 2. Run `kg-gen curate` on all input sources together, so duplicates are detected across sources.
-3. Review `audit.csv`; inspect low-scoring documents and all `near_duplicate` decisions before publishing the curated dataset.
+3. Review `audit.csv`; inspect every quality review flag and all `near_duplicate` decisions before publishing the curated dataset. Review flags are retained rather than automatically deleted.
 4. Review `quality_report.json` for unexpected source imbalance, high duplicate rate, missing content, or unusually low n-gram diversity.
 5. Preserve the complete version directory. Create a new manifest version rather than editing published artifacts.
 
-The current quality and diversity values are explainable triage signals, not a guarantee of downstream model performance. Toxicity filtering, Vietnamese tokenization, semantic embeddings, and LLM-as-judge scoring are planned extensions.
+The current quality and diversity values are explainable triage signals, not a guarantee of downstream model performance. Semantic document deduplication is available as an optional experiment; toxicity filtering, Vietnamese tokenization, and LLM-as-judge scoring remain planned extensions.
