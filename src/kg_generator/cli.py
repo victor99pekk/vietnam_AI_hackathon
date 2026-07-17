@@ -177,5 +177,22 @@ def evaluate(input_paths: tuple[str, ...], reference_path: str | None) -> None:
             click.echo(f"  {metric}: {score:.3f}")
 
 
+@main.command()
+@click.option(
+    "-o", "--output",
+    "output_dir",
+    default="./output",
+    type=click.Path(),
+    help="Pipeline output directory containing knowledge_graph.json.",
+)
+def neo4j_upload(output_dir: str) -> None:
+    """Clear Neo4j database and upload the generated knowledge graph."""
+    from kg_generator.export.neo4j_upload import upload_from_output
+
+    click.echo(" Clearing Neo4j database and uploading knowledge graph...")
+    upload_from_output(Path(output_dir))
+    click.echo(" Done! Knowledge graph uploaded to Neo4j.")
+
+
 if __name__ == "__main__":
     main()

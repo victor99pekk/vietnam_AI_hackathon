@@ -1,5 +1,6 @@
 """Knowledge Graph Generator — core configuration and ontology definitions."""
 
+import os
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
@@ -62,6 +63,11 @@ class PipelineConfig:
     resolve_threshold: float = 0.80
     resolve_method: str = "embedding"  # embedding, string_similarity
 
+    # Neo4j — configured via environment variables only (NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD)
+    neo4j_uri: str = ""
+    neo4j_user: str = ""
+    neo4j_password: str = ""
+
     # Export
     export_formats: list[str] = field(default_factory=lambda: ["json", "graphml"])
 
@@ -89,5 +95,13 @@ class PipelineConfig:
 def load_config(config_path: Path | None = None) -> PipelineConfig:
     """Load configuration from a YAML file, applying sensible defaults otherwise."""
     if config_path and config_path.exists():
-        return PipelineConfig.from_yaml(config_path)
-    return PipelineConfig()
+        config = PipelineConfig.from_yaml(config_path)
+    else:
+        config = PipelineConfig()
+
+    # Neo4j connection — only from environment variables
+    config.neo4j_uri = os.environ.get("NEO4J_URI", "")
+    config.neo4j_user = os.environ.get("NEO4J_USER", "")
+    config.neo4j_password = os.environ.get("NEO4J_PASSWORD", "")
+
+    return config
