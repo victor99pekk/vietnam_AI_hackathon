@@ -146,13 +146,35 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
     driver = GraphDatabase.driver(uri, auth=(user, password))
 
     with driver.session() as session:
+        # Wipe existing graph to avoid stale labels/properties from previous uploads
+        click.echo("Clearing existing graph...")
+        session.run("MATCH (n) DETACH DELETE n")
+
         # Create uniqueness constraints
         session.run("CREATE CONSTRAINT IF NOT EXISTS FOR (n:Entity) REQUIRE n.name IS UNIQUE")
 
-        # Upload nodes — separate Chunk nodes from regular Entity nodes
+        # Upload nodes — separate by type: Chunk, Document, Entity
         nodes = data["graph"]["nodes"]
         chunks = [n for n in nodes if n.get("type") == "Chunk"]
-        entities = [n for n in nodes if n.get("type") != "Chunk"]
+        documents = [n for n in nodes if n.get("type") == "Document"]
+        entities = [n for n in nodes if n.get("type") not in ("Chunk", "Document")]
+
+        # Upload Document nodes
+        click.echo(f"Uploading {len(documents)} Document nodes...")
+        for doc in documents:
+            session.run(
+                "MERGE (d:Document {name: $name}) "
+                "SET d.id = $id, "
+                "d.entityType = 'Document', "
+                "d.description = $description, "
+                "d.source = $source, "
+                "d.chunk_count = $chunk_count",
+                name=doc.get("name", doc.get("id", "")),
+                id=doc.get("id", ""),
+                description=doc.get("description", ""),
+                source=doc.get("source", []),
+                chunk_count=doc.get("chunk_count", 0),
+            )
 
         # Upload Entity nodes with clean GraphRAG properties
         click.echo(f"Uploading {len(entities)} Entity nodes...")
@@ -160,9 +182,8 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
             node_type = node.get("type", "Entity")
             session.run(
                 "MERGE (n:Entity {name: $name}) "
-                f"SET n:`{node_type}` "
                 "SET n.id = $id, "
-                "n.type = $type, "
+                "n.entityType = $entityType, "
                 "n.aliases = $aliases, "
                 "n.description = $description, "
                 "n.importanceScore = $importanceScore, "
@@ -172,7 +193,7 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
                 "n.updatedAt = $updatedAt",
                 name=node.get("name", node.get("id", "")),
                 id=node.get("id", ""),
-                type=node_type,
+                entityType=node_type,
                 aliases=node.get("aliases", []),
                 description=node.get("description", ""),
                 importanceScore=node.get("importanceScore", 0.0),
@@ -203,13 +224,6 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
                 source=chunk.get("source", ""),
             )
 
-        # Strip legacy properties left over from previous uploads
-        click.echo("Cleaning up legacy properties...")
-        session.run(
-            "MATCH (n:Entity) "
-            "REMOVE n.confidence, n.mentions, n.label, n.displayName, n.entity_id, n.attributes"
-        )
-
         # Upload edges — match on any label using name property
         edges = data["graph"]["links"] if "links" in data["graph"] else data["graph"]["edges"]
         click.echo(f"Uploading {len(edges)} relationships...")
@@ -229,7 +243,7 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
                 )
                 edge_count += 1
 
-        click.echo(f"Done! Uploaded {len(nodes)} nodes and {edge_count} relationships to {uri}")
+        click.echo(f"Done! Uploaded {len(documents)} docs, {len(chunks)} chunks, {len(entities)} entities, {edge_count} relationships to {uri}")
 
     driver.close()
 

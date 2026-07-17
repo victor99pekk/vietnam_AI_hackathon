@@ -168,4 +168,3 @@ class RelationExtractor:
         except (json.JSONDecodeError, IndexError):
             logger.warning("Failed to parse LLM relation output")
             return []
-            return []
