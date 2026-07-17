@@ -21,6 +21,8 @@ htmlcov/
 
 # Output
 output/
+output_eval/
+generated_KGs/
 data/external/
 
 # OS
