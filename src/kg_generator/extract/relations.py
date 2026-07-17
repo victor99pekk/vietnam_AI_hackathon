@@ -92,7 +92,9 @@ class RelationExtractor:
     def _llm_extract(
         self, text: str, entities: list[Entity]
     ) -> list[tuple[str, str, str]]:
-        """LLM-based relation extraction (requires openai)."""
+        """LLM-based relation extraction using DeepSeek (OpenAI-compatible API)."""
+        import os
+
         try:
             from openai import OpenAI
         except ImportError:
@@ -110,7 +112,10 @@ class RelationExtractor:
             f'[["Alice", "works_at", "Acme Corp"], ["Bob", "lives_in", "Hanoi"]]'
         )
 
-        client = OpenAI()
+        client = OpenAI(
+            api_key=os.getenv("DEEPSEEK_API_KEY"),
+            base_url="https://api.deepseek.com",
+        )
         response = client.chat.completions.create(
             model=self.model_name,
             messages=[{"role": "user", "content": prompt}],
