@@ -24,43 +24,64 @@ class GraphBuilder:
     def build(
         self,
         entities: list[dict[str, Any]],
-        triples: list[tuple[str, str, str]],
+        triples: list[tuple[str, str, str, str]],
     ) -> nx.DiGraph:
-        """Build a directed graph from entities and (subject, predicate, object) triples."""
+        """Build a directed graph from entities and (subject, predicate, object, source_text) triples."""
         graph = nx.DiGraph()
 
-        # Add entity nodes
+        # Add entity nodes with GraphRAG properties
         for entity in entities:
             graph.add_node(
                 entity["name"],
-                label=entity.get("label", "ENTITY"),
-                confidence=entity.get("confidence", 1.0),
-                mentions=entity.get("mentions", []),
-                attributes=entity.get("attributes", {}),
+                id=entity.get("id", ""),
+                name=entity.get("name", ""),
+                type=entity.get("type", "ENTITY"),
+                aliases=entity.get("aliases", []),
+                description=entity.get("description", ""),
+                importanceScore=entity.get("importanceScore", 0.0),
+                confidenceScore=entity.get("confidenceScore", 1.0),
+                source=entity.get("source", []),
+                embedding=entity.get("embedding"),
+                updatedAt=entity.get("updatedAt", ""),
+                # Chunk-specific
+                text=entity.get("text", ""),
+                tokenCount=entity.get("tokenCount", 0),
+                index=entity.get("index", 0),
+                chunk_count=entity.get("chunk_count", 0),
             )
 
         # Add relation edges
-        for subj, pred, obj in triples:
+        for triple in triples:
+            subj, pred, obj = triple[0], triple[1], triple[2]
+            source_text = triple[3] if len(triple) > 3 else ""
+
             # Ensure both endpoints exist as nodes
             if subj not in graph:
-                graph.add_node(subj, label="ENTITY")
+                graph.add_node(subj, label="ENTITY", type="ENTITY", name=subj)
             if obj not in graph:
-                graph.add_node(obj, label="ENTITY")
+                graph.add_node(obj, label="ENTITY", type="ENTITY", name=obj)
 
             # Add or update the edge
             if graph.has_edge(subj, obj):
-                # Append to list of predicates
                 existing = graph.edges[subj, obj].get("predicates", [])
                 if pred not in existing:
                     existing.append(pred)
                 graph.edges[subj, obj]["predicates"] = existing
                 graph.edges[subj, obj]["weight"] = len(existing)
+                existing_sources = graph.edges[subj, obj].get("source_texts", [])
+                if source_text and source_text not in existing_sources:
+                    existing_sources.append(source_text)
+                    graph.edges[subj, obj]["source_texts"] = existing_sources
             else:
                 graph.add_edge(
                     subj, obj,
                     predicates=[pred],
                     weight=1,
+                    source_texts=[source_text] if source_text else [],
                 )
+
+        # Compute PageRank-based importance scores
+        self._compute_importance(graph)
 
         logger.info(
             f"Built graph: {graph.number_of_nodes()} nodes, {graph.number_of_edges()} edges"
@@ -71,6 +92,16 @@ class GraphBuilder:
             self._validate(graph)
 
         return graph
+
+    @staticmethod
+    def _compute_importance(graph: nx.DiGraph) -> None:
+        """Compute PageRank importance and store as importanceScore on each node."""
+        try:
+            pr = nx.pagerank(graph, max_iter=100, tol=1e-4)
+            for node, score in pr.items():
+                graph.nodes[node]["importanceScore"] = round(score, 6)
+        except Exception:
+            logger.debug("PageRank computation failed — skipping importance scores")
 
     def _validate(self, graph: nx.DiGraph) -> None:
         """Check graph consistency against the ontology schema."""

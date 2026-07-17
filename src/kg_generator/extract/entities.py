@@ -1,9 +1,10 @@
 """Entity extraction with language-swappable backends."""
 
-import re
 import logging
+import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from typing import Any
 
 from kg_generator.config import Language
@@ -13,21 +14,56 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class Entity:
-    """A single extracted entity."""
+    """A single extracted entity with GraphRAG-ready properties.
+
+    Aligned with best practices:
+    - Identification:   id, name, aliases, type
+    - Semantic:          description
+    - Search:            embedding, importanceScore
+    - Provenance:        source, confidenceScore, updatedAt
+    """
 
     name: str
     label: str  # e.g., PERSON, ORG, LOCATION, CONCEPT, EVENT
     mentions: list[str] = field(default_factory=list)
     attributes: dict[str, Any] = field(default_factory=dict)
     confidence: float = 1.0
+    description: str = ""
+    source: str = ""
+    embedding: list[float] | None = None
+
+    @property
+    def id(self) -> str:
+        """Unique structured ID derived from the entity label and canonical name."""
+        safe_name = self.name.lower().replace(" ", "_").replace("'", "").replace('"', "")
+        return f"{self.label.lower()}:{safe_name}"
+
+    @property
+    def aliases(self) -> list[str]:
+        """All known surface forms (synonyms, misspellings, abbreviations)."""
+        return sorted(set(m.lower() for m in self.mentions))
+
+    @property
+    def displayName(self) -> str:
+        return self.name
+
+    @property
+    def entityType(self) -> str:
+        return self.label
 
     def to_dict(self) -> dict[str, Any]:
+        """Clean GraphRAG-ready dict with no legacy keys."""
         return {
+            "id": self.id,
             "name": self.name,
-            "label": self.label,
-            "mentions": self.mentions,
-            "attributes": self.attributes,
-            "confidence": self.confidence,
+            "type": self.label,
+            "aliases": list(self.aliases),
+            "description": self.description,
+            "confidenceScore": self.confidence,
+            "importanceScore": 0.0,  # populated by graph builder
+            "source": [self.source] if self.source else [],
+            "embedding": self.embedding,
+            "updatedAt": datetime.now(timezone.utc).isoformat(),
         }
 
 

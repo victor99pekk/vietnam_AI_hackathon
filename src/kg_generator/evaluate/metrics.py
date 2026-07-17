@@ -38,7 +38,7 @@ class QualityEvaluator:
         self,
         graph: nx.DiGraph,
         entities: list[dict[str, Any]],
-        triples: list[tuple[str, str, str]],
+        triples: list[tuple[str, str, str, str]],
     ) -> dict[str, Any]:
         """Compute all quality metrics for a graph."""
         return {
@@ -62,7 +62,7 @@ class QualityEvaluator:
         if not entities:
             return {"completeness": 0.0, "completeness_breakdown": {}}
 
-        expected_fields = {"name", "label", "mentions"}
+        expected_fields = {"name", "type", "aliases"}
         scores = []
         breakdown: dict[str, float] = {}
 
@@ -80,25 +80,23 @@ class QualityEvaluator:
     def consistency(
         self,
         graph: nx.DiGraph,
-        triples: list[tuple[str, str, str]],
+        triples: list[tuple[str, str, str, str]],
     ) -> dict[str, float]:
         """Schema conformance and structural consistency."""
         if not triples:
             return {"consistency": 1.0}
 
-        # Check that all triple endpoints exist as nodes
         node_names = set(graph.nodes())
         orphan_count = sum(
-            1 for s, p, o in triples
-            if s not in node_names or o not in node_names
+            1 for t in triples
+            if t[0] not in node_names or t[2] not in node_names
         )
         endpoint_score = 1.0 - (orphan_count / len(triples))
 
-        # Check label consistency — same entity shouldn't have conflicting labels
         label_conflicts = 0
         for node in graph.nodes():
             data = graph.nodes[node]
-            if data.get("label") == "UNKNOWN":
+            if data.get("type") in ("UNKNOWN", "", None):
                 label_conflicts += 1
         label_score = 1.0 - (label_conflicts / max(graph.number_of_nodes(), 1))
 
@@ -108,7 +106,7 @@ class QualityEvaluator:
     def duplication_level(
         self,
         entities: list[dict[str, Any]],
-        triples: list[tuple[str, str, str]],
+        triples: list[tuple[str, str, str, str]],
     ) -> dict[str, float]:
         """Detect duplicate entities and triples."""
         if not entities or not triples:
@@ -118,9 +116,9 @@ class QualityEvaluator:
         names = [e["name"].lower() for e in entities]
         entity_dup_ratio = 1.0 - (len(set(names)) / len(names))
 
-        # Triple duplication
-        triple_set = set(triples)
-        triple_dup_ratio = 1.0 - (len(triple_set) / len(triples))
+        # Triple duplication (ignore source_text for dedup comparison)
+        triple_keys = {(t[0], t[1], t[2]) for t in triples}
+        triple_dup_ratio = 1.0 - (len(triple_keys) / len(triples))
 
         score = (entity_dup_ratio + triple_dup_ratio) / 2
         return {
@@ -130,26 +128,26 @@ class QualityEvaluator:
         }
 
     def missing_information(self, entities: list[dict[str, Any]]) -> dict[str, float]:
-        """Fraction of entities with empty/missing attributes."""
+        """Fraction of entities with empty/missing type or aliases."""
         if not entities:
             return {"missing_information": 1.0}
 
         missing_count = sum(
             1 for e in entities
-            if not e.get("label") or not e.get("mentions") or e.get("label") == "UNKNOWN"
+            if not e.get("type") or not e.get("aliases") or e.get("type") in ("UNKNOWN", "")
         )
         return {"missing_information": missing_count / len(entities)}
 
-    def format_errors(self, triples: list[tuple[str, str, str]]) -> dict[str, float]:
+    def format_errors(self, triples: list[tuple[str, str, str, str]]) -> dict[str, float]:
         """Detect malformed triples (empty strings, wrong types)."""
         if not triples:
             return {"format_errors": 0.0}
 
         errors = 0
-        for s, p, o in triples:
-            if not s or not p or not o:
+        for t in triples:
+            if not t[0] or not t[1] or not t[2]:
                 errors += 1
-            elif not isinstance(s, str) or not isinstance(p, str) or not isinstance(o, str):
+            elif not isinstance(t[0], str) or not isinstance(t[1], str) or not isinstance(t[2], str):
                 errors += 1
 
         return {"format_errors": errors / len(triples)}
@@ -159,14 +157,14 @@ class QualityEvaluator:
         entities: list[dict[str, Any]],
         graph: nx.DiGraph,
     ) -> dict[str, float]:
-        """Heuristic labeling quality — fraction of entities with meaningful labels."""
+        """Heuristic labeling quality — fraction of entities with meaningful types."""
         if not entities:
             return {"labeling_quality": 0.0}
 
-        generic_labels = {"ENTITY", "UNKNOWN", "NAMED_ENTITY", "CONCEPT"}
+        generic = {"ENTITY", "UNKNOWN", "NAMED_ENTITY", "CONCEPT"}
         meaningful = sum(
             1 for e in entities
-            if e.get("label") and e["label"] not in generic_labels
+            if e.get("type") and e["type"] not in generic
         )
         return {"labeling_quality": meaningful / len(entities)}
 
@@ -174,18 +172,16 @@ class QualityEvaluator:
         self,
         graph: nx.DiGraph,
         entities: list[dict[str, Any]],
-        triples: list[tuple[str, str, str]],
+        triples: list[tuple[str, str, str, str]],
     ) -> dict[str, float]:
         """Score indicating how reusable the KG is for downstream tasks."""
         score = 0.0
 
-        # Has nodes and edges
         if graph.number_of_nodes() > 0:
             score += 0.2
         if graph.number_of_edges() > 0:
             score += 0.2
 
-        # Is connected (not just isolated nodes)
         if graph.number_of_edges() > 0:
             connected_ratio = (
                 len(max(nx.weakly_connected_components(graph), key=len))
@@ -193,16 +189,16 @@ class QualityEvaluator:
             )
             score += 0.2 * connected_ratio
 
-        # Has meaningful labels
-        generic_labels = {"ENTITY", "UNKNOWN"}
+        # Has meaningful types (not generic fallbacks)
+        generic = {"ENTITY", "UNKNOWN", "Chunk", "Document"}
         if entities:
-            meaningful = sum(1 for e in entities if e.get("label") not in generic_labels)
+            meaningful = sum(1 for e in entities if e.get("type") not in generic)
             score += 0.2 * (meaningful / len(entities))
 
-        # Has attributes beyond names
+        # Has descriptions
         if entities:
-            has_attrs = sum(1 for e in entities if e.get("attributes"))
-            score += 0.2 * (has_attrs / len(entities))
+            has_desc = sum(1 for e in entities if e.get("description"))
+            score += 0.2 * (has_desc / len(entities))
 
         return {"reusability": score}
 
@@ -210,7 +206,7 @@ class QualityEvaluator:
         self,
         graph: nx.DiGraph,
         entities: list[dict[str, Any]],
-        triples: list[tuple[str, str, str]],
+        triples: list[tuple[str, str, str, str]],
     ) -> float:
         # Compute each metric individually (not via evaluate_graph to avoid recursion)
         comp = self.completeness(entities).get("completeness", 0.0)

@@ -8,7 +8,8 @@ from dotenv import load_dotenv
 # Load .env file before anything else
 load_dotenv()
 
-from kg_generator.config import PipelineConfig, load_config
+from kg_generator.config import Language, PipelineConfig, load_config
+from kg_generator.pipeline import Pipeline
 
 
 @click.group()
@@ -57,13 +58,11 @@ def run(
     llm: bool,
 ) -> None:
     """Run the full knowledge graph generation pipeline."""
-    from kg_generator.pipeline import Pipeline
-
     config = load_config(Path(config_path) if config_path else None)
 
     if input_paths:
         config.input_paths = [Path(p) for p in input_paths]
-    config.language = language  # type: ignore[assignment]
+    config.language = Language(language)
     config.use_llm = llm
 
     pipeline = Pipeline(config, Path(output_dir))
@@ -90,8 +89,6 @@ def run(
 )
 def quick(input_paths: tuple[str, ...], output_dir: str) -> None:
     """Run with sensible defaults — no config file needed."""
-    from kg_generator.pipeline import Pipeline
-
     config = PipelineConfig(input_paths=[Path(p) for p in input_paths])
     pipeline = Pipeline(config, Path(output_dir))
     pipeline.execute()
@@ -100,121 +97,141 @@ def quick(input_paths: tuple[str, ...], output_dir: str) -> None:
 
 @main.command()
 @click.option(
-    "-i", "--input",
-    "input_paths",
-    multiple=True,
-    required=True,
-    type=click.Path(exists=True, path_type=Path),
-    help="Input files or directories. All sources are deduplicated together.",
-)
-@click.option(
-    "-m", "--source-manifest",
-    "source_manifest_path",
-    required=True,
-    type=click.Path(exists=True, path_type=Path),
-    help="YAML or JSON dataset provenance manifest (name, version, license, source).",
-)
-@click.option(
-    "-o", "--output",
-    "output_root",
-    default="./output/curated_datasets",
-    type=click.Path(path_type=Path),
-    help="Root directory. Results are written to <root>/<dataset>/<version>.",
-)
-@click.option("--dedup-threshold", default=0.85, show_default=True, type=click.FloatRange(0, 1))
-@click.option(
-    "--dedup-method",
-    default="minhash",
-    show_default=True,
-    type=click.Choice(["minhash", "semantic"]),
-    help="Use surface-text MinHash or multilingual embedding cosine similarity.",
-)
-@click.option(
-    "--semantic-model",
-    default="sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
-    show_default=True,
-    help="Sentence-Transformers model used only with --dedup-method semantic.",
-)
-@click.option(
-    "--experiment-id",
-    help="Optional identifier stored in the dataset manifest for this experiment.",
-)
-@click.option("--min-chars", default=50, show_default=True, type=click.IntRange(0, None))
-@click.option("--min-words", default=10, show_default=True, type=click.IntRange(0, None))
-def curate(
-    input_paths: tuple[Path, ...],
-    source_manifest_path: Path,
-    output_root: Path,
-    dedup_threshold: float,
-    dedup_method: str,
-    semantic_model: str,
-    experiment_id: str | None,
-    min_chars: int,
-    min_words: int,
-) -> None:
-    """Create an auditable, deduplicated text dataset and quality report."""
-    from kg_generator.curate.pipeline import CurationConfig, DatasetCurationPipeline
-
-    config = CurationConfig(
-        input_paths=input_paths,
-        output_root=output_root,
-        source_manifest_path=source_manifest_path,
-        dedup_threshold=dedup_threshold,
-        dedup_method=dedup_method,
-        semantic_model=semantic_model,
-        experiment_id=experiment_id,
-        min_chars=min_chars,
-        min_words=min_words,
-    )
-    try:
-        output_dir = DatasetCurationPipeline(config).execute()
-    except (FileExistsError, RuntimeError, ValueError) as error:
-        raise click.ClickException(str(error)) from error
-    click.echo(f"\n Curated dataset written to {output_dir}")
-
-
-@main.command()
-@click.option(
-    "-i", "--input",
-    "input_paths",
-    multiple=True,
-    required=True,
-    type=click.Path(exists=True),
-    help="Input files to evaluate.",
-)
-@click.option(
-    "-r", "--reference",
-    "reference_path",
-    type=click.Path(exists=True),
-    help="Reference/gold-standard graph for comparison.",
-)
-def evaluate(input_paths: tuple[str, ...], reference_path: str | None) -> None:
-    """Run only the quality evaluation stage on existing data."""
-    from kg_generator.evaluate.metrics import QualityEvaluator
-
-    evaluator = QualityEvaluator()
-    for path in input_paths:
-        results = evaluator.evaluate(Path(path))
-        click.echo(f"\n--- {path} ---")
-        for metric, score in results.items():
-            click.echo(f"  {metric}: {score:.3f}")
-
-
-@main.command()
-@click.option(
     "-o", "--output",
     "output_dir",
-    default="./output",
-    type=click.Path(),
-    help="Pipeline output directory containing knowledge_graph.json.",
+    required=True,
+    type=click.Path(exists=True),
+    help="Output directory containing knowledge_graph.json from a previous run.",
 )
-def neo4j_upload(output_dir: str) -> None:
-    """Clear Neo4j database and upload the generated knowledge graph."""
-    from kg_generator.export.neo4j_upload import upload_from_output
+@click.option(
+    "--uri",
+    default=None,
+    help="Neo4j connection URI (default: $NEO4J_URI or bolt://localhost:7687).",
+)
+@click.option(
+    "--user",
+    default=None,
+    help="Neo4j username (default: $NEO4J_USER or neo4j).",
+)
+@click.option(
+    "--password",
+    default=None,
+    help="Neo4j password (default: $NEO4J_PASSWORD).",
+)
+def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: str | None) -> None:
+    """Upload a generated knowledge graph to a Neo4j database."""
+    import json
+    import os
 
-    click.echo(" Clearing Neo4j database and uploading knowledge graph...")
-    upload_from_output(Path(output_dir))
-    click.echo(" Done! Knowledge graph uploaded to Neo4j.")
+    output_path = Path(output_dir)
+    kg_file = output_path / "knowledge_graph.json"
+
+    if not kg_file.exists():
+        raise click.FileError(str(kg_file), hint="Run the pipeline first: kg-gen run -i data/ -o output")
+
+    with open(kg_file) as f:
+        data = json.load(f)
+
+    # Resolve connection details
+    uri = uri or os.getenv("NEO4J_URI", "bolt://localhost:7687")
+    user = user or os.getenv("NEO4J_USER", "neo4j")
+    password = password or os.getenv("NEO4J_PASSWORD", "")
+
+    try:
+        from neo4j import GraphDatabase
+    except ImportError:
+        click.echo("Neo4j driver not installed. Run: uv pip install -e \".[neo4j]\"")
+        raise click.Abort()
+
+    driver = GraphDatabase.driver(uri, auth=(user, password))
+
+    with driver.session() as session:
+        # Create uniqueness constraints
+        session.run("CREATE CONSTRAINT IF NOT EXISTS FOR (n:Entity) REQUIRE n.name IS UNIQUE")
+
+        # Upload nodes — separate Chunk nodes from regular Entity nodes
+        nodes = data["graph"]["nodes"]
+        chunks = [n for n in nodes if n.get("type") == "Chunk"]
+        entities = [n for n in nodes if n.get("type") != "Chunk"]
+
+        # Upload Entity nodes with clean GraphRAG properties
+        click.echo(f"Uploading {len(entities)} Entity nodes...")
+        for node in entities:
+            node_type = node.get("type", "Entity")
+            session.run(
+                "MERGE (n:Entity {name: $name}) "
+                f"SET n:`{node_type}` "
+                "SET n.id = $id, "
+                "n.type = $type, "
+                "n.aliases = $aliases, "
+                "n.description = $description, "
+                "n.importanceScore = $importanceScore, "
+                "n.confidenceScore = $confidenceScore, "
+                "n.source = $source, "
+                "n.embedding = $embedding, "
+                "n.updatedAt = $updatedAt",
+                name=node.get("name", node.get("id", "")),
+                id=node.get("id", ""),
+                type=node_type,
+                aliases=node.get("aliases", []),
+                description=node.get("description", ""),
+                importanceScore=node.get("importanceScore", 0.0),
+                confidenceScore=node.get("confidenceScore", 1.0),
+                source=node.get("source", []),
+                embedding=node.get("embedding") if isinstance(node.get("embedding"), list) else None,
+                updatedAt=node.get("updatedAt", ""),
+            )
+
+        # Upload Chunk nodes with clean GraphRAG properties
+        click.echo(f"Uploading {len(chunks)} Chunk nodes...")
+        for chunk in chunks:
+            chunk_id = chunk.get("name", chunk.get("id", ""))
+            session.run(
+                "MERGE (c:Chunk {name: $name}) "
+                "SET c.id = $id, "
+                "c.text = $text, "
+                "c.tokenCount = $tokenCount, "
+                "c.index = $index, "
+                "c.embedding = $embedding, "
+                "c.source = $source",
+                name=chunk_id,
+                id=chunk_id,
+                text=chunk.get("text", ""),
+                tokenCount=chunk.get("tokenCount", 0),
+                index=chunk.get("index", 0),
+                embedding=chunk.get("embedding") if isinstance(chunk.get("embedding"), list) else None,
+                source=chunk.get("source", ""),
+            )
+
+        # Strip legacy properties left over from previous uploads
+        click.echo("Cleaning up legacy properties...")
+        session.run(
+            "MATCH (n:Entity) "
+            "REMOVE n.confidence, n.mentions, n.label, n.displayName, n.entity_id, n.attributes"
+        )
+
+        # Upload edges — match on any label using name property
+        edges = data["graph"]["links"] if "links" in data["graph"] else data["graph"]["edges"]
+        click.echo(f"Uploading {len(edges)} relationships...")
+        edge_count = 0
+        for edge in edges:
+            predicates = edge.get("predicates", ["RELATED_TO"])
+            for pred in predicates:
+                safe_pred = pred.upper().replace(" ", "_")
+                session.run(
+                    "MATCH (a {name: $source}) "
+                    "MATCH (b {name: $target}) "
+                    f"MERGE (a)-[r:{safe_pred}]->(b) "
+                    "SET r.weight = $weight",
+                    source=edge["source"],
+                    target=edge["target"],
+                    weight=edge.get("weight", 1),
+                )
+                edge_count += 1
+
+        click.echo(f"Done! Uploaded {len(nodes)} nodes and {edge_count} relationships to {uri}")
+
+    driver.close()
 
 
 if __name__ == "__main__":

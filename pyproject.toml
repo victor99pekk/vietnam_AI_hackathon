@@ -43,10 +43,6 @@ llm = [
     "openai>=1.6",
     "langchain>=0.1",
 ]
-# Dev / testing
-dev = [
-    "pytest>=8.0",
-]
 # All extras
 all = [
     "kg-generator[embeddings,vi,data,neo4j,llm,dev]",

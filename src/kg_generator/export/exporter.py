@@ -17,7 +17,7 @@ class GraphExporter:
         self,
         graph: nx.DiGraph,
         entities: list[dict[str, Any]],
-        triples: list[tuple[str, str, str]],
+        triples: list[tuple[str, str, str, str]],
         output_dir: Path,
         formats: list[str] | None = None,
     ) -> list[Path]:
@@ -46,7 +46,7 @@ class GraphExporter:
         self,
         graph: nx.DiGraph,
         entities: list[dict[str, Any]],
-        triples: list[tuple[str, str, str]],
+        triples: list[tuple[str, str, str, str]],
         output_dir: Path,
     ) -> Path:
         """Export as a single JSON file (node-link + entity/triple lists)."""
@@ -55,8 +55,13 @@ class GraphExporter:
 
         # Convert triples to serializable format
         triple_dicts = [
-            {"subject": s, "predicate": p, "object": o}
-            for s, p, o in triples
+            {
+                "subject": t[0],
+                "predicate": t[1],
+                "object": t[2],
+                "source_text": t[3] if len(t) > 3 else "",
+            }
+            for t in triples
         ]
 
         output = {
@@ -83,13 +88,17 @@ class GraphExporter:
         # Copy graph to avoid mutating with string conversions
         g = graph.copy()
         for _, data in g.nodes(data=True):
-            for k, v in data.items():
+            for k, v in list(data.items()):
                 if isinstance(v, (list, dict)):
                     data[k] = json.dumps(v, ensure_ascii=False)
+                elif v is None:
+                    data[k] = ""
         for _, _, data in g.edges(data=True):
-            for k, v in data.items():
+            for k, v in list(data.items()):
                 if isinstance(v, (list, dict)):
                     data[k] = json.dumps(v, ensure_ascii=False)
+                elif v is None:
+                    data[k] = ""
 
         nx.write_graphml(g, str(path))
         logger.info(f"  GraphML -> {path}")
@@ -129,7 +138,7 @@ class GraphExporter:
         self,
         graph: nx.DiGraph,
         entities: list[dict[str, Any]],
-        triples: list[tuple[str, str, str]],
+        triples: list[tuple[str, str, str, str]],
         output_dir: Path,
     ) -> Path:
         """Export as RDF/Turtle format."""
@@ -138,10 +147,10 @@ class GraphExporter:
             f.write("@prefix kg: <http://knowledge.graph/ontology/> .\n")
             f.write("@prefix ent: <http://knowledge.graph/entity/> .\n\n")
 
-            for subj, pred, obj in triples:
-                s = subj.replace(" ", "_").replace('"', "")
-                o = obj.replace(" ", "_").replace('"', "")
-                p = pred.replace(" ", "_").replace('"', "")
+            for t in triples:
+                s = t[0].replace(" ", "_").replace('"', "")
+                o = t[2].replace(" ", "_").replace('"', "")
+                p = t[1].replace(" ", "_").replace('"', "")
                 f.write(f'ent:{s}\tkg:{p}\tent:{o} .\n')
 
         logger.info(f"  RDF/Turtle -> {path}")

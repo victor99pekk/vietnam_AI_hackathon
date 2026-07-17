@@ -24,8 +24,8 @@ pipeline:
   llm_model: deepseek-chat
 
   # Entity resolution
-  resolve_method: embedding        # embedding | string_similarity
-  resolve_threshold: 0.80
+  resolve_method: string        # string | embedding
+  resolve_threshold: 0.85
 
   # Neo4j connection — configured via NEO4J_URI / NEO4J_USER / NEO4J_PASSWORD in .env only
 

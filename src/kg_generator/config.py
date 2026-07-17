@@ -50,6 +50,10 @@ class PipelineConfig:
     input_paths: list[Path] = field(default_factory=list)
     file_formats: list[str] = field(default_factory=lambda: ["txt", "json", "csv"])
 
+    # Chunking (0 = disabled, keep documents as-is)
+    chunk_size: int = 500
+    chunk_overlap: int = 100
+
     # Dedup
     dedup_threshold: float = 0.85
     dedup_method: str = "minhash"  # minhash, simhash, ngram
@@ -59,9 +63,9 @@ class PipelineConfig:
     use_llm: bool = False
     spacy_model: str = "en_core_web_sm"
 
-    # Resolve
-    resolve_threshold: float = 0.80
-    resolve_method: str = "embedding"  # embedding, string_similarity
+    # Resolve (string matching is safer than embedding-based for short/ID-like names)
+    resolve_threshold: float = 0.85
+    resolve_method: str = "string"  # string | embedding
 
     # Neo4j — configured via environment variables only (NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD)
     neo4j_uri: str = ""
@@ -86,8 +90,8 @@ class PipelineConfig:
             llm_model=pipeline.get("llm_model", "gpt-4o-mini"),
             use_llm=pipeline.get("use_llm", False),
             spacy_model=pipeline.get("spacy_model", "en_core_web_sm"),
-            resolve_threshold=pipeline.get("resolve_threshold", 0.80),
-            resolve_method=pipeline.get("resolve_method", "embedding"),
+            resolve_threshold=pipeline.get("resolve_threshold", 0.85),
+            resolve_method=pipeline.get("resolve_method", "string"),
             export_formats=pipeline.get("export_formats", ["json", "graphml"]),
         )
 

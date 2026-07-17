@@ -8,17 +8,46 @@ from kg_generator.extract.entities import Entity
 
 logger = logging.getLogger(__name__)
 
-# Common English relation patterns (subject, predicate, object)
+# Common English relation patterns (subject_label, object_label, predicate)
 RELATION_PATTERNS = [
-    # (head_label, dep_label, predicate_label)
+    # Person ↔ Org
     ("PERSON", "ORG", "works_at"),
+    ("PERSON", "ORG", "founded"),
+    ("PERSON", "ORG", "studied_at"),
+    # Person ↔ Location
     ("PERSON", "GPE", "lives_in"),
+    ("PERSON", "GPE", "born_in"),
+    ("PERSON", "GPE", "died_in"),
+    # Person ↔ Person
     ("PERSON", "PERSON", "knows"),
-    ("ORG", "GPE", "located_in"),
-    ("ORG", "ORG", "subsidiary_of"),
+    ("PERSON", "PERSON", "collaborated_with"),
+    # Person ↔ Other
     ("PERSON", "PRODUCT", "created"),
-    ("ORG", "PRODUCT", "produces"),
     ("PERSON", "EVENT", "participated_in"),
+    ("PERSON", "WORK_OF_ART", "authored"),
+    ("PERSON", "DATE", "born_on"),
+    # Org ↔ Location
+    ("ORG", "GPE", "located_in"),
+    ("ORG", "GPE", "headquartered_in"),
+    # Org ↔ Org
+    ("ORG", "ORG", "subsidiary_of"),
+    ("ORG", "ORG", "partnered_with"),
+    # Org ↔ Other
+    ("ORG", "PRODUCT", "produces"),
+    ("ORG", "EVENT", "organized"),
+    ("ORG", "WORK_OF_ART", "published"),
+    # Event ↔ Location / Date
+    ("EVENT", "GPE", "took_place_in"),
+    ("EVENT", "DATE", "occurred_on"),
+    ("EVENT", "ORG", "involved"),
+    # Work ↔ Person / Date
+    ("WORK_OF_ART", "PERSON", "authored_by"),
+    ("WORK_OF_ART", "DATE", "published_on"),
+    # Concept ↔ Any
+    ("CONCEPT", "PERSON", "associated_with"),
+    ("CONCEPT", "ORG", "related_to"),
+    ("CONCEPT", "GPE", "related_to"),
+    ("CONCEPT", "CONCEPT", "related_to"),
 ]
 
 
@@ -35,17 +64,20 @@ class RelationExtractor:
         self.use_llm = use_llm
         self.model_name = model_name
 
-    def extract(self, text: str, entities: list[Entity]) -> list[tuple[str, str, str]]:
-        """Extract relation triples from text given extracted entities."""
+    def extract(self, text: str, entities: list[Entity]) -> list[tuple[str, str, str, str]]:
+        """Extract relation triples from text given extracted entities.
+        
+        Returns: list of (subject, predicate, object, source_text) tuples.
+        """
         if self.use_llm:
             return self._llm_extract(text, entities)
         return self._rule_based_extract(text, entities)
 
     def _rule_based_extract(
         self, text: str, entities: list[Entity]
-    ) -> list[tuple[str, str, str]]:
+    ) -> list[tuple[str, str, str, str]]:
         """Rule-based relation extraction using entity co-occurrence and heuristics."""
-        triples: list[tuple[str, str, str]] = []
+        triples: list[tuple[str, str, str, str]] = []
         entity_map = {e.name.lower(): e for e in entities}
 
         # Use entity co-occurrence within the same sentence
@@ -65,7 +97,7 @@ class RelationExtractor:
                         continue
                     predicate = self._infer_predicate(sentence, e1, e2, entity_map)
                     if predicate:
-                        triples.append((e1.name, predicate, e2.name))
+                        triples.append((e1.name, predicate, e2.name, sentence))
 
         logger.debug(f"RuleBasedRelationExtractor: found {len(triples)} triples")
         return triples
@@ -91,7 +123,7 @@ class RelationExtractor:
 
     def _llm_extract(
         self, text: str, entities: list[Entity]
-    ) -> list[tuple[str, str, str]]:
+    ) -> list[tuple[str, str, str, str]]:
         """LLM-based relation extraction using DeepSeek (OpenAI-compatible API)."""
         import os
 
@@ -127,7 +159,7 @@ class RelationExtractor:
         try:
             raw_triples = json.loads(content)
             triples = [
-                (str(t[0]), str(t[1]), str(t[2]))
+                (str(t[0]), str(t[1]), str(t[2]), text[:500])
                 for t in raw_triples
                 if len(t) == 3
             ]
@@ -135,4 +167,5 @@ class RelationExtractor:
             return triples
         except (json.JSONDecodeError, IndexError):
             logger.warning("Failed to parse LLM relation output")
+            return []
             return []

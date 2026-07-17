@@ -1,0 +1,20 @@
+{
+  "num_nodes": 86,
+  "num_edges": 620,
+  "num_triples": 686,
+  "completeness": 1.0,
+  "completeness_breakdown": {
+    "has_label": 1.0,
+    "has_mentions": 1.0,
+    "has_name": 1.0
+  },
+  "consistency": 1.0,
+  "duplication_level": 0.04810495626822159,
+  "entity_duplication_rate": 0.0,
+  "triple_duplication_rate": 0.09620991253644318,
+  "missing_information": 0.0,
+  "format_errors": 0.0,
+  "labeling_quality": 0.5714285714285714,
+  "reusability": 0.8057142857142857,
+  "overall_score": 0.9041482715535194
+}

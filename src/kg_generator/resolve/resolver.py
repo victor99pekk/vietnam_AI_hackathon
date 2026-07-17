@@ -91,13 +91,33 @@ class EntityResolver:
 
             for i, existing in enumerate(seen):
                 if self._string_similarity(name, existing) >= self.threshold:
-                    # Merge into existing
-                    resolved[i]["mentions"] = list(set(
-                        resolved[i].get("mentions", []) + entity.get("mentions", [name])
-                    ))
-                    resolved[i]["confidence"] = max(
-                        resolved[i].get("confidence", 0), entity.get("confidence", 0)
+                    # Merge into existing canonical entity
+                    canonical = resolved[i]
+
+                    # Combine aliases
+                    merged_aliases = set(canonical.get("aliases", []))
+                    merged_aliases.update(entity.get("aliases", []))
+                    merged_aliases.add(entity.get("name", ""))
+                    canonical["aliases"] = sorted(a for a in merged_aliases if a)
+
+                    # Take highest confidence
+                    canonical["confidenceScore"] = max(
+                        canonical.get("confidenceScore", 0), entity.get("confidenceScore", 0)
                     )
+
+                    # Keep longest description
+                    if len(entity.get("description", "")) > len(canonical.get("description", "")):
+                        canonical["description"] = entity["description"]
+
+                    # Accumulate sources as a list
+                    existing = canonical.get("source", [])
+                    if not isinstance(existing, list):
+                        existing = [existing] if existing else []
+                    new_src = entity.get("source", [])
+                    if isinstance(new_src, str):
+                        new_src = [new_src] if new_src else []
+                    canonical["source"] = list(dict.fromkeys(existing + new_src))
+
                     matched = True
                     break
 
@@ -114,21 +134,36 @@ class EntityResolver:
         """Merge a cluster of entity dicts into one canonical entity."""
         cluster_entities = [entities[i] for i in cluster]
 
-        # Use the most common name, or the one with highest confidence
-        best = max(cluster_entities, key=lambda e: (e.get("confidence", 0), len(e.get("name", ""))))
+        # Best entity by confidence
+        best = max(cluster_entities, key=lambda e: (e.get("confidenceScore", 0), len(e.get("name", ""))))
 
-        all_mentions = []
-        all_attrs: dict[str, Any] = {}
+        all_aliases: list[str] = []
+        all_sources: list[str] = []
+        best_description = ""
+
         for e in cluster_entities:
-            all_mentions.extend(e.get("mentions", [e["name"]]))
-            all_attrs.update(e.get("attributes", {}))
+            all_aliases.extend(e.get("aliases", []))
+            all_aliases.append(e.get("name", ""))
+            if e.get("source"):
+                src = e["source"]
+                if isinstance(src, list):
+                    all_sources.extend(src)
+                else:
+                    all_sources.append(src)
+            if len(e.get("description", "")) > len(best_description):
+                best_description = e["description"]
 
         return {
+            "id": best.get("id", f"entity:{best['name'].lower().replace(' ', '_')}"),
             "name": best["name"],
-            "label": best.get("label", "ENTITY"),
-            "mentions": list(set(all_mentions)),
-            "attributes": all_attrs,
-            "confidence": max(e.get("confidence", 0) for e in cluster_entities),
+            "type": best.get("type", "ENTITY"),
+            "aliases": sorted(set(a for a in all_aliases if a)),
+            "description": best_description,
+            "confidenceScore": max(e.get("confidenceScore", 0) for e in cluster_entities),
+            "importanceScore": max(e.get("importanceScore", 0) for e in cluster_entities),
+            "source": list(dict.fromkeys(all_sources)),  # deduped, order preserved
+            "embedding": best.get("embedding"),
+            "updatedAt": max((e.get("updatedAt", "") for e in cluster_entities), default=""),
         }
 
     @staticmethod
