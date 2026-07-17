@@ -10,7 +10,7 @@ pipeline:
     - data/debugg_sample/
 
   file_formats:
-    - txt
+    - jsonl
 
   # Deduplication — lower threshold to test dedup logic
   dedup_method: ngram

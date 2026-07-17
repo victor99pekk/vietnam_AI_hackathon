@@ -4,9 +4,9 @@
   "num_triples": 691,
   "completeness": 0.9810606060606061,
   "completeness_breakdown": {
+    "has_type": 1.0,
     "has_name": 1.0,
-    "has_aliases": 0.9431818181818182,
-    "has_type": 1.0
+    "has_aliases": 0.9431818181818182
   },
   "consistency": 1.0,
   "duplication_level": 0.056333048283120635,

@@ -10,6 +10,7 @@ pipeline:
     - data/sample/
 
   file_formats:
+    - jsonl
     - txt
     - json
     - csv

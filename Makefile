@@ -5,7 +5,7 @@ dataset ?= small
 # ── Dataset configs ──
 # Add new datasets here
 dataset_conf.small     := configs/debug.yaml
-dataset_input.small    := -i data/debugg_sample/
+dataset_input.small    := -i data/debugg_sample/alan_turing.jsonl -i data/debugg_sample/marie_curie.jsonl
 dataset_kg.small       := generated_KGs/output_debug/knowledge_graph.json
 
 dataset_conf.wikipedia     := configs/pipeline.yaml
@@ -16,8 +16,10 @@ dataset_kg.wikipedia       := generated_KGs/output/knowledge_graph.json
 MODEL   ?= Qwen/Qwen2.5-0.5B-Instruct
 model   ?= all
 DEVICE  ?= cpu
+wiki_count ?= 100
+wiki_lang  ?= en
 
-.PHONY: help test ingest upload download plots LLM_plots install clean \
+.PHONY: help test ingest upload download download-wikipedia new-graph add plots LLM_plots install clean \
         eval-install eval-install-model eval-method1 eval-method2 eval-graphgen eval-all \
         eval-local eval-datasets
 
@@ -29,8 +31,11 @@ help:
 	@echo "   ingest           Run the KG generation pipeline"
 	@echo "   upload           Replace Neo4j contents with the generated graph"
 	@echo "   download         Download graph from Neo4j → knowledge_graph.json"
+	@echo "   new-graph        Build KG from data and upload to Neo4j [dataset=small|wikipedia]"
+	@echo "   add              Add all .jsonl files from data/add/ to the Neo4j graph"
 	@echo "   plots            Generate PNG plots from evaluation results"
 	@echo "   LLM_plots        Generate model comparison plots from ablation results"
+	@echo "   download-wikipedia  Download Wikipedia articles as JSONL [wiki_count=100] [wiki_lang=en]"
 	@echo "   install          Set up the project and install dependencies"
 	@echo "   clean            Remove generated output folders"
 	@echo ""
@@ -64,13 +69,18 @@ help:
 	@echo "   MODEL    = Qwen/Qwen2.5-{0.5B,1.5B,3B,7B}-Instruct"
 	@echo "             (default: Qwen2.5-0.5B — small enough for CPU)"
 	@echo "   DEVICE   = cpu | cuda                 (default: cpu)"
+	@echo "   wiki_count = 100                      (articles to download)"
+	@echo "   wiki_lang  = en | vi                  (Wikipedia language)"
 	@echo ""
 	@echo "── Examples ────────────────────────────────────────────"
-	@echo "   make eval-method1                              # quick KG health check"
-	@echo "   make eval-local                               # full local eval: audit + QA datasets"
-	@echo "   make eval-datasets                            # generate QA datasets for Colab"
-	@echo "   make eval-method2 model=b                     # fine-tune KG model (CPU)"
-	@echo "   make eval-method2 model=b DEVICE=cuda          # fine-tune KG model (GPU)"
+	@echo "   make download-wikipedia wiki_count=500            # download 500 en articles"
+	@echo "   make new-graph dataset=wikipedia                  # build KG + upload to Neo4j"
+	@echo "   make add                                          # add data/add/*.jsonl to Neo4j"
+	@echo "   make eval-method1                                 # quick KG health check"
+	@echo "   make eval-local                                  # full local eval: audit + QA datasets"
+	@echo "   make eval-datasets                               # generate QA datasets for Colab"
+	@echo "   make eval-method2 model=b                        # fine-tune KG model (CPU)"
+	@echo "   make eval-method2 model=b DEVICE=cuda             # fine-tune KG model (GPU)"
 	@echo "   make eval-method2 model=b MODEL=Qwen/Qwen2.5-1.5B-Instruct"
 
 ## test: Run the test suite
@@ -88,6 +98,33 @@ upload:
 ## download: Download the graph from Neo4j (e.g., for Colab evaluation)  [dataset=small|wikipedia]
 download:
 	$(VENV) && kg-gen neo4j-download -o ./generated_KGs/output_$(dataset)/knowledge_graph.json
+
+## download-wikipedia: Download Wikipedia articles as JSONL  [wiki_count=100] [wiki_lang=en]
+download-wikipedia:
+	$(VENV) && python data/download_data/wikipedia.py \
+		--language $(wiki_lang) \
+		--count $(wiki_count) \
+		--output data/wikipedia/wikipedia_$(wiki_lang)_$(wiki_count).jsonl
+
+## new-graph: Build KG from data and upload to Neo4j (clears existing graph)  [dataset=small|wikipedia]
+new-graph: ingest upload
+
+## add: Add all .jsonl files from data/add/ to the existing Neo4j graph  [dataset=small|wikipedia]
+add:
+	@files=$$(find data/add -name '*.jsonl' -type f 2>/dev/null); \
+	if [ -z "$$files" ]; then \
+		echo "ERROR: no .jsonl files found in data/add/"; \
+		exit 1; \
+	fi; \
+	echo "Adding files:"; \
+	echo "$$files" | sed 's/^/  /'; \
+	input_args=$$(echo "$$files" | sed 's/^/-i /' | tr '\n' ' '); \
+	$(VENV) && kg-gen run \
+		-c $(dataset_conf.$(dataset)) \
+		$$input_args \
+		-o ./generated_KGs/output_$(dataset)_add; \
+	$(VENV) && kg-gen neo4j-upload \
+		-o ./generated_KGs/output_$(dataset)_add
 
 ## plots: Generate visual plots from evaluation results  [dataset=small|wikipedia]
 plots:
