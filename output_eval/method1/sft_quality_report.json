@@ -3,41 +3,41 @@
   "metrics": {
     "faithfulness": 0.2,
     "faithfulness_detail": "28/35 responses contain entities not in source triples",
-    "answer_relevancy": 0.55,
+    "answer_relevancy": 0.554,
     "relevancy_detail": "Keyword overlap between instruction and response (heuristic proxy)",
-    "factual_correctness": 0.96,
+    "factual_correctness": 0.94,
     "factual_detail": "Presence of triple entities in response (heuristic proxy)",
     "note": "Heuristic evaluation (deepeval not available). Install deepeval for LLM-as-Judge scoring.",
     "semantic_diversity": {
-      "score": 0.367,
-      "unique_bigram_ratio": 0.367,
+      "score": 0.352,
+      "unique_bigram_ratio": 0.352,
       "most_common_bigrams": [
         {
-          "bigram": "associated_with",
-          "count": 16
-        },
-        {
-          "bigram": "the_first",
-          "count": 15
+          "bigram": "and_what",
+          "count": 17
         },
         {
           "bigram": "first_female",
           "count": 15
         },
         {
-          "bigram": "female_professor",
+          "bigram": "associated_with",
+          "count": 15
+        },
+        {
+          "bigram": "the_first",
           "count": 14
         },
         {
-          "bigram": "who_was",
-          "count": 14
+          "bigram": "female_professor",
+          "count": 13
         }
       ],
       "flag": "red",
-      "detail": "Low diversity \u2014 only 37% unique bigrams. Instructions may be too templated."
+      "detail": "Low diversity \u2014 only 35% unique bigrams. Instructions may be too templated."
     }
   },
   "details": [],
-  "overall_score": 0.519,
+  "overall_score": 0.511,
   "verdict": "\ud83d\udd36 Fair \u2014 consider improving the KG before generating SFT data."
 }

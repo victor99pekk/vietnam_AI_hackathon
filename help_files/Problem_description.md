@@ -35,7 +35,7 @@ Preliminary quality metrics: completeness, consistency, duplication level, missi
 Guides and templates for teams building AI datasets for Vietnamese LLMs.
 - Ask LLM to generate guidelines
 - Fix pipeline
-- Define input data specification
+- Define input data specification (done for text)
 
 ---
 
