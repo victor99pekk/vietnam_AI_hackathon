@@ -264,10 +264,10 @@ def run_method2(
     if skip_dataset_gen:
         # Resolve existing dataset paths from previous run
         logger.info("\n--- Step 2.1: Dataset Generation (SKIPPED, using existing) ---")
-        kg_train_path = output_dir / "kg_qa_train.jsonl"
-        kg_test_path = output_dir / "kg_qa_test.jsonl"
-        raw_train_path = output_dir / "raw_qa_train.jsonl"
-        raw_test_path = output_dir / "raw_qa_test.jsonl"
+        kg_train_path = output_dir / "test_training_data" / "kg_qa_train.jsonl"
+        kg_test_path = output_dir / "test_training_data" / "kg_qa_test.jsonl"
+        raw_train_path = output_dir / "test_training_data" / "raw_qa_train.jsonl"
+        raw_test_path = output_dir / "test_training_data" / "raw_qa_test.jsonl"
 
         if not kg_test_path.exists():
             logger.error(

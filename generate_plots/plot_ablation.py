@@ -84,11 +84,19 @@ def plot_ablation(
     with open(results_path) as f:
         data = json.load(f)
 
+    # Handle method2_results.json wrapper: {"ablation": {"models": {...}, "comparison": {...}}}
+    if "ablation" in data and isinstance(data["ablation"], dict):
+        data = data["ablation"]
+
     # Determine the structure — can be:
+    #   {"models": {"A_base": {...}, "B_kg": {...}, "C_raw": {...}}, "comparison": {...}}
     #   {"models": {"A": {...}, "B": {...}, "C": {...}}, "comparison": {...}}
     #   or a flat dict with per-model keys
-    models_data = data.get("models", {})
+    models_data_raw = data.get("models", {})
     comparison = data.get("comparison", {})
+
+    # Normalise model keys: "A_base" → "A", "B_kg" → "B", "C_raw" → "C", etc.
+    models_data = _normalise_model_keys(models_data_raw)
 
     # If no nested "models" key, try to extract model results from flat dict
     if not models_data:
@@ -131,6 +139,47 @@ def plot_ablation(
 # Helpers
 # ═══════════════════════════════════════════════════════════════
 
+def _normalise_model_keys(
+    models_data: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, float]]:
+    """Normalise model keys like 'A_base' → 'A', 'B_kg' → 'B', 'C_raw' → 'C'.
+
+    Also filters out metadata fields (model name, total_predictions, avg_response_length)
+    and keeps only numeric metric values.
+    """
+    # Fields to skip (not performance metrics)
+    SKIP_FIELDS = {"model", "total_predictions", "avg_response_length"}
+
+    normalised: dict[str, dict[str, float]] = {}
+    for key, metrics in models_data.items():
+        key_lower = key.lower()
+        # Use the first character if it's a recognised model letter (a/b/c),
+        # otherwise fall back to the full key
+        first_char = key_lower[0] if key_lower else ""
+        if first_char in ("a", "b", "c"):
+            short_name = first_char.upper()
+        else:
+            short_name = key  # keep as-is if no match
+
+        # Filter: only keep numeric metrics, skip metadata
+        filtered: dict[str, float] = {}
+        for mk, mv in metrics.items():
+            if mk in SKIP_FIELDS:
+                continue
+            if mv is None:
+                continue
+            if isinstance(mv, (int, float)):
+                filtered[mk] = float(mv)
+
+        # Also store the display name from the "model" field if present
+        if "model" in metrics:
+            filtered["_display_name"] = metrics["model"]  # type: ignore[assignment]
+
+        normalised[short_name] = filtered
+
+    return normalised
+
+
 def _extract_models_from_flat(data: dict[str, Any]) -> dict[str, dict[str, float]]:
     """Try to extract per-model metrics from a flat-ish results dict."""
     models: dict[str, dict[str, float]] = {}
@@ -165,6 +214,29 @@ def _extract_models_from_flat(data: dict[str, Any]) -> dict[str, dict[str, float
 def _normalize_metric_name(name: str) -> str:
     """Convert snake_case metric names to display labels."""
     return name.replace("_", " ").title().replace(" ", "\n")
+
+
+def _get_model_label(
+    model_key: str,
+    models_data: dict[str, dict[str, float]],
+) -> str:
+    """Get a human-readable label for a model.
+
+    Uses the _display_name from the data if available, otherwise
+    falls back to a hardcoded mapping.
+    """
+    model_metrics = models_data.get(model_key, {})
+    if "_display_name" in model_metrics:
+        # e.g. "A_base (Qwen2.5 base)" → keep as-is
+        return str(model_metrics["_display_name"])
+
+    # Fallback mapping
+    fallback = {
+        "A": "A (Base)",
+        "B": "B (KG-Managed)",
+        "C": "C (Raw-Text)",
+    }
+    return fallback.get(model_key, model_key)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -206,9 +278,7 @@ def _plot_model_bars(
             f"{model_name} (Raw-Text)" if "C" in model_name else
             f"{model_name} (Base)", "#95a5a6"
         ))
-        label = {
-            "A": "A (Base)", "B": "B (KG-Managed)", "C": "C (Raw-Text)",
-        }.get(model_name, model_name)
+        label = _get_model_label(model_name, models_data)
 
         bars = ax.bar(x + offset, values, width, label=label, color=color, edgecolor="white", linewidth=0.8)
 
@@ -264,15 +334,11 @@ def _plot_model_radar(
     ax.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
     ax.set_yticklabels(["0.2", "0.4", "0.6", "0.8", "1.0"], fontsize=7, color="grey")
 
-    model_labels = {
-        "A": "A (Base)", "B": "B (KG-Managed)", "C": "C (Raw-Text)",
-    }
-
     for model_name in sorted(models_data.keys()):
         values = [models_data[model_name].get(m, 0) for m in all_metrics]
         values += values[:1]
         color = MODEL_COLORS_SHORT.get(model_name, "#95a5a6")
-        label = model_labels.get(model_name, model_name)
+        label = _get_model_label(model_name, models_data)
         ax.fill(angles, values, alpha=0.08, color=color)
         ax.plot(angles, values, linewidth=2, color=color, marker="o", markersize=5, label=label)
 
@@ -289,6 +355,9 @@ def _plot_improvement(
     save_path: Path,
 ) -> None:
     """Bar chart showing B and C improvement over baseline A."""
+    # Metrics where lower is better — we invert them so "improvement" always means "better"
+    LOWER_IS_BETTER = {"hallucination_rate", "perplexity"}
+
     baseline = models_data.get("A", {})
     if not baseline:
         logger.warning("No baseline Model A data — skipping improvement plot")
@@ -301,6 +370,9 @@ def _plot_improvement(
     b_data = models_data.get("B", {})
     c_data = models_data.get("C", {})
 
+    b_label = _get_model_label("B", models_data)
+    c_label = _get_model_label("C", models_data)
+
     b_improvements = []
     c_improvements = []
     metric_labels = []
@@ -309,8 +381,14 @@ def _plot_improvement(
         base_val = baseline.get(m, 0)
         if base_val == 0:
             continue
-        b_improvements.append(((b_data.get(m, 0) - base_val) / base_val) * 100)
-        c_improvements.append(((c_data.get(m, 0) - base_val) / base_val) * 100)
+        b_diff = b_data.get(m, 0) - base_val
+        c_diff = c_data.get(m, 0) - base_val
+        # Invert "lower is better" metrics so positive = improvement
+        if m in LOWER_IS_BETTER:
+            b_diff = -b_diff
+            c_diff = -c_diff
+        b_improvements.append((b_diff / base_val) * 100)
+        c_improvements.append((c_diff / base_val) * 100)
         metric_labels.append(_normalize_metric_name(m))
 
     if not metric_labels:
@@ -321,9 +399,9 @@ def _plot_improvement(
 
     fig, ax = plt.subplots(figsize=(max(8, len(metric_labels) * 1.8), 5.5))
 
-    bars_b = ax.bar(x - width / 2, b_improvements, width, label="B (KG-Managed)",
+    bars_b = ax.bar(x - width / 2, b_improvements, width, label=b_label,
                      color=MODEL_COLORS_SHORT["B"], edgecolor="white", linewidth=0.8)
-    bars_c = ax.bar(x + width / 2, c_improvements, width, label="C (Raw-Text)",
+    bars_c = ax.bar(x + width / 2, c_improvements, width, label=c_label,
                      color=MODEL_COLORS_SHORT["C"], edgecolor="white", linewidth=0.8)
 
     # Zero line

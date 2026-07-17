@@ -1,0 +1,2262 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d17" for="edge" attr.name="description" attr.type="string" />
+  <key id="d16" for="edge" attr.name="relations" attr.type="string" />
+  <key id="d15" for="edge" attr.name="source_chunk_ids" attr.type="string" />
+  <key id="d14" for="edge" attr.name="source_texts" attr.type="string" />
+  <key id="d13" for="edge" attr.name="weight" attr.type="long" />
+  <key id="d12" for="edge" attr.name="predicates" attr.type="string" />
+  <key id="d11" for="node" attr.name="embedding" attr.type="string" />
+  <key id="d10" for="node" attr.name="confidenceScore" attr.type="double" />
+  <key id="d9" for="node" attr.name="importanceScore" attr.type="double" />
+  <key id="d8" for="node" attr.name="chunk_count" attr.type="long" />
+  <key id="d7" for="node" attr.name="description" attr.type="string" />
+  <key id="d6" for="node" attr.name="name" attr.type="string" />
+  <key id="d5" for="node" attr.name="index" attr.type="long" />
+  <key id="d4" for="node" attr.name="tokenCount" attr.type="long" />
+  <key id="d3" for="node" attr.name="text" attr.type="string" />
+  <key id="d2" for="node" attr.name="source" attr.type="string" />
+  <key id="d1" for="node" attr.name="type" attr.type="string" />
+  <key id="d0" for="node" attr.name="id" attr.type="string" />
+  <graph edgedefault="directed">
+    <node id="chunk:3b463fb4f43575c5995e">
+      <data key="d0">chunk:3b463fb4f43575c5995e</data>
+      <data key="d1">Chunk</data>
+      <data key="d2">data/debugg_sample/alan_turing.txt</data>
+      <data key="d3">Alan Turing was born in London, England in 1912. He studied at King's College, Cambridge and later earned his PhD from Princeton University.
+
+During World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.</data>
+      <data key="d4">56</data>
+      <data key="d5">0</data>
+    </node>
+    <node id="chunk:62c434903c478b7df0d8">
+      <data key="d0">chunk:62c434903c478b7df0d8</data>
+      <data key="d1">Chunk</data>
+      <data key="d2">data/debugg_sample/alan_turing.txt</data>
+      <data key="d3">ode. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.
+
+After the war, Turing worked at the National Physical Laboratory and later at the University of Manchester. He is widely considered the father of theoretical computer science and artificial intelligence. His 1950 paper "Computing Machinery and Intelligence" introduced the Turing Test.</data>
+      <data key="d4">54</data>
+      <data key="d5">1</data>
+    </node>
+    <node id="chunk:b78da64bbb3bef1dc9cf">
+      <data key="d0">chunk:b78da64bbb3bef1dc9cf</data>
+      <data key="d1">Chunk</data>
+      <data key="d2">data/debugg_sample/alan_turing.txt</data>
+      <data key="d3">cial intelligence. His 1950 paper "Computing Machinery and Intelligence" introduced the Turing Test.
+
+Turing also made significant contributions to mathematical biology, publishing work on morphogenesis. He died in 1954 in Wilmslow, England.</data>
+      <data key="d4">32</data>
+      <data key="d5">2</data>
+    </node>
+    <node id="chunk:65841b8a1c7b64044f47">
+      <data key="d0">chunk:65841b8a1c7b64044f47</data>
+      <data key="d1">Chunk</data>
+      <data key="d2">data/debugg_sample/marie_curie.txt</data>
+      <data key="d3">Marie Curie was born in Warsaw, Poland in 1867. She is best known for her pioneering research on radioactivity. She discovered the elements polonium and radium.
+
+Curie worked at the University of Paris, where she became the first female professor. In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.</data>
+      <data key="d4">61</data>
+      <data key="d5">0</data>
+    </node>
+    <node id="chunk:5f496075cac1bc777856">
+      <data key="d0">chunk:5f496075cac1bc777856</data>
+      <data key="d1">Chunk</data>
+      <data key="d2">data/debugg_sample/marie_curie.txt</data>
+      <data key="d3">Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.
+
+In 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium. She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today.
+
+Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.</data>
+      <data key="d4">70</data>
+      <data key="d5">1</data>
+    </node>
+    <node id="document:885bd4414d90ae05ddde">
+      <data key="d0">document:885bd4414d90ae05ddde</data>
+      <data key="d1">Document</data>
+      <data key="d6">alan_turing.txt</data>
+      <data key="d7">Source document: data/debugg_sample/alan_turing.txt</data>
+      <data key="d2">["data/debugg_sample/alan_turing.txt"]</data>
+      <data key="d8">3</data>
+    </node>
+    <node id="document:e5c28ab9a7af34c2d3b1">
+      <data key="d0">document:e5c28ab9a7af34c2d3b1</data>
+      <data key="d1">Document</data>
+      <data key="d6">marie_curie.txt</data>
+      <data key="d7">Source document: data/debugg_sample/marie_curie.txt</data>
+      <data key="d2">["data/debugg_sample/marie_curie.txt"]</data>
+      <data key="d8">2</data>
+    </node>
+    <node id="entity:a485dd67852d2a5d276b">
+      <data key="d0">entity:a485dd67852d2a5d276b</data>
+      <data key="d1">PERSON</data>
+      <data key="d6">Alan Turing</data>
+      <data key="d7">Alan Turing was a pioneering British mathematician, logician, and computer scientist, born in London in 1912. He is considered the father of theoretical computer science and artificial intelligence, having made foundational contributions to both fields as well as to mathematical biology. During World War II, he worked at Bletchley Park, where he developed the Bombe and played a crucial role in breaking the Enigma code. After the war, he continued his influential work at the National Physical Laboratory and the University of Manchester.</data>
+      <data key="d9">0.008066</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:6cd087ba88cc65156991">
+      <data key="d0">entity:6cd087ba88cc65156991</data>
+      <data key="d1">LOCATION</data>
+      <data key="d6">London, England</data>
+      <data key="d7">The birthplace of Alan Turing, located in England.</data>
+      <data key="d9">0.00732</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:fb4c570edce747778471">
+      <data key="d0">entity:fb4c570edce747778471</data>
+      <data key="d1">DATE</data>
+      <data key="d6">1912</data>
+      <data key="d7">The year Alan Turing was born.</data>
+      <data key="d9">0.00732</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:824150c30149cb1799b6">
+      <data key="d0">entity:824150c30149cb1799b6</data>
+      <data key="d1">ORGANIZATION</data>
+      <data key="d6">King's College, Cambridge</data>
+      <data key="d7">The college at the University of Cambridge where Alan Turing studied.</data>
+      <data key="d9">0.00732</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:c17ea67497d6a1933d22">
+      <data key="d0">entity:c17ea67497d6a1933d22</data>
+      <data key="d1">ORGANIZATION</data>
+      <data key="d6">Princeton University</data>
+      <data key="d7">The university where Alan Turing earned his PhD.</data>
+      <data key="d9">0.00732</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:adeae57afbb4f24d26d3">
+      <data key="d0">entity:adeae57afbb4f24d26d3</data>
+      <data key="d1">EVENT</data>
+      <data key="d6">World War II</data>
+      <data key="d7">A global war during which Alan Turing worked on breaking German codes.</data>
+      <data key="d9">0.00732</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:52400027e2e9fa3be9de">
+      <data key="d0">entity:52400027e2e9fa3be9de</data>
+      <data key="d1">LOCATION</data>
+      <data key="d6">Bletchley Park</data>
+      <data key="d7">The British codebreaking center where Alan Turing worked during World War II.</data>
+      <data key="d9">0.00732</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:fa1e75f882b97a4e5e48">
+      <data key="d0">entity:fa1e75f882b97a4e5e48</data>
+      <data key="d1">TECHNOLOGY</data>
+      <data key="d6">Enigma code</data>
+      <data key="d7">The German encryption method that Alan Turing helped to break.</data>
+      <data key="d9">0.010652</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:e51b8d3b10d0c288c916">
+      <data key="d0">entity:e51b8d3b10d0c288c916</data>
+      <data key="d1">TECHNOLOGY</data>
+      <data key="d6">Bombe</data>
+      <data key="d7">The Bombe is an electromechanical device developed by Alan Turing during World War II to decipher messages encrypted by the Enigma machine.</data>
+      <data key="d9">0.007816</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:fc5365480a064078fc61">
+      <data key="d0">entity:fc5365480a064078fc61</data>
+      <data key="d1">TECHNOLOGY</data>
+      <data key="d6">Enigma</data>
+      <data key="d7">An encryption machine whose messages were deciphered by the Bombe.</data>
+      <data key="d9">0.010302</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:afed28b3c7a9acbfceb6">
+      <data key="d0">entity:afed28b3c7a9acbfceb6</data>
+      <data key="d1">ORGANIZATION</data>
+      <data key="d6">National Physical Laboratory</data>
+      <data key="d7">A research institution where Alan Turing worked after the war.</data>
+      <data key="d9">0.007314</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:ef76ddf7e416d4edfbd1">
+      <data key="d0">entity:ef76ddf7e416d4edfbd1</data>
+      <data key="d1">ORGANIZATION</data>
+      <data key="d6">University of Manchester</data>
+      <data key="d7">An academic institution where Alan Turing worked later in his career.</data>
+      <data key="d9">0.007314</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:d74bf387646800d91698">
+      <data key="d0">entity:d74bf387646800d91698</data>
+      <data key="d1">SCIENCE</data>
+      <data key="d6">theoretical computer science</data>
+      <data key="d7">A field of study for which Alan Turing is considered the founding father.</data>
+      <data key="d9">0.007314</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:df29e356245aac7381db">
+      <data key="d0">entity:df29e356245aac7381db</data>
+      <data key="d1">SCIENCE</data>
+      <data key="d6">artificial intelligence</data>
+      <data key="d7">A field of study for which Alan Turing is considered the founding father.</data>
+      <data key="d9">0.007314</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:555e7011140f7de124c5">
+      <data key="d0">entity:555e7011140f7de124c5</data>
+      <data key="d1">WORK</data>
+      <data key="d6">Computing Machinery and Intelligence</data>
+      <data key="d7">Computing Machinery and Intelligence is a seminal 1950 paper authored by Alan Turing that introduced the Turing Test.</data>
+      <data key="d9">0.007908</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:cd712ce88bce4bbc4740">
+      <data key="d0">entity:cd712ce88bce4bbc4740</data>
+      <data key="d1">CONCEPT</data>
+      <data key="d6">Turing Test</data>
+      <data key="d7">The Turing Test is a test of a machine's ability to exhibit intelligent behavior equivalent to, or indistinguishable from, that of a human. It was introduced by Alan Turing in his 1950 paper, "Computing Machinery and Intelligence."</data>
+      <data key="d9">0.011279</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:ff32a994760dd68fa6b3">
+      <data key="d0">entity:ff32a994760dd68fa6b3</data>
+      <data key="d1">DATE</data>
+      <data key="d6">1950</data>
+      <data key="d7">1950 is the year in which Alan Turing published his influential and seminal paper, "Computing Machinery and Intelligence."</data>
+      <data key="d9">0.007908</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:1d9155a50045a14aef4f">
+      <data key="d0">entity:1d9155a50045a14aef4f</data>
+      <data key="d1">DATE</data>
+      <data key="d6">1954</data>
+      <data key="d7">The year of Alan Turing's death.</data>
+      <data key="d9">0.007412</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:a5f94b43ab63927e5f65">
+      <data key="d0">entity:a5f94b43ab63927e5f65</data>
+      <data key="d1">LOCATION</data>
+      <data key="d6">Wilmslow, England</data>
+      <data key="d7">The town in England where Alan Turing died.</data>
+      <data key="d9">0.007412</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:caacf5838ce39a15a105">
+      <data key="d0">entity:caacf5838ce39a15a105</data>
+      <data key="d1">SCIENCE</data>
+      <data key="d6">mathematical biology</data>
+      <data key="d7">A field of study to which Alan Turing contributed, specifically through his work on morphogenesis.</data>
+      <data key="d9">0.007412</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:48d7f2361ef161a49d1b">
+      <data key="d0">entity:48d7f2361ef161a49d1b</data>
+      <data key="d1">CONCEPT</data>
+      <data key="d6">morphogenesis</data>
+      <data key="d7">The biological process that causes an organism to develop its shape, which was the subject of Turing's work in mathematical biology.</data>
+      <data key="d9">0.013732</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:dd5d0ba9d265e3595bd6">
+      <data key="d0">entity:dd5d0ba9d265e3595bd6</data>
+      <data key="d1">CONCEPT</data>
+      <data key="d6">artificial intelligence</data>
+      <data key="d7">A field of computer science focused on creating machines capable of intelligent behavior, to which Alan Turing made foundational contributions.</data>
+      <data key="d9">0.020403</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:360a2e1386408097d3d5">
+      <data key="d0">entity:360a2e1386408097d3d5</data>
+      <data key="d1">PERSON</data>
+      <data key="d6">Marie Curie</data>
+      <data key="d7">Marie Curie was a pioneering physicist and chemist, born in Warsaw, Poland, in 1867. She is renowned for her groundbreaking research on radioactivity, which led to the discovery of the elements polonium and radium. Her exceptional contributions to science earned her Nobel Prizes in both Physics and Chemistry. In addition to her research, she founded the Curie Institutes, which continue to be important centers for medical research. Marie Curie died from radiation-induced aplastic anemia, a condition resulting from her prolonged exposure to radioactive materials during her scientific work.</data>
+      <data key="d9">0.02882</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:8f3c37c7907288674eee">
+      <data key="d0">entity:8f3c37c7907288674eee</data>
+      <data key="d1">LOCATION</data>
+      <data key="d6">Warsaw</data>
+      <data key="d7">Warsaw is the capital city of Poland, notable as the birthplace of Marie Curie and the location of one of the Curie Institutes that she founded.</data>
+      <data key="d9">0.009083</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:17f73b43b68b92063205">
+      <data key="d0">entity:17f73b43b68b92063205</data>
+      <data key="d1">LOCATION</data>
+      <data key="d6">Poland</data>
+      <data key="d7">Marie Curie was born in Poland, her native country, and she later named the element polonium in honor of her homeland.</data>
+      <data key="d9">0.017158</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:efda500bef12d027bed2">
+      <data key="d0">entity:efda500bef12d027bed2</data>
+      <data key="d1">DATE</data>
+      <data key="d6">1867</data>
+      <data key="d7">The year Marie Curie was born.</data>
+      <data key="d9">0.007639</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:e11aa880be5576adeab0">
+      <data key="d0">entity:e11aa880be5576adeab0</data>
+      <data key="d1">SCIENCE</data>
+      <data key="d6">radioactivity</data>
+      <data key="d7">Radioactivity is the phenomenon of spontaneous emission of radiation. Pioneering research on this phenomenon was conducted by Marie Curie, who, along with Pierre Curie and Henri Becquerel, was recognized for this work.</data>
+      <data key="d9">0.056167</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:ae7590a26638946f46bb">
+      <data key="d0">entity:ae7590a26638946f46bb</data>
+      <data key="d1">SCIENCE</data>
+      <data key="d6">polonium</data>
+      <data key="d7">Polonium is a radioactive chemical element discovered by Marie Curie, who named it after her native Poland.</data>
+      <data key="d9">0.009401</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:5278405a24ef270d45e8">
+      <data key="d0">entity:5278405a24ef270d45e8</data>
+      <data key="d1">SCIENCE</data>
+      <data key="d6">radium</data>
+      <data key="d7">Radium is a radioactive chemical element discovered by Marie Curie, a groundbreaking achievement that contributed to her winning a second Nobel Prize.</data>
+      <data key="d9">0.011004</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:d50e9dfd99527b72d868">
+      <data key="d0">entity:d50e9dfd99527b72d868</data>
+      <data key="d1">ORGANIZATION</data>
+      <data key="d6">University of Paris</data>
+      <data key="d7">The institution where Marie Curie worked and became the first female professor.</data>
+      <data key="d9">0.007639</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:47f3cbe05995ca034577">
+      <data key="d0">entity:47f3cbe05995ca034577</data>
+      <data key="d1">EVENT</data>
+      <data key="d6">Nobel Prize in Physics</data>
+      <data key="d7">The Nobel Prize in Physics is a prestigious award that was received jointly by Marie Curie, Pierre Curie, and Henri Becquerel in 1903. They were recognized for their collective work on radioactivity.</data>
+      <data key="d9">0.094525</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:22d9b9b89e9481d9f666">
+      <data key="d0">entity:22d9b9b89e9481d9f666</data>
+      <data key="d1">DATE</data>
+      <data key="d6">1903</data>
+      <data key="d7">1903 was the year Marie Curie, Pierre Curie, and Henri Becquerel were jointly awarded the Nobel Prize in Physics for their groundbreaking work on radioactivity.</data>
+      <data key="d9">0.044288</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:731c828e503c64269c56">
+      <data key="d0">entity:731c828e503c64269c56</data>
+      <data key="d1">PERSON</data>
+      <data key="d6">Pierre Curie</data>
+      <data key="d7">Pierre Curie was a physicist and the husband of Marie Curie. He shared the 1903 Nobel Prize in Physics with Marie Curie and Henri Becquerel for their work on radioactivity.</data>
+      <data key="d9">0.016394</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:e27165f1ae951a05643c">
+      <data key="d0">entity:e27165f1ae951a05643c</data>
+      <data key="d1">PERSON</data>
+      <data key="d6">Henri Becquerel</data>
+      <data key="d7">Henri Becquerel was a physicist who shared the 1903 Nobel Prize in Physics with Marie and Pierre Curie for their collective work on radioactivity, including his discovery of spontaneous radioactivity.</data>
+      <data key="d9">0.018725</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:c0a1cce08f3b3266cbab">
+      <data key="d0">entity:c0a1cce08f3b3266cbab</data>
+      <data key="d1">EVENT</data>
+      <data key="d6">first female professor</data>
+      <data key="d7">Marie Curie's historic achievement at the University of Paris, becoming the first woman to hold a professorship there.</data>
+      <data key="d9">0.010895</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:4209965dc2d49dee62e2">
+      <data key="d0">entity:4209965dc2d49dee62e2</data>
+      <data key="d1">WORK</data>
+      <data key="d6">research on radioactivity</data>
+      <data key="d7">The pioneering scientific work conducted by Marie Curie, Pierre Curie, and Henri Becquerel that earned them the 1903 Nobel Prize in Physics.</data>
+      <data key="d9">0.04086</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:e2b04fa8c7accad35f1a">
+      <data key="d0">entity:e2b04fa8c7accad35f1a</data>
+      <data key="d1">EVENT</data>
+      <data key="d6">Nobel Prize in Chemistry</data>
+      <data key="d7">A prestigious award won by Marie Curie in 1911 for her discovery of the elements radium and polonium.</data>
+      <data key="d9">0.027026</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:fc300ae89ef28083692f">
+      <data key="d0">entity:fc300ae89ef28083692f</data>
+      <data key="d1">ORGANIZATION</data>
+      <data key="d6">Curie Institutes</data>
+      <data key="d7">Major medical research centers founded by Marie Curie in Paris and Warsaw that remain operational today.</data>
+      <data key="d9">0.007465</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:d8f1c409f8d92766d88a">
+      <data key="d0">entity:d8f1c409f8d92766d88a</data>
+      <data key="d1">LOCATION</data>
+      <data key="d6">Paris</data>
+      <data key="d7">The capital of France, home to one of the Curie Institutes founded by Marie Curie.</data>
+      <data key="d9">0.008738</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:a1941c9876d0c907aaa8">
+      <data key="d0">entity:a1941c9876d0c907aaa8</data>
+      <data key="d1">DATE</data>
+      <data key="d6">1911</data>
+      <data key="d7">The year Marie Curie won her second Nobel Prize, this time in Chemistry.</data>
+      <data key="d9">0.006645</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:9a94dd09af8a6d1965ae">
+      <data key="d0">entity:9a94dd09af8a6d1965ae</data>
+      <data key="d1">DATE</data>
+      <data key="d6">1934</data>
+      <data key="d7">The year Marie Curie died in Passy, France.</data>
+      <data key="d9">0.007465</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:876a02aedcd6c0d357db">
+      <data key="d0">entity:876a02aedcd6c0d357db</data>
+      <data key="d1">LOCATION</data>
+      <data key="d6">Passy</data>
+      <data key="d7">A commune in France where Marie Curie died.</data>
+      <data key="d9">0.009586</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:bcf687c5a0cb58ffff66">
+      <data key="d0">entity:bcf687c5a0cb58ffff66</data>
+      <data key="d1">SCIENCE</data>
+      <data key="d6">aplastic anemia</data>
+      <data key="d7">A medical condition caused by bone marrow failure, which led to Marie Curie's death due to long-term radiation exposure.</data>
+      <data key="d9">0.058842</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:f30387fb60ab255e1f5a">
+      <data key="d0">entity:f30387fb60ab255e1f5a</data>
+      <data key="d1">LOCATION</data>
+      <data key="d6">France</data>
+      <data key="d7">The country where Marie Curie died and where one of the Curie Institutes is located.</data>
+      <data key="d9">0.023091</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:cdfc694384c8a2e0b7ae">
+      <data key="d0">entity:cdfc694384c8a2e0b7ae</data>
+      <data key="d1">SCIENCE</data>
+      <data key="d6">radiation</data>
+      <data key="d7">The emission of energy as electromagnetic waves or particles, long-term exposure to which likely caused Marie Curie's fatal illness.</data>
+      <data key="d9">0.055914</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:11a3baf19ad2d0118396">
+      <data key="d0">entity:11a3baf19ad2d0118396</data>
+      <data key="d1">SCIENCE</data>
+      <data key="d6">medical research</data>
+      <data key="d7">The field of scientific investigation focused on human health and disease, which the Curie Institutes continue to advance.</data>
+      <data key="d9">0.008738</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:c0a08013a05522039eef">
+      <data key="d0">entity:c0a08013a05522039eef</data>
+      <data key="d1">SCIENCE</data>
+      <data key="d6">Chemistry</data>
+      <data key="d7">The scientific discipline in which Marie Curie won her second Nobel Prize for discovering radium and polonium.</data>
+      <data key="d9">0.007465</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:00074dafc6e65164508e">
+      <data key="d0">entity:00074dafc6e65164508e</data>
+      <data key="d1">SCIENCE</data>
+      <data key="d6">Physics</data>
+      <data key="d7">The scientific discipline in which Marie Curie shared her first Nobel Prize for work on radioactivity.</data>
+      <data key="d9">0.007465</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:beb6f735c15108bcb0d8">
+      <data key="d0">entity:beb6f735c15108bcb0d8</data>
+      <data key="d1">EVENT</data>
+      <data key="d6">discovery of radium and polonium</data>
+      <data key="d7">The scientific breakthrough by Marie Curie that led to her winning the Nobel Prize in Chemistry in 1911.</data>
+      <data key="d9">0.007465</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:62df4adfb804a507e3ed">
+      <data key="d0">entity:62df4adfb804a507e3ed</data>
+      <data key="d1">WORK</data>
+      <data key="d6">work on radioactivity</data>
+      <data key="d7">The collaborative research conducted by Marie Curie, Pierre Curie, and Henri Becquerel that earned them the Nobel Prize in Physics.</data>
+      <data key="d9">0.008062</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:710c3a576ff45ab3b7da">
+      <data key="d0">entity:710c3a576ff45ab3b7da</data>
+      <data key="d1">CONCEPT</data>
+      <data key="d6">long-term exposure to radiation</data>
+      <data key="d7">The prolonged contact with radioactive materials that likely caused Marie Curie's aplastic anemia and subsequent death.</data>
+      <data key="d9">0.006645</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:977ad1390a6933ccac84">
+      <data key="d0">entity:977ad1390a6933ccac84</data>
+      <data key="d1">SCIENCE</data>
+      <data key="d6">bone marrow failure</data>
+      <data key="d7">The underlying mechanism of aplastic anemia, which caused Marie Curie's death due to radiation damage.</data>
+      <data key="d9">0.057006</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:d9df4233e327b7ca7579">
+      <data key="d0">entity:d9df4233e327b7ca7579</data>
+      <data key="d1">EVENT</data>
+      <data key="d6">first Nobel Prize</data>
+      <data key="d7">The Nobel Prize in Physics awarded to Marie Curie, Pierre Curie, and Henri Becquerel, marking Marie Curie's first Nobel Prize.</data>
+      <data key="d9">0.025549</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:ab7af1cd37fe48eafdbf">
+      <data key="d0">entity:ab7af1cd37fe48eafdbf</data>
+      <data key="d1">EVENT</data>
+      <data key="d6">second Nobel Prize</data>
+      <data key="d7">The Nobel Prize in Chemistry awarded solely to Marie Curie in 1911, marking her second Nobel Prize.</data>
+      <data key="d9">0.009478</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:3b04f6cfbd5faffbbad4">
+      <data key="d0">entity:3b04f6cfbd5faffbbad4</data>
+      <data key="d1">CONCEPT</data>
+      <data key="d6">female scientist</data>
+      <data key="d7">Marie Curie was a pioneering female scientist who broke barriers by winning Nobel Prizes in two different scientific fields.</data>
+      <data key="d9">0.007465</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:ecbd604e66003ab6060c">
+      <data key="d0">entity:ecbd604e66003ab6060c</data>
+      <data key="d1">CONCEPT</data>
+      <data key="d6">Nobel laureate</data>
+      <data key="d7">A recipient of a Nobel Prize; Marie Curie was the first person to win Nobel Prizes in two different scientific disciplines.</data>
+      <data key="d9">0.007465</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:19ddc2bfade0a51cb3a1">
+      <data key="d0">entity:19ddc2bfade0a51cb3a1</data>
+      <data key="d1">CONCEPT</data>
+      <data key="d6">scientific pioneer</data>
+      <data key="d7">Marie Curie is recognized as a trailblazer in the study of radioactivity and a role model in science.</data>
+      <data key="d9">0.008738</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:f098d67858ae46fa8817">
+      <data key="d0">entity:f098d67858ae46fa8817</data>
+      <data key="d1">SCIENCE</data>
+      <data key="d6">radioactive elements</data>
+      <data key="d7">Elements that exhibit radioactivity, such as radium and polonium discovered by Marie Curie.</data>
+      <data key="d9">0.012197</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <node id="entity:3240a82373a11d3a9e52">
+      <data key="d0">entity:3240a82373a11d3a9e52</data>
+      <data key="d1">CONCEPT</data>
+      <data key="d6">scientific collaboration</data>
+      <data key="d7">The partnership between Marie Curie, Pierre Curie, and Henri Becquerel in researching radioactivity.</data>
+      <data key="d9">0.006645</data>
+      <data key="d10">1.0</data>
+      <data key="d11" />
+    </node>
+    <edge source="chunk:3b463fb4f43575c5995e" target="chunk:62c434903c478b7df0d8">
+      <data key="d12">["NEXT"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "NEXT", "evidence_sentence": "", "source_chunk_id": "chunk:3b463fb4f43575c5995e"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:3b463fb4f43575c5995e" target="document:885bd4414d90ae05ddde">
+      <data key="d12">["PART_OF"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "PART_OF", "evidence_sentence": "", "source_chunk_id": "chunk:3b463fb4f43575c5995e"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:3b463fb4f43575c5995e" target="entity:a485dd67852d2a5d276b">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Alan Turing was born in London, England in 1912."]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Alan Turing was born in London, England in 1912.", "source_chunk_id": "chunk:3b463fb4f43575c5995e"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:3b463fb4f43575c5995e" target="entity:6cd087ba88cc65156991">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Alan Turing was born in London, England in 1912."]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Alan Turing was born in London, England in 1912.", "source_chunk_id": "chunk:3b463fb4f43575c5995e"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:3b463fb4f43575c5995e" target="entity:fb4c570edce747778471">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Alan Turing was born in London, England in 1912."]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Alan Turing was born in London, England in 1912.", "source_chunk_id": "chunk:3b463fb4f43575c5995e"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:3b463fb4f43575c5995e" target="entity:824150c30149cb1799b6">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["He studied at King's College, Cambridge and later earned his PhD from Princeton University."]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "He studied at King's College, Cambridge and later earned his PhD from Princeton University.", "source_chunk_id": "chunk:3b463fb4f43575c5995e"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:3b463fb4f43575c5995e" target="entity:c17ea67497d6a1933d22">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["He studied at King's College, Cambridge and later earned his PhD from Princeton University."]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "He studied at King's College, Cambridge and later earned his PhD from Princeton University.", "source_chunk_id": "chunk:3b463fb4f43575c5995e"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:3b463fb4f43575c5995e" target="entity:adeae57afbb4f24d26d3">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["During World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code."]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "During World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code.", "source_chunk_id": "chunk:3b463fb4f43575c5995e"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:3b463fb4f43575c5995e" target="entity:52400027e2e9fa3be9de">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["During World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code."]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "During World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code.", "source_chunk_id": "chunk:3b463fb4f43575c5995e"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:3b463fb4f43575c5995e" target="entity:fa1e75f882b97a4e5e48">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["During World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code."]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "During World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code.", "source_chunk_id": "chunk:3b463fb4f43575c5995e"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:3b463fb4f43575c5995e" target="entity:e51b8d3b10d0c288c916">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages."]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.", "source_chunk_id": "chunk:3b463fb4f43575c5995e"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:62c434903c478b7df0d8" target="chunk:b78da64bbb3bef1dc9cf">
+      <data key="d12">["NEXT"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "NEXT", "evidence_sentence": "", "source_chunk_id": "chunk:62c434903c478b7df0d8"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:62c434903c478b7df0d8" target="document:885bd4414d90ae05ddde">
+      <data key="d12">["PART_OF"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "PART_OF", "evidence_sentence": "", "source_chunk_id": "chunk:62c434903c478b7df0d8"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:62c434903c478b7df0d8" target="entity:a485dd67852d2a5d276b">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "", "source_chunk_id": "chunk:62c434903c478b7df0d8"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:62c434903c478b7df0d8" target="entity:e51b8d3b10d0c288c916">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages."]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.", "source_chunk_id": "chunk:62c434903c478b7df0d8"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:62c434903c478b7df0d8" target="entity:fc5365480a064078fc61">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages."]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.", "source_chunk_id": "chunk:62c434903c478b7df0d8"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:62c434903c478b7df0d8" target="entity:afed28b3c7a9acbfceb6">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["After the war, Turing worked at the National Physical Laboratory and later at the University of Manchester."]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "After the war, Turing worked at the National Physical Laboratory and later at the University of Manchester.", "source_chunk_id": "chunk:62c434903c478b7df0d8"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:62c434903c478b7df0d8" target="entity:ef76ddf7e416d4edfbd1">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["After the war, Turing worked at the National Physical Laboratory and later at the University of Manchester."]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "After the war, Turing worked at the National Physical Laboratory and later at the University of Manchester.", "source_chunk_id": "chunk:62c434903c478b7df0d8"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:62c434903c478b7df0d8" target="entity:d74bf387646800d91698">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["He is widely considered the father of theoretical computer science and artificial intelligence."]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "He is widely considered the father of theoretical computer science and artificial intelligence.", "source_chunk_id": "chunk:62c434903c478b7df0d8"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:62c434903c478b7df0d8" target="entity:df29e356245aac7381db">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["He is widely considered the father of theoretical computer science and artificial intelligence."]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "He is widely considered the father of theoretical computer science and artificial intelligence.", "source_chunk_id": "chunk:62c434903c478b7df0d8"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:62c434903c478b7df0d8" target="entity:555e7011140f7de124c5">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test."]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.", "source_chunk_id": "chunk:62c434903c478b7df0d8"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:62c434903c478b7df0d8" target="entity:cd712ce88bce4bbc4740">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test."]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.", "source_chunk_id": "chunk:62c434903c478b7df0d8"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:62c434903c478b7df0d8" target="entity:ff32a994760dd68fa6b3">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test."]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.", "source_chunk_id": "chunk:62c434903c478b7df0d8"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:b78da64bbb3bef1dc9cf" target="document:885bd4414d90ae05ddde">
+      <data key="d12">["PART_OF"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "PART_OF", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:b78da64bbb3bef1dc9cf" target="entity:a485dd67852d2a5d276b">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:b78da64bbb3bef1dc9cf" target="entity:555e7011140f7de124c5">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test."]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:b78da64bbb3bef1dc9cf" target="entity:cd712ce88bce4bbc4740">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test."]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:b78da64bbb3bef1dc9cf" target="entity:ff32a994760dd68fa6b3">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test."]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:b78da64bbb3bef1dc9cf" target="entity:1d9155a50045a14aef4f">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["He died in 1954 in Wilmslow, England."]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "He died in 1954 in Wilmslow, England.", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:b78da64bbb3bef1dc9cf" target="entity:a5f94b43ab63927e5f65">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["He died in 1954 in Wilmslow, England."]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "He died in 1954 in Wilmslow, England.", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:b78da64bbb3bef1dc9cf" target="entity:caacf5838ce39a15a105">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Turing also made significant contributions to mathematical biology, publishing work on morphogenesis."]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Turing also made significant contributions to mathematical biology, publishing work on morphogenesis.", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:b78da64bbb3bef1dc9cf" target="entity:48d7f2361ef161a49d1b">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Turing also made significant contributions to mathematical biology, publishing work on morphogenesis."]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Turing also made significant contributions to mathematical biology, publishing work on morphogenesis.", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:b78da64bbb3bef1dc9cf" target="entity:dd5d0ba9d265e3595bd6">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="chunk:5f496075cac1bc777856">
+      <data key="d12">["NEXT"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "NEXT", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="document:e5c28ab9a7af34c2d3b1">
+      <data key="d12">["PART_OF"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "PART_OF", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:360a2e1386408097d3d5">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Marie Curie was born in Warsaw, Poland in 1867."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Marie Curie was born in Warsaw, Poland in 1867.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:8f3c37c7907288674eee">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Marie Curie was born in Warsaw, Poland in 1867."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Marie Curie was born in Warsaw, Poland in 1867.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:17f73b43b68b92063205">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Marie Curie was born in Warsaw, Poland in 1867."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Marie Curie was born in Warsaw, Poland in 1867.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:efda500bef12d027bed2">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Marie Curie was born in Warsaw, Poland in 1867."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Marie Curie was born in Warsaw, Poland in 1867.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:e11aa880be5576adeab0">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["She is best known for her pioneering research on radioactivity."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "She is best known for her pioneering research on radioactivity.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:ae7590a26638946f46bb">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["She discovered the elements polonium and radium."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "She discovered the elements polonium and radium.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:5278405a24ef270d45e8">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["She discovered the elements polonium and radium."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "She discovered the elements polonium and radium.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:d50e9dfd99527b72d868">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Curie worked at the University of Paris, where she became the first female professor."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Curie worked at the University of Paris, where she became the first female professor.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:47f3cbe05995ca034577">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:22d9b9b89e9481d9f666">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:731c828e503c64269c56">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:e27165f1ae951a05643c">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:c0a1cce08f3b3266cbab">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Curie worked at the University of Paris, where she became the first female professor."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Curie worked at the University of Paris, where she became the first female professor.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:65841b8a1c7b64044f47" target="entity:4209965dc2d49dee62e2">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["She is best known for her pioneering research on radioactivity."]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "She is best known for her pioneering research on radioactivity.", "source_chunk_id": "chunk:65841b8a1c7b64044f47"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="document:e5c28ab9a7af34c2d3b1">
+      <data key="d12">["PART_OF"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "PART_OF", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:360a2e1386408097d3d5">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:731c828e503c64269c56">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:e27165f1ae951a05643c">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:47f3cbe05995ca034577">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:e2b04fa8c7accad35f1a">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:e11aa880be5576adeab0">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:5278405a24ef270d45e8">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["In 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "In 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:ae7590a26638946f46bb">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["In 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "In 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:fc300ae89ef28083692f">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:d8f1c409f8d92766d88a">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:8f3c37c7907288674eee">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:a1941c9876d0c907aaa8">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["In 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "In 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:9a94dd09af8a6d1965ae">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:876a02aedcd6c0d357db">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:bcf687c5a0cb58ffff66">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:f30387fb60ab255e1f5a">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:17f73b43b68b92063205">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:cdfc694384c8a2e0b7ae">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:11a3baf19ad2d0118396">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:c0a08013a05522039eef">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["In 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "In 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:00074dafc6e65164508e">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:22d9b9b89e9481d9f666">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:beb6f735c15108bcb0d8">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["In 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "In 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:62df4adfb804a507e3ed">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:710c3a576ff45ab3b7da">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:977ad1390a6933ccac84">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:d9df4233e327b7ca7579">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:ab7af1cd37fe48eafdbf">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">["In 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium."]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "In 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium.", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:3b04f6cfbd5faffbbad4">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:ecbd604e66003ab6060c">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:19ddc2bfade0a51cb3a1">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:f098d67858ae46fa8817">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="chunk:5f496075cac1bc777856" target="entity:3240a82373a11d3a9e52">
+      <data key="d12">["MENTIONS"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "MENTIONS", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856"}]</data>
+      <data key="d17" />
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:6cd087ba88cc65156991">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:3b463fb4f43575c5995e", "description": "Alan Turing was born in London, England."}]</data>
+      <data key="d17">Alan Turing was born in London, England.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:fb4c570edce747778471">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:3b463fb4f43575c5995e", "description": "Alan Turing was born in the year 1912."}]</data>
+      <data key="d17">Alan Turing was born in the year 1912.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:824150c30149cb1799b6">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:3b463fb4f43575c5995e", "description": "Alan Turing studied at King's College, Cambridge."}]</data>
+      <data key="d17">Alan Turing studied at King's College, Cambridge.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:c17ea67497d6a1933d22">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:3b463fb4f43575c5995e", "description": "Alan Turing earned his PhD from Princeton University."}]</data>
+      <data key="d17">Alan Turing earned his PhD from Princeton University.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:adeae57afbb4f24d26d3">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:3b463fb4f43575c5995e", "description": "Alan Turing worked as a codebreaker during World War II."}]</data>
+      <data key="d17">Alan Turing worked as a codebreaker during World War II.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:52400027e2e9fa3be9de">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:3b463fb4f43575c5995e", "description": "Alan Turing worked at Bletchley Park during the war."}]</data>
+      <data key="d17">Alan Turing worked at Bletchley Park during the war.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:fa1e75f882b97a4e5e48">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:3b463fb4f43575c5995e", "description": "Alan Turing played a crucial role in breaking the German Enigma code."}]</data>
+      <data key="d17">Alan Turing played a crucial role in breaking the German Enigma code.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:e51b8d3b10d0c288c916">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e", "chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:3b463fb4f43575c5995e", "description": "Alan Turing developed the Bombe to decipher Enigma messages."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:62c434903c478b7df0d8", "description": "Alan Turing developed the Bombe to decipher Enigma messages."}]</data>
+      <data key="d17">Alan Turing developed the Bombe to decipher Enigma messages.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:afed28b3c7a9acbfceb6">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:62c434903c478b7df0d8", "description": "Alan Turing worked at the National Physical Laboratory after the war."}]</data>
+      <data key="d17">Alan Turing worked at the National Physical Laboratory after the war.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:ef76ddf7e416d4edfbd1">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:62c434903c478b7df0d8", "description": "Alan Turing worked at the University of Manchester later in his career."}]</data>
+      <data key="d17">Alan Turing worked at the University of Manchester later in his career.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:d74bf387646800d91698">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:62c434903c478b7df0d8", "description": "Alan Turing is considered the father of theoretical computer science."}]</data>
+      <data key="d17">Alan Turing is considered the father of theoretical computer science.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:df29e356245aac7381db">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:62c434903c478b7df0d8", "description": "Alan Turing is considered the father of artificial intelligence."}]</data>
+      <data key="d17">Alan Turing is considered the father of artificial intelligence.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:555e7011140f7de124c5">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8", "chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:62c434903c478b7df0d8", "description": "Alan Turing authored the 1950 paper \"Computing Machinery and Intelligence.\""}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf", "description": "Alan Turing authored the 1950 paper \"Computing Machinery and Intelligence.\""}]</data>
+      <data key="d17">Alan Turing authored the 1950 paper "Computing Machinery and Intelligence."</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:cd712ce88bce4bbc4740">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf", "description": "Alan Turing proposed the Turing Test as a measure of machine intelligence."}]</data>
+      <data key="d17">Alan Turing proposed the Turing Test as a measure of machine intelligence.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:caacf5838ce39a15a105">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf", "description": "Alan Turing made significant contributions to the field of mathematical biology."}]</data>
+      <data key="d17">Alan Turing made significant contributions to the field of mathematical biology.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:48d7f2361ef161a49d1b">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf", "description": "Alan Turing published work on morphogenesis, a topic within mathematical biology."}]</data>
+      <data key="d17">Alan Turing published work on morphogenesis, a topic within mathematical biology.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:ff32a994760dd68fa6b3">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf", "description": "Alan Turing published his key paper in 1950."}]</data>
+      <data key="d17">Alan Turing published his key paper in 1950.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:1d9155a50045a14aef4f">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf", "description": "Alan Turing died in 1954."}]</data>
+      <data key="d17">Alan Turing died in 1954.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:a5f94b43ab63927e5f65">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf", "description": "Alan Turing died in Wilmslow, England."}]</data>
+      <data key="d17">Alan Turing died in Wilmslow, England.</data>
+    </edge>
+    <edge source="entity:a485dd67852d2a5d276b" target="entity:dd5d0ba9d265e3595bd6">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf", "description": "Alan Turing made foundational contributions to the field of artificial intelligence."}]</data>
+      <data key="d17">Alan Turing made foundational contributions to the field of artificial intelligence.</data>
+    </edge>
+    <edge source="entity:e51b8d3b10d0c288c916" target="entity:fa1e75f882b97a4e5e48">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:3b463fb4f43575c5995e"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:3b463fb4f43575c5995e", "description": "The Bombe was an electromechanical device used to decipher Enigma-encrypted messages."}]</data>
+      <data key="d17">The Bombe was an electromechanical device used to decipher Enigma-encrypted messages.</data>
+    </edge>
+    <edge source="entity:e51b8d3b10d0c288c916" target="entity:fc5365480a064078fc61">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:62c434903c478b7df0d8", "description": "The Bombe was used to decipher messages encrypted by the Enigma machine."}]</data>
+      <data key="d17">The Bombe was used to decipher messages encrypted by the Enigma machine.</data>
+    </edge>
+    <edge source="entity:555e7011140f7de124c5" target="entity:cd712ce88bce4bbc4740">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:62c434903c478b7df0d8", "chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:62c434903c478b7df0d8", "description": "The paper \"Computing Machinery and Intelligence\" introduced the concept of the Turing Test."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf", "description": "The paper \"Computing Machinery and Intelligence\" introduced the concept of the Turing Test."}]</data>
+      <data key="d17">The paper "Computing Machinery and Intelligence" introduced the concept of the Turing Test.</data>
+    </edge>
+    <edge source="entity:555e7011140f7de124c5" target="entity:dd5d0ba9d265e3595bd6">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf", "description": "The paper 'Computing Machinery and Intelligence' is a seminal work in the field of artificial intelligence."}]</data>
+      <data key="d17">The paper 'Computing Machinery and Intelligence' is a seminal work in the field of artificial intelligence.</data>
+    </edge>
+    <edge source="entity:cd712ce88bce4bbc4740" target="entity:dd5d0ba9d265e3595bd6">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf", "description": "The Turing Test is a foundational concept for evaluating intelligence in artificial intelligence."}]</data>
+      <data key="d17">The Turing Test is a foundational concept for evaluating intelligence in artificial intelligence.</data>
+    </edge>
+    <edge source="entity:caacf5838ce39a15a105" target="entity:48d7f2361ef161a49d1b">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:b78da64bbb3bef1dc9cf"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf", "description": "Morphogenesis is a specific topic within the broader field of mathematical biology that Turing studied."}]</data>
+      <data key="d17">Morphogenesis is a specific topic within the broader field of mathematical biology that Turing studied.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:8f3c37c7907288674eee">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie was born in Warsaw, the capital of her native Poland, and later founded one of the Curie Institutes in that same city."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie was born in Warsaw, the capital of her native Poland, and later founded one of the Curie Institutes in that same city."}]</data>
+      <data key="d17">Marie Curie was born in Warsaw, the capital of her native Poland, and later founded one of the Curie Institutes in that same city.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:17f73b43b68b92063205">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie was born in Poland and later worked in France. In honor of her homeland, she named the element polonium."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie was born in Poland and later worked in France. In honor of her homeland, she named the element polonium."}]</data>
+      <data key="d17">Marie Curie was born in Poland and later worked in France. In honor of her homeland, she named the element polonium.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:efda500bef12d027bed2">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie was born in the year 1867."}]</data>
+      <data key="d17">Marie Curie was born in the year 1867.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:e11aa880be5576adeab0">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie is best known for her pioneering research on radioactivity, which earned her international recognition."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie is best known for her pioneering research on radioactivity, which earned her international recognition."}]</data>
+      <data key="d17">Marie Curie is best known for her pioneering research on radioactivity, which earned her international recognition.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:ae7590a26638946f46bb">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie discovered the element polonium, a contribution that played a role in her receiving the Nobel Prize in Chemistry."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie discovered the element polonium, a contribution that played a role in her receiving the Nobel Prize in Chemistry."}]</data>
+      <data key="d17">Marie Curie discovered the element polonium, a contribution that played a role in her receiving the Nobel Prize in Chemistry.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:5278405a24ef270d45e8">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie discovered the element radium, a groundbreaking achievement that contributed to her being awarded the Nobel Prize in Chemistry."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie discovered the element radium, a groundbreaking achievement that contributed to her being awarded the Nobel Prize in Chemistry."}]</data>
+      <data key="d17">Marie Curie discovered the element radium, a groundbreaking achievement that contributed to her being awarded the Nobel Prize in Chemistry.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:d50e9dfd99527b72d868">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie worked at the University of Paris and became its first female professor."}]</data>
+      <data key="d17">Marie Curie worked at the University of Paris and became its first female professor.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:47f3cbe05995ca034577">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie was a co-recipient of the Nobel Prize in Physics in 1903, which she received for her work on radioactivity."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie was a co-recipient of the Nobel Prize in Physics in 1903, which she received for her work on radioactivity."}]</data>
+      <data key="d17">Marie Curie was a co-recipient of the Nobel Prize in Physics in 1903, which she received for her work on radioactivity.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:731c828e503c64269c56">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie and Pierre Curie collaborated on radioactivity research and shared the Nobel Prize in Physics."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie and Pierre Curie collaborated on radioactivity research and shared the Nobel Prize in Physics."}]</data>
+      <data key="d17">Marie Curie and Pierre Curie collaborated on radioactivity research and shared the Nobel Prize in Physics.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:e27165f1ae951a05643c">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie and Henri Becquerel shared the Nobel Prize in Physics for their work on radioactivity."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie and Henri Becquerel shared the Nobel Prize in Physics for their work on radioactivity."}]</data>
+      <data key="d17">Marie Curie and Henri Becquerel shared the Nobel Prize in Physics for their work on radioactivity.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:c0a1cce08f3b3266cbab">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie achieved the milestone of becoming the first female professor at the University of Paris."}]</data>
+      <data key="d17">Marie Curie achieved the milestone of becoming the first female professor at the University of Paris.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:22d9b9b89e9481d9f666">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie received her first Nobel Prize in 1903, which was awarded in the field of Physics."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie received her first Nobel Prize in 1903, which was awarded in the field of Physics."}]</data>
+      <data key="d17">Marie Curie received her first Nobel Prize in 1903, which was awarded in the field of Physics.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:4209965dc2d49dee62e2">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie conducted pioneering research on radioactivity, which became her most famous scientific contribution."}]</data>
+      <data key="d17">Marie Curie conducted pioneering research on radioactivity, which became her most famous scientific contribution.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:e2b04fa8c7accad35f1a">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie won the Nobel Prize in Chemistry in 1911 for discovering radium and polonium."}]</data>
+      <data key="d17">Marie Curie won the Nobel Prize in Chemistry in 1911 for discovering radium and polonium.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:fc300ae89ef28083692f">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers."}]</data>
+      <data key="d17">Marie Curie founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:bcf687c5a0cb58ffff66">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie died from aplastic anemia, likely caused by her long-term exposure to radiation."}]</data>
+      <data key="d17">Marie Curie died from aplastic anemia, likely caused by her long-term exposure to radiation.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:876a02aedcd6c0d357db">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie died in Passy, France in 1934."}]</data>
+      <data key="d17">Marie Curie died in Passy, France in 1934.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:f30387fb60ab255e1f5a">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie lived and worked in France, founded an institute in Paris, and died in Passy, France."}]</data>
+      <data key="d17">Marie Curie lived and worked in France, founded an institute in Paris, and died in Passy, France.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:cdfc694384c8a2e0b7ae">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie's long-term exposure to radiation during her research likely caused her aplastic anemia and death."}]</data>
+      <data key="d17">Marie Curie's long-term exposure to radiation during her research likely caused her aplastic anemia and death.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:11a3baf19ad2d0118396">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Through founding the Curie Institutes, Marie Curie established centers that remain major hubs for medical research."}]</data>
+      <data key="d17">Through founding the Curie Institutes, Marie Curie established centers that remain major hubs for medical research.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:c0a08013a05522039eef">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie won the Nobel Prize in Chemistry in 1911 for her scientific discoveries."}]</data>
+      <data key="d17">Marie Curie won the Nobel Prize in Chemistry in 1911 for her scientific discoveries.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:00074dafc6e65164508e">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie won the Nobel Prize in Physics for her pioneering work on radioactivity."}]</data>
+      <data key="d17">Marie Curie won the Nobel Prize in Physics for her pioneering work on radioactivity.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:d8f1c409f8d92766d88a">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie founded one of the Curie Institutes in Paris."}]</data>
+      <data key="d17">Marie Curie founded one of the Curie Institutes in Paris.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:977ad1390a6933ccac84">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie died from aplastic anemia, a condition of bone marrow failure caused by radiation."}]</data>
+      <data key="d17">Marie Curie died from aplastic anemia, a condition of bone marrow failure caused by radiation.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:3b04f6cfbd5faffbbad4">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie was a groundbreaking female scientist who achieved unprecedented recognition in science."}]</data>
+      <data key="d17">Marie Curie was a groundbreaking female scientist who achieved unprecedented recognition in science.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:ecbd604e66003ab6060c">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie became a Nobel laureate twice, in Physics and Chemistry."}]</data>
+      <data key="d17">Marie Curie became a Nobel laureate twice, in Physics and Chemistry.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:19ddc2bfade0a51cb3a1">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie is celebrated as a scientific pioneer for her discoveries and contributions to radioactivity research."}]</data>
+      <data key="d17">Marie Curie is celebrated as a scientific pioneer for her discoveries and contributions to radioactivity research.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:f098d67858ae46fa8817">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie discovered the radioactive elements radium and polonium."}]</data>
+      <data key="d17">Marie Curie discovered the radioactive elements radium and polonium.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:beb6f735c15108bcb0d8">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie was responsible for the discovery of radium and polonium."}]</data>
+      <data key="d17">Marie Curie was responsible for the discovery of radium and polonium.</data>
+    </edge>
+    <edge source="entity:360a2e1386408097d3d5" target="entity:9a94dd09af8a6d1965ae">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie died in 1934 from aplastic anemia caused by radiation exposure."}]</data>
+      <data key="d17">Marie Curie died in 1934 from aplastic anemia caused by radiation exposure.</data>
+    </edge>
+    <edge source="entity:8f3c37c7907288674eee" target="entity:17f73b43b68b92063205">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Warsaw is the capital city of Poland."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Warsaw is the capital city of Poland."}]</data>
+      <data key="d17">Warsaw is the capital city of Poland.</data>
+    </edge>
+    <edge source="entity:e11aa880be5576adeab0" target="entity:47f3cbe05995ca034577">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The work on radioactivity was the basis for the Nobel Prize in Physics awarded to Marie Curie, Pierre Curie, and Henri Becquerel."}]</data>
+      <data key="d17">The work on radioactivity was the basis for the Nobel Prize in Physics awarded to Marie Curie, Pierre Curie, and Henri Becquerel.</data>
+    </edge>
+    <edge source="entity:ae7590a26638946f46bb" target="entity:e11aa880be5576adeab0">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "(entity:ae7590a26638946f46bb, entity:e11aa880be5566adeab0) are both associated with Polonium, which is a radioactive element. Its radioactivity was a key property identified during its discovery, which occurred through dedicated research on radioactivity."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "(entity:ae7590a26638946f46bb, entity:e11aa880be5566adeab0) are both associated with Polonium, which is a radioactive element. Its radioactivity was a key property identified during its discovery, which occurred through dedicated research on radioactivity."}]</data>
+      <data key="d17">(entity:ae7590a26638946f46bb, entity:e11aa880be5566adeab0) are both associated with Polonium, which is a radioactive element. Its radioactivity was a key property identified during its discovery, which occurred through dedicated research on radioactivity.</data>
+    </edge>
+    <edge source="entity:ae7590a26638946f46bb" target="entity:5278405a24ef270d45e8">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Polonium and radium are both radioactive elements discovered by Marie Curie during her research."}]</data>
+      <data key="d17">Polonium and radium are both radioactive elements discovered by Marie Curie during her research.</data>
+    </edge>
+    <edge source="entity:ae7590a26638946f46bb" target="entity:e2b04fa8c7accad35f1a">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The discovery of polonium was a key reason Marie Curie was awarded the Nobel Prize in Chemistry."}]</data>
+      <data key="d17">The discovery of polonium was a key reason Marie Curie was awarded the Nobel Prize in Chemistry.</data>
+    </edge>
+    <edge source="entity:ae7590a26638946f46bb" target="entity:17f73b43b68b92063205">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie named the element polonium after her native country, Poland."}]</data>
+      <data key="d17">Marie Curie named the element polonium after her native country, Poland.</data>
+    </edge>
+    <edge source="entity:ae7590a26638946f46bb" target="entity:f098d67858ae46fa8817">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Polonium is one of the radioactive elements discovered by Marie Curie."}]</data>
+      <data key="d17">Polonium is one of the radioactive elements discovered by Marie Curie.</data>
+    </edge>
+    <edge source="entity:5278405a24ef270d45e8" target="entity:e11aa880be5576adeab0">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Radium is a radioactive element that was discovered through research on radioactivity, and it exhibits the property of radioactivity."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Radium is a radioactive element that was discovered through research on radioactivity, and it exhibits the property of radioactivity."}]</data>
+      <data key="d17">Radium is a radioactive element that was discovered through research on radioactivity, and it exhibits the property of radioactivity.</data>
+    </edge>
+    <edge source="entity:5278405a24ef270d45e8" target="entity:e2b04fa8c7accad35f1a">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The discovery of radium was a key reason Marie Curie was awarded the Nobel Prize in Chemistry."}]</data>
+      <data key="d17">The discovery of radium was a key reason Marie Curie was awarded the Nobel Prize in Chemistry.</data>
+    </edge>
+    <edge source="entity:5278405a24ef270d45e8" target="entity:f098d67858ae46fa8817">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Radium is one of the radioactive elements discovered by Marie Curie."}]</data>
+      <data key="d17">Radium is one of the radioactive elements discovered by Marie Curie.</data>
+    </edge>
+    <edge source="entity:d50e9dfd99527b72d868" target="entity:c0a1cce08f3b3266cbab">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "The University of Paris appointed Marie Curie as its first female professor."}]</data>
+      <data key="d17">The University of Paris appointed Marie Curie as its first female professor.</data>
+    </edge>
+    <edge source="entity:d50e9dfd99527b72d868" target="entity:22d9b9b89e9481d9f666">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Marie Curie was working at the University of Paris when she received the Nobel Prize in 1903."}]</data>
+      <data key="d17">Marie Curie was working at the University of Paris when she received the Nobel Prize in 1903.</data>
+    </edge>
+    <edge source="entity:47f3cbe05995ca034577" target="entity:e11aa880be5576adeab0">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "The 1903 Nobel Prize in Physics was awarded for work on radioactivity."}]</data>
+      <data key="d17">The 1903 Nobel Prize in Physics was awarded for work on radioactivity.</data>
+    </edge>
+    <edge source="entity:47f3cbe05995ca034577" target="entity:22d9b9b89e9481d9f666">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "The Nobel Prize in Physics was awarded in the year 1903."}]</data>
+      <data key="d17">The Nobel Prize in Physics was awarded in the year 1903.</data>
+    </edge>
+    <edge source="entity:47f3cbe05995ca034577" target="entity:4209965dc2d49dee62e2">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "The Nobel Prize in Physics was awarded for the collective research on radioactivity."}]</data>
+      <data key="d17">The Nobel Prize in Physics was awarded for the collective research on radioactivity.</data>
+    </edge>
+    <edge source="entity:22d9b9b89e9481d9f666" target="entity:47f3cbe05995ca034577">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The Nobel Prize in Physics was awarded to Marie Curie, Pierre Curie, and Henri Becquerel in 1903."}]</data>
+      <data key="d17">The Nobel Prize in Physics was awarded to Marie Curie, Pierre Curie, and Henri Becquerel in 1903.</data>
+    </edge>
+    <edge source="entity:22d9b9b89e9481d9f666" target="entity:d9df4233e327b7ca7579">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie's first Nobel Prize was awarded in 1903."}]</data>
+      <data key="d17">Marie Curie's first Nobel Prize was awarded in 1903.</data>
+    </edge>
+    <edge source="entity:731c828e503c64269c56" target="entity:47f3cbe05995ca034577">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Pierre Curie was a co-recipient of the 1903 Nobel Prize in Physics, sharing the award with Marie Curie and Henri Becquerel."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Pierre Curie was a co-recipient of the 1903 Nobel Prize in Physics, sharing the award with Marie Curie and Henri Becquerel."}]</data>
+      <data key="d17">Pierre Curie was a co-recipient of the 1903 Nobel Prize in Physics, sharing the award with Marie Curie and Henri Becquerel.</data>
+    </edge>
+    <edge source="entity:731c828e503c64269c56" target="entity:360a2e1386408097d3d5">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Pierre Curie was Marie Curie's husband and research collaborator."}]</data>
+      <data key="d17">Pierre Curie was Marie Curie's husband and research collaborator.</data>
+    </edge>
+    <edge source="entity:731c828e503c64269c56" target="entity:e11aa880be5576adeab0">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Pierre Curie collaborated with Marie Curie on pioneering research on radioactivity."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Pierre Curie collaborated with Marie Curie on pioneering research on radioactivity."}]</data>
+      <data key="d17">Pierre Curie collaborated with Marie Curie on pioneering research on radioactivity.</data>
+    </edge>
+    <edge source="entity:731c828e503c64269c56" target="entity:4209965dc2d49dee62e2">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Pierre Curie collaborated with Marie Curie on research on radioactivity."}]</data>
+      <data key="d17">Pierre Curie collaborated with Marie Curie on research on radioactivity.</data>
+    </edge>
+    <edge source="entity:731c828e503c64269c56" target="entity:e27165f1ae951a05643c">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Pierre Curie and Henri Becquerel were co-recipients with Marie Curie of the 1903 Nobel Prize in Physics."}]</data>
+      <data key="d17">Pierre Curie and Henri Becquerel were co-recipients with Marie Curie of the 1903 Nobel Prize in Physics.</data>
+    </edge>
+    <edge source="entity:731c828e503c64269c56" target="entity:22d9b9b89e9481d9f666">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Pierre Curie received the Nobel Prize in Physics in 1903."}]</data>
+      <data key="d17">Pierre Curie received the Nobel Prize in Physics in 1903.</data>
+    </edge>
+    <edge source="entity:e27165f1ae951a05643c" target="entity:47f3cbe05995ca034577">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Henri Becquerel shared the 1903 Nobel Prize in Physics with Marie Curie and Pierre Curie."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Henri Becquerel shared the 1903 Nobel Prize in Physics with Marie Curie and Pierre Curie."}]</data>
+      <data key="d17">Henri Becquerel shared the 1903 Nobel Prize in Physics with Marie Curie and Pierre Curie.</data>
+    </edge>
+    <edge source="entity:e27165f1ae951a05643c" target="entity:e11aa880be5576adeab0">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47", "chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Henri Becquerel discovered spontaneous radioactivity, and his foundational work on this phenomenon led to him being awarded the Nobel Prize."}, {"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Henri Becquerel discovered spontaneous radioactivity, and his foundational work on this phenomenon led to him being awarded the Nobel Prize."}]</data>
+      <data key="d17">Henri Becquerel discovered spontaneous radioactivity, and his foundational work on this phenomenon led to him being awarded the Nobel Prize.</data>
+    </edge>
+    <edge source="entity:e27165f1ae951a05643c" target="entity:4209965dc2d49dee62e2">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:65841b8a1c7b64044f47"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:65841b8a1c7b64044f47", "description": "Henri Becquerel contributed to the research on radioactivity that earned the Nobel Prize."}]</data>
+      <data key="d17">Henri Becquerel contributed to the research on radioactivity that earned the Nobel Prize.</data>
+    </edge>
+    <edge source="entity:e27165f1ae951a05643c" target="entity:22d9b9b89e9481d9f666">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Henri Becquerel received the Nobel Prize in Physics in 1903."}]</data>
+      <data key="d17">Henri Becquerel received the Nobel Prize in Physics in 1903.</data>
+    </edge>
+    <edge source="entity:fc300ae89ef28083692f" target="entity:d8f1c409f8d92766d88a">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "One of the Curie Institutes founded by Marie Curie is located in Paris."}]</data>
+      <data key="d17">One of the Curie Institutes founded by Marie Curie is located in Paris.</data>
+    </edge>
+    <edge source="entity:fc300ae89ef28083692f" target="entity:8f3c37c7907288674eee">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "One of the Curie Institutes founded by Marie Curie is located in Warsaw."}]</data>
+      <data key="d17">One of the Curie Institutes founded by Marie Curie is located in Warsaw.</data>
+    </edge>
+    <edge source="entity:fc300ae89ef28083692f" target="entity:11a3baf19ad2d0118396">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The Curie Institutes continue to operate as major medical research centers today."}]</data>
+      <data key="d17">The Curie Institutes continue to operate as major medical research centers today.</data>
+    </edge>
+    <edge source="entity:fc300ae89ef28083692f" target="entity:360a2e1386408097d3d5">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie founded the Curie Institutes, which continue her legacy in medical research."}]</data>
+      <data key="d17">Marie Curie founded the Curie Institutes, which continue her legacy in medical research.</data>
+    </edge>
+    <edge source="entity:fc300ae89ef28083692f" target="entity:19ddc2bfade0a51cb3a1">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The Curie Institutes, founded by Marie Curie, continue her legacy as a scientific pioneer."}]</data>
+      <data key="d17">The Curie Institutes, founded by Marie Curie, continue her legacy as a scientific pioneer.</data>
+    </edge>
+    <edge source="entity:d8f1c409f8d92766d88a" target="entity:f30387fb60ab255e1f5a">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Paris is the capital city of France."}]</data>
+      <data key="d17">Paris is the capital city of France.</data>
+    </edge>
+    <edge source="entity:a1941c9876d0c907aaa8" target="entity:e2b04fa8c7accad35f1a">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The year 1911 marks when Marie Curie was awarded the Nobel Prize in Chemistry."}]</data>
+      <data key="d17">The year 1911 marks when Marie Curie was awarded the Nobel Prize in Chemistry.</data>
+    </edge>
+    <edge source="entity:a1941c9876d0c907aaa8" target="entity:ab7af1cd37fe48eafdbf">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie's second Nobel Prize was awarded in 1911."}]</data>
+      <data key="d17">Marie Curie's second Nobel Prize was awarded in 1911.</data>
+    </edge>
+    <edge source="entity:9a94dd09af8a6d1965ae" target="entity:360a2e1386408097d3d5">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The year 1934 marks the death of Marie Curie in Passy, France."}]</data>
+      <data key="d17">The year 1934 marks the death of Marie Curie in Passy, France.</data>
+    </edge>
+    <edge source="entity:9a94dd09af8a6d1965ae" target="entity:876a02aedcd6c0d357db">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "In 1934, Marie Curie died in Passy, France."}]</data>
+      <data key="d17">In 1934, Marie Curie died in Passy, France.</data>
+    </edge>
+    <edge source="entity:9a94dd09af8a6d1965ae" target="entity:bcf687c5a0cb58ffff66">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie's death in 1934 was caused by aplastic anemia."}]</data>
+      <data key="d17">Marie Curie's death in 1934 was caused by aplastic anemia.</data>
+    </edge>
+    <edge source="entity:876a02aedcd6c0d357db" target="entity:f30387fb60ab255e1f5a">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Passy is a commune located in France."}]</data>
+      <data key="d17">Passy is a commune located in France.</data>
+    </edge>
+    <edge source="entity:bcf687c5a0cb58ffff66" target="entity:977ad1390a6933ccac84">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Aplastic anemia is characterized by bone marrow failure."}]</data>
+      <data key="d17">Aplastic anemia is characterized by bone marrow failure.</data>
+    </edge>
+    <edge source="entity:cdfc694384c8a2e0b7ae" target="entity:bcf687c5a0cb58ffff66">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Long-term exposure to radiation was the likely cause of Marie Curie's aplastic anemia."}]</data>
+      <data key="d17">Long-term exposure to radiation was the likely cause of Marie Curie's aplastic anemia.</data>
+    </edge>
+    <edge source="entity:c0a08013a05522039eef" target="entity:e2b04fa8c7accad35f1a">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The Nobel Prize in Chemistry is awarded in the field of Chemistry."}]</data>
+      <data key="d17">The Nobel Prize in Chemistry is awarded in the field of Chemistry.</data>
+    </edge>
+    <edge source="entity:00074dafc6e65164508e" target="entity:47f3cbe05995ca034577">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The Nobel Prize in Physics is awarded in the field of Physics."}]</data>
+      <data key="d17">The Nobel Prize in Physics is awarded in the field of Physics.</data>
+    </edge>
+    <edge source="entity:beb6f735c15108bcb0d8" target="entity:5278405a24ef270d45e8">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The discovery event included the identification of the element radium."}]</data>
+      <data key="d17">The discovery event included the identification of the element radium.</data>
+    </edge>
+    <edge source="entity:beb6f735c15108bcb0d8" target="entity:ae7590a26638946f46bb">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The discovery event included the identification of the element polonium."}]</data>
+      <data key="d17">The discovery event included the identification of the element polonium.</data>
+    </edge>
+    <edge source="entity:beb6f735c15108bcb0d8" target="entity:360a2e1386408097d3d5">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie was the scientist who achieved the discovery of radium and polonium."}]</data>
+      <data key="d17">Marie Curie was the scientist who achieved the discovery of radium and polonium.</data>
+    </edge>
+    <edge source="entity:beb6f735c15108bcb0d8" target="entity:e2b04fa8c7accad35f1a">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "This discovery was the primary reason Marie Curie was awarded the Nobel Prize in Chemistry."}]</data>
+      <data key="d17">This discovery was the primary reason Marie Curie was awarded the Nobel Prize in Chemistry.</data>
+    </edge>
+    <edge source="entity:62df4adfb804a507e3ed" target="entity:360a2e1386408097d3d5">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie was a principal investigator in the work on radioactivity."}]</data>
+      <data key="d17">Marie Curie was a principal investigator in the work on radioactivity.</data>
+    </edge>
+    <edge source="entity:62df4adfb804a507e3ed" target="entity:731c828e503c64269c56">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Pierre Curie collaborated on the work on radioactivity."}]</data>
+      <data key="d17">Pierre Curie collaborated on the work on radioactivity.</data>
+    </edge>
+    <edge source="entity:62df4adfb804a507e3ed" target="entity:e27165f1ae951a05643c">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Henri Becquerel contributed to the foundational work on radioactivity."}]</data>
+      <data key="d17">Henri Becquerel contributed to the foundational work on radioactivity.</data>
+    </edge>
+    <edge source="entity:62df4adfb804a507e3ed" target="entity:47f3cbe05995ca034577">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The work on radioactivity was the achievement recognized by the Nobel Prize in Physics."}]</data>
+      <data key="d17">The work on radioactivity was the achievement recognized by the Nobel Prize in Physics.</data>
+    </edge>
+    <edge source="entity:710c3a576ff45ab3b7da" target="entity:360a2e1386408097d3d5">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie suffered from long-term exposure to radiation throughout her career."}]</data>
+      <data key="d17">Marie Curie suffered from long-term exposure to radiation throughout her career.</data>
+    </edge>
+    <edge source="entity:710c3a576ff45ab3b7da" target="entity:bcf687c5a0cb58ffff66">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Long-term exposure to radiation was the likely cause of Marie Curie's aplastic anemia."}]</data>
+      <data key="d17">Long-term exposure to radiation was the likely cause of Marie Curie's aplastic anemia.</data>
+    </edge>
+    <edge source="entity:710c3a576ff45ab3b7da" target="entity:cdfc694384c8a2e0b7ae">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The concept refers to prolonged contact with radiation."}]</data>
+      <data key="d17">The concept refers to prolonged contact with radiation.</data>
+    </edge>
+    <edge source="entity:977ad1390a6933ccac84" target="entity:cdfc694384c8a2e0b7ae">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Radiation exposure can cause bone marrow failure, leading to aplastic anemia."}]</data>
+      <data key="d17">Radiation exposure can cause bone marrow failure, leading to aplastic anemia.</data>
+    </edge>
+    <edge source="entity:d9df4233e327b7ca7579" target="entity:47f3cbe05995ca034577">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie's first Nobel Prize was the Nobel Prize in Physics."}]</data>
+      <data key="d17">Marie Curie's first Nobel Prize was the Nobel Prize in Physics.</data>
+    </edge>
+    <edge source="entity:d9df4233e327b7ca7579" target="entity:360a2e1386408097d3d5">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie received her first Nobel Prize for her work on radioactivity."}]</data>
+      <data key="d17">Marie Curie received her first Nobel Prize for her work on radioactivity.</data>
+    </edge>
+    <edge source="entity:d9df4233e327b7ca7579" target="entity:731c828e503c64269c56">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Pierre Curie shared the first Nobel Prize with Marie Curie."}]</data>
+      <data key="d17">Pierre Curie shared the first Nobel Prize with Marie Curie.</data>
+    </edge>
+    <edge source="entity:d9df4233e327b7ca7579" target="entity:e27165f1ae951a05643c">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Henri Becquerel shared the first Nobel Prize with Marie and Pierre Curie."}]</data>
+      <data key="d17">Henri Becquerel shared the first Nobel Prize with Marie and Pierre Curie.</data>
+    </edge>
+    <edge source="entity:ab7af1cd37fe48eafdbf" target="entity:e2b04fa8c7accad35f1a">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie's second Nobel Prize was the Nobel Prize in Chemistry."}]</data>
+      <data key="d17">Marie Curie's second Nobel Prize was the Nobel Prize in Chemistry.</data>
+    </edge>
+    <edge source="entity:ab7af1cd37fe48eafdbf" target="entity:360a2e1386408097d3d5">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie received her second Nobel Prize for discovering radium and polonium."}]</data>
+      <data key="d17">Marie Curie received her second Nobel Prize for discovering radium and polonium.</data>
+    </edge>
+    <edge source="entity:f098d67858ae46fa8817" target="entity:e11aa880be5576adeab0">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Radioactive elements are substances that exhibit the phenomenon of radioactivity."}]</data>
+      <data key="d17">Radioactive elements are substances that exhibit the phenomenon of radioactivity.</data>
+    </edge>
+    <edge source="entity:3240a82373a11d3a9e52" target="entity:360a2e1386408097d3d5">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Marie Curie engaged in scientific collaboration with Pierre Curie and Henri Becquerel."}]</data>
+      <data key="d17">Marie Curie engaged in scientific collaboration with Pierre Curie and Henri Becquerel.</data>
+    </edge>
+    <edge source="entity:3240a82373a11d3a9e52" target="entity:731c828e503c64269c56">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Pierre Curie was part of the scientific collaboration on radioactivity."}]</data>
+      <data key="d17">Pierre Curie was part of the scientific collaboration on radioactivity.</data>
+    </edge>
+    <edge source="entity:3240a82373a11d3a9e52" target="entity:e27165f1ae951a05643c">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "Henri Becquerel was part of the scientific collaboration on radioactivity."}]</data>
+      <data key="d17">Henri Becquerel was part of the scientific collaboration on radioactivity.</data>
+    </edge>
+    <edge source="entity:3240a82373a11d3a9e52" target="entity:62df4adfb804a507e3ed">
+      <data key="d12">["RELATION"]</data>
+      <data key="d13">1</data>
+      <data key="d14">[]</data>
+      <data key="d15">["chunk:5f496075cac1bc777856"]</data>
+      <data key="d16">[{"predicate": "RELATION", "evidence_sentence": "", "source_chunk_id": "chunk:5f496075cac1bc777856", "description": "The scientific collaboration resulted in the work on radioactivity."}]</data>
+      <data key="d17">The scientific collaboration resulted in the work on radioactivity.</data>
+    </edge>
+  </graph>
+</graphml>

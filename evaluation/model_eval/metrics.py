@@ -81,33 +81,53 @@ class AblationBenchmark:
         }
 
         # Model A: Base model (no fine-tuning)
-        results["models"]["A_base"] = self._evaluate_model(
+        metrics_a, preds_a = self._evaluate_model(
             name="A_base (Qwen2.5 base)",
             test_pairs=test_pairs,
             adapter_path=None,
         )
+        results["models"]["A_base"] = metrics_a
 
         # Model B: KG-Managed
         if kg_adapter_path and kg_adapter_path.exists():
-            results["models"]["B_kg"] = self._evaluate_model(
+            metrics_b, preds_b = self._evaluate_model(
                 name="B_kg (KG-Managed)",
                 test_pairs=test_pairs,
                 adapter_path=kg_adapter_path,
             )
+            results["models"]["B_kg"] = metrics_b
         else:
             logger.warning("KG adapter not found at %s — skipping Model B", kg_adapter_path)
             results["models"]["B_kg"] = {"skipped": True, "reason": "Adapter not found"}
+            preds_b = None
 
         # Model C: Raw-Text
         if raw_adapter_path and raw_adapter_path.exists():
-            results["models"]["C_raw"] = self._evaluate_model(
+            metrics_c, preds_c = self._evaluate_model(
                 name="C_raw (Unmanaged)",
                 test_pairs=test_pairs,
                 adapter_path=raw_adapter_path,
             )
+            results["models"]["C_raw"] = metrics_c
         else:
             logger.warning("Raw adapter not found at %s — skipping Model C", raw_adapter_path)
             results["models"]["C_raw"] = {"skipped": True, "reason": "Adapter not found"}
+            preds_c = None
+
+        # ── Save per-model answers ────────────────────────────
+        answers_dir = output_dir / "answers"
+        answers_dir.mkdir(parents=True, exist_ok=True)
+        for preds, fname in [
+            (preds_a, "model_A.jsonl"),
+            (preds_b, "model_B.jsonl"),
+            (preds_c, "model_C.jsonl"),
+        ]:
+            if preds:
+                path = answers_dir / fname
+                with open(path, "w", encoding="utf-8") as f:
+                    for p in preds:
+                        f.write(json.dumps(p, ensure_ascii=False) + "\n")
+                logger.info("Answers saved → %s", path)
 
         # Comparison analysis
         results["comparison"] = self._compare(results["models"])
@@ -132,8 +152,11 @@ class AblationBenchmark:
         name: str,
         test_pairs: list[dict[str, Any]],
         adapter_path: Path | None,
-    ) -> dict[str, Any]:
-        """Evaluate a single model on the test set."""
+    ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+        """Evaluate a single model on the test set.
+
+        Returns (metrics_dict, predictions_list).
+        """
         logger.info("Evaluating: %s", name)
 
         predictions: list[dict[str, Any]] = []
@@ -167,7 +190,7 @@ class AblationBenchmark:
                     "type": pair_type,
                 })
 
-        return self._compute_metrics(predictions, name)
+        return self._compute_metrics(predictions, name), predictions
 
     def _compute_metrics(
         self, predictions: list[dict[str, Any]], name: str

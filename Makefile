@@ -17,7 +17,7 @@ MODEL   ?= Qwen/Qwen2.5-0.5B-Instruct
 model   ?= all
 DEVICE  ?= cpu
 
-.PHONY: help test ingest upload download plots install clean \
+.PHONY: help test ingest upload download plots LLM_plots install clean \
         eval-install eval-install-model eval-method1 eval-method2 eval-graphgen eval-all \
         eval-local eval-datasets
 
@@ -30,6 +30,7 @@ help:
 	@echo "   upload           Replace Neo4j contents with the generated graph"
 	@echo "   download         Download graph from Neo4j → knowledge_graph.json"
 	@echo "   plots            Generate PNG plots from evaluation results"
+	@echo "   LLM_plots        Generate model comparison plots from ablation results"
 	@echo "   install          Set up the project and install dependencies"
 	@echo "   clean            Remove generated output folders"
 	@echo ""
@@ -91,6 +92,10 @@ download:
 ## plots: Generate visual plots from evaluation results  [dataset=small|wikipedia]
 plots:
 	$(VENV) && python -m generate_plots
+
+## LLM_plots: Generate model comparison plots from ablation results (Method 2)
+LLM_plots:
+	$(VENV) && python -m generate_plots --method 2 --ablation output_eval/small_data/method2/method2_results.json --output output_eval/small_data/method2
 
 ## install: Set up the project and install dependencies
 install:

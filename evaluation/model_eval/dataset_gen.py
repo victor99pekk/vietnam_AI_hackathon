@@ -77,8 +77,11 @@ class QADatasetGenerator:
         train = unique[:split_idx]
         test = unique[split_idx:]
 
-        train_path = self._write_jsonl(train, output_dir / "kg_qa_train.jsonl")
-        test_path = self._write_jsonl(test, output_dir / "kg_qa_test.jsonl")
+        data_dir = output_dir / "test_training_data"
+        data_dir.mkdir(parents=True, exist_ok=True)
+
+        train_path = self._write_jsonl(train, data_dir / "kg_qa_train.jsonl")
+        test_path = self._write_jsonl(test, data_dir / "kg_qa_test.jsonl")
 
         logger.info(
             "KG-Managed dataset: %d train + %d test QA pairs → %s",
@@ -129,8 +132,11 @@ class QADatasetGenerator:
         train = unique[:split_idx]
         test = unique[split_idx:]
 
-        train_path = self._write_jsonl(train, output_dir / "raw_qa_train.jsonl")
-        test_path = self._write_jsonl(test, output_dir / "raw_qa_test.jsonl")
+        data_dir = output_dir / "test_training_data"
+        data_dir.mkdir(parents=True, exist_ok=True)
+
+        train_path = self._write_jsonl(train, data_dir / "raw_qa_train.jsonl")
+        test_path = self._write_jsonl(test, data_dir / "raw_qa_test.jsonl")
 
         logger.info(
             "Unmanaged dataset: %d train + %d test QA pairs → %s",

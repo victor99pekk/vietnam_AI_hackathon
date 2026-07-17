@@ -1,0 +1,8588 @@
+{
+  "graph": {
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+      {
+        "label": "PERSON",
+        "confidence": 0.9,
+        "mentions": [
+          "Alan Turing"
+        ],
+        "attributes": {},
+        "id": "Alan Turing"
+      },
+      {
+        "label": "GPE",
+        "confidence": 0.9,
+        "mentions": [
+          "London"
+        ],
+        "attributes": {},
+        "id": "London"
+      },
+      {
+        "label": "GPE",
+        "confidence": 0.9,
+        "mentions": [
+          "England"
+        ],
+        "attributes": {},
+        "id": "England"
+      },
+      {
+        "label": "DATE",
+        "confidence": 0.9,
+        "mentions": [
+          "1912"
+        ],
+        "attributes": {},
+        "id": "1912"
+      },
+      {
+        "label": "ORG",
+        "confidence": 0.9,
+        "mentions": [
+          "King's College"
+        ],
+        "attributes": {},
+        "id": "King's College"
+      },
+      {
+        "label": "GPE",
+        "confidence": 0.9,
+        "mentions": [
+          "Cambridge"
+        ],
+        "attributes": {},
+        "id": "Cambridge"
+      },
+      {
+        "label": "WORK_OF_ART",
+        "confidence": 0.9,
+        "mentions": [
+          "PhD"
+        ],
+        "attributes": {},
+        "id": "PhD"
+      },
+      {
+        "label": "ORG",
+        "confidence": 0.9,
+        "mentions": [
+          "Princeton University"
+        ],
+        "attributes": {},
+        "id": "Princeton University"
+      },
+      {
+        "label": "EVENT",
+        "confidence": 0.9,
+        "mentions": [
+          "World War II"
+        ],
+        "attributes": {},
+        "id": "World War II"
+      },
+      {
+        "label": "FAC",
+        "confidence": 0.9,
+        "mentions": [
+          "Bletchley Park"
+        ],
+        "attributes": {},
+        "id": "Bletchley Park"
+      },
+      {
+        "label": "NORP",
+        "confidence": 0.9,
+        "mentions": [
+          "German"
+        ],
+        "attributes": {},
+        "id": "German"
+      },
+      {
+        "label": "PRODUCT",
+        "confidence": 0.9,
+        "mentions": [
+          "Enigma"
+        ],
+        "attributes": {},
+        "id": "Enigma"
+      },
+      {
+        "label": "GPE",
+        "confidence": 0.9,
+        "mentions": [
+          "Bombe"
+        ],
+        "attributes": {},
+        "id": "Bombe"
+      },
+      {
+        "label": "ORG",
+        "confidence": 0.9,
+        "mentions": [
+          "the National Physical Laboratory"
+        ],
+        "attributes": {},
+        "id": "the National Physical Laboratory"
+      },
+      {
+        "label": "ORG",
+        "confidence": 0.9,
+        "mentions": [
+          "the University of Manchester"
+        ],
+        "attributes": {},
+        "id": "the University of Manchester"
+      },
+      {
+        "label": "DATE",
+        "confidence": 0.9,
+        "mentions": [
+          "1950"
+        ],
+        "attributes": {},
+        "id": "1950"
+      },
+      {
+        "label": "WORK_OF_ART",
+        "confidence": 0.9,
+        "mentions": [
+          "Computing Machinery"
+        ],
+        "attributes": {},
+        "id": "Computing Machinery"
+      },
+      {
+        "label": "ORG",
+        "confidence": 0.9,
+        "mentions": [
+          "Intelligence"
+        ],
+        "attributes": {},
+        "id": "Intelligence"
+      },
+      {
+        "label": "WORK_OF_ART",
+        "confidence": 0.9,
+        "mentions": [
+          "the Turing Test"
+        ],
+        "attributes": {},
+        "id": "the Turing Test"
+      },
+      {
+        "label": "DATE",
+        "confidence": 0.9,
+        "mentions": [
+          "1954"
+        ],
+        "attributes": {},
+        "id": "1954"
+      },
+      {
+        "label": "GPE",
+        "confidence": 0.9,
+        "mentions": [
+          "Wilmslow"
+        ],
+        "attributes": {},
+        "id": "Wilmslow"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "his PhD"
+        ],
+        "attributes": {},
+        "id": "his PhD"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "a crucial role"
+        ],
+        "attributes": {},
+        "id": "a crucial role"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "the German Enigma code"
+        ],
+        "attributes": {},
+        "id": "the German Enigma code"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "the Bombe"
+        ],
+        "attributes": {},
+        "id": "the Bombe"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "an electromechanical device"
+        ],
+        "attributes": {},
+        "id": "an electromechanical device"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "Enigma-encrypted messages"
+        ],
+        "attributes": {},
+        "id": "Enigma-encrypted messages"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "the war"
+        ],
+        "attributes": {},
+        "id": "the war"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "the University"
+        ],
+        "attributes": {},
+        "id": "the University"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "Manchester"
+        ],
+        "attributes": {},
+        "id": "Manchester"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "the father"
+        ],
+        "attributes": {},
+        "id": "the father"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "theoretical computer science"
+        ],
+        "attributes": {},
+        "id": "theoretical computer science"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "artificial intelligence"
+        ],
+        "attributes": {},
+        "id": "artificial intelligence"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "His 1950 paper"
+        ],
+        "attributes": {},
+        "id": "His 1950 paper"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "significant contributions"
+        ],
+        "attributes": {},
+        "id": "significant contributions"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "mathematical biology"
+        ],
+        "attributes": {},
+        "id": "mathematical biology"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "work"
+        ],
+        "attributes": {},
+        "id": "work"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "morphogenesis"
+        ],
+        "attributes": {},
+        "id": "morphogenesis"
+      },
+      {
+        "label": "PERSON",
+        "confidence": 0.9,
+        "mentions": [
+          "Marie Curie"
+        ],
+        "attributes": {},
+        "id": "Marie Curie"
+      },
+      {
+        "label": "GPE",
+        "confidence": 0.9,
+        "mentions": [
+          "Warsaw"
+        ],
+        "attributes": {},
+        "id": "Warsaw"
+      },
+      {
+        "label": "GPE",
+        "confidence": 0.9,
+        "mentions": [
+          "Poland"
+        ],
+        "attributes": {},
+        "id": "Poland"
+      },
+      {
+        "label": "DATE",
+        "confidence": 0.9,
+        "mentions": [
+          "1867"
+        ],
+        "attributes": {},
+        "id": "1867"
+      },
+      {
+        "label": "ORG",
+        "confidence": 0.9,
+        "mentions": [
+          "the University of Paris"
+        ],
+        "attributes": {},
+        "id": "the University of Paris"
+      },
+      {
+        "label": "ORDINAL",
+        "confidence": 0.9,
+        "mentions": [
+          "first"
+        ],
+        "attributes": {},
+        "id": "first"
+      },
+      {
+        "label": "DATE",
+        "confidence": 0.9,
+        "mentions": [
+          "1903"
+        ],
+        "attributes": {},
+        "id": "1903"
+      },
+      {
+        "label": "WORK_OF_ART",
+        "confidence": 0.9,
+        "mentions": [
+          "the Nobel Prize in Physics"
+        ],
+        "attributes": {},
+        "id": "the Nobel Prize in Physics"
+      },
+      {
+        "label": "PERSON",
+        "confidence": 0.9,
+        "mentions": [
+          "Pierre Curie"
+        ],
+        "attributes": {},
+        "id": "Pierre Curie"
+      },
+      {
+        "label": "PERSON",
+        "confidence": 0.9,
+        "mentions": [
+          "Henri Becquerel"
+        ],
+        "attributes": {},
+        "id": "Henri Becquerel"
+      },
+      {
+        "label": "DATE",
+        "confidence": 0.9,
+        "mentions": [
+          "1911"
+        ],
+        "attributes": {},
+        "id": "1911"
+      },
+      {
+        "label": "ORDINAL",
+        "confidence": 0.9,
+        "mentions": [
+          "second"
+        ],
+        "attributes": {},
+        "id": "second"
+      },
+      {
+        "label": "WORK_OF_ART",
+        "confidence": 0.9,
+        "mentions": [
+          "Nobel Prize"
+        ],
+        "attributes": {},
+        "id": "Nobel Prize"
+      },
+      {
+        "label": "ORG",
+        "confidence": 0.9,
+        "mentions": [
+          "Chemistry"
+        ],
+        "attributes": {},
+        "id": "Chemistry"
+      },
+      {
+        "label": "ORG",
+        "confidence": 0.9,
+        "mentions": [
+          "the Curie Institutes"
+        ],
+        "attributes": {},
+        "id": "the Curie Institutes"
+      },
+      {
+        "label": "GPE",
+        "confidence": 0.9,
+        "mentions": [
+          "Paris"
+        ],
+        "attributes": {},
+        "id": "Paris"
+      },
+      {
+        "label": "DATE",
+        "confidence": 0.9,
+        "mentions": [
+          "today"
+        ],
+        "attributes": {},
+        "id": "today"
+      },
+      {
+        "label": "DATE",
+        "confidence": 0.9,
+        "mentions": [
+          "1934"
+        ],
+        "attributes": {},
+        "id": "1934"
+      },
+      {
+        "label": "GPE",
+        "confidence": 0.9,
+        "mentions": [
+          "Passy"
+        ],
+        "attributes": {},
+        "id": "Passy"
+      },
+      {
+        "label": "GPE",
+        "confidence": 0.9,
+        "mentions": [
+          "France"
+        ],
+        "attributes": {},
+        "id": "France"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "She"
+        ],
+        "attributes": {},
+        "id": "She"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "her pioneering research"
+        ],
+        "attributes": {},
+        "id": "her pioneering research"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "radioactivity"
+        ],
+        "attributes": {},
+        "id": "radioactivity"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "the elements"
+        ],
+        "attributes": {},
+        "id": "the elements"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "polonium"
+        ],
+        "attributes": {},
+        "id": "polonium"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "radium"
+        ],
+        "attributes": {},
+        "id": "radium"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "Curie"
+        ],
+        "attributes": {},
+        "id": "Curie"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "the first female professor"
+        ],
+        "attributes": {},
+        "id": "the first female professor"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "the Nobel Prize"
+        ],
+        "attributes": {},
+        "id": "the Nobel Prize"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "Physics"
+        ],
+        "attributes": {},
+        "id": "Physics"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "their work"
+        ],
+        "attributes": {},
+        "id": "their work"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "a second Nobel Prize"
+        ],
+        "attributes": {},
+        "id": "a second Nobel Prize"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "this time"
+        ],
+        "attributes": {},
+        "id": "this time"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "her discovery"
+        ],
+        "attributes": {},
+        "id": "her discovery"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "which"
+        ],
+        "attributes": {},
+        "id": "which"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "major medical research centers"
+        ],
+        "attributes": {},
+        "id": "major medical research centers"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "aplastic anemia"
+        ],
+        "attributes": {},
+        "id": "aplastic anemia"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "her long-term exposure"
+        ],
+        "attributes": {},
+        "id": "her long-term exposure"
+      },
+      {
+        "label": "CONCEPT",
+        "confidence": 0.7,
+        "mentions": [
+          "radiation"
+        ],
+        "attributes": {},
+        "id": "radiation"
+      }
+    ],
+    "edges": [
+      {
+        "predicates": [
+          "lives_in"
+        ],
+        "weight": 1,
+        "source": "Alan Turing",
+        "target": "London"
+      },
+      {
+        "predicates": [
+          "lives_in"
+        ],
+        "weight": 1,
+        "source": "Alan Turing",
+        "target": "England"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Alan Turing",
+        "target": "1912"
+      },
+      {
+        "predicates": [
+          "lives_in"
+        ],
+        "weight": 1,
+        "source": "London",
+        "target": "Alan Turing"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "London",
+        "target": "England"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "London",
+        "target": "1912"
+      },
+      {
+        "predicates": [
+          "lives_in"
+        ],
+        "weight": 1,
+        "source": "England",
+        "target": "Alan Turing"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "England",
+        "target": "London"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "England",
+        "target": "1912"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "England",
+        "target": "1954"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "England",
+        "target": "Wilmslow"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1912",
+        "target": "Alan Turing"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1912",
+        "target": "London"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1912",
+        "target": "England"
+      },
+      {
+        "predicates": [
+          "located_in"
+        ],
+        "weight": 1,
+        "source": "King's College",
+        "target": "Cambridge"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "King's College",
+        "target": "PhD"
+      },
+      {
+        "predicates": [
+          "subsidiary_of"
+        ],
+        "weight": 1,
+        "source": "King's College",
+        "target": "Princeton University"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "King's College",
+        "target": "his PhD"
+      },
+      {
+        "predicates": [
+          "located_in"
+        ],
+        "weight": 1,
+        "source": "Cambridge",
+        "target": "King's College"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Cambridge",
+        "target": "PhD"
+      },
+      {
+        "predicates": [
+          "located_in"
+        ],
+        "weight": 1,
+        "source": "Cambridge",
+        "target": "Princeton University"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Cambridge",
+        "target": "his PhD"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "PhD",
+        "target": "King's College"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "PhD",
+        "target": "Cambridge"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "PhD",
+        "target": "Princeton University"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "PhD",
+        "target": "his PhD"
+      },
+      {
+        "predicates": [
+          "subsidiary_of"
+        ],
+        "weight": 1,
+        "source": "Princeton University",
+        "target": "King's College"
+      },
+      {
+        "predicates": [
+          "located_in"
+        ],
+        "weight": 1,
+        "source": "Princeton University",
+        "target": "Cambridge"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Princeton University",
+        "target": "PhD"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Princeton University",
+        "target": "his PhD"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "World War II",
+        "target": "Bletchley Park"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "World War II",
+        "target": "German"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "World War II",
+        "target": "Enigma"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "World War II",
+        "target": "a crucial role"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "World War II",
+        "target": "the German Enigma code"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "World War II",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Bletchley Park",
+        "target": "World War II"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Bletchley Park",
+        "target": "German"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Bletchley Park",
+        "target": "Enigma"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Bletchley Park",
+        "target": "a crucial role"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Bletchley Park",
+        "target": "the German Enigma code"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Bletchley Park",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "German",
+        "target": "World War II"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "German",
+        "target": "Bletchley Park"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "German",
+        "target": "Enigma"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "German",
+        "target": "a crucial role"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "German",
+        "target": "the German Enigma code"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "German",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Enigma",
+        "target": "World War II"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Enigma",
+        "target": "Bletchley Park"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Enigma",
+        "target": "German"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Enigma",
+        "target": "a crucial role"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Enigma",
+        "target": "the German Enigma code"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Enigma",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Enigma",
+        "target": "Bombe"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Enigma",
+        "target": "the Bombe"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Enigma",
+        "target": "an electromechanical device"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Enigma",
+        "target": "Enigma-encrypted messages"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Bombe",
+        "target": "Enigma"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Bombe",
+        "target": "the Bombe"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Bombe",
+        "target": "an electromechanical device"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Bombe",
+        "target": "Enigma-encrypted messages"
+      },
+      {
+        "predicates": [
+          "subsidiary_of"
+        ],
+        "weight": 1,
+        "source": "the National Physical Laboratory",
+        "target": "the University of Manchester"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the National Physical Laboratory",
+        "target": "the war"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the National Physical Laboratory",
+        "target": "the University"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the National Physical Laboratory",
+        "target": "Manchester"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the National Physical Laboratory",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "subsidiary_of"
+        ],
+        "weight": 1,
+        "source": "the University of Manchester",
+        "target": "the National Physical Laboratory"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University of Manchester",
+        "target": "the war"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University of Manchester",
+        "target": "the University"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University of Manchester",
+        "target": "Manchester"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University of Manchester",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1950",
+        "target": "Computing Machinery"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1950",
+        "target": "Intelligence"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1950",
+        "target": "the Turing Test"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1950",
+        "target": "His 1950 paper"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Computing Machinery",
+        "target": "1950"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Computing Machinery",
+        "target": "Intelligence"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Computing Machinery",
+        "target": "the Turing Test"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Computing Machinery",
+        "target": "His 1950 paper"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Intelligence",
+        "target": "the father"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Intelligence",
+        "target": "theoretical computer science"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Intelligence",
+        "target": "artificial intelligence"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Intelligence",
+        "target": "1950"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Intelligence",
+        "target": "Computing Machinery"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Intelligence",
+        "target": "the Turing Test"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Intelligence",
+        "target": "His 1950 paper"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Turing Test",
+        "target": "1950"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the Turing Test",
+        "target": "Computing Machinery"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Turing Test",
+        "target": "Intelligence"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Turing Test",
+        "target": "His 1950 paper"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1954",
+        "target": "England"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1954",
+        "target": "Wilmslow"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Wilmslow",
+        "target": "England"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Wilmslow",
+        "target": "1954"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "his PhD",
+        "target": "King's College"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "his PhD",
+        "target": "Cambridge"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "his PhD",
+        "target": "PhD"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "his PhD",
+        "target": "Princeton University"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "a crucial role",
+        "target": "World War II"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "a crucial role",
+        "target": "Bletchley Park"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "a crucial role",
+        "target": "German"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "a crucial role",
+        "target": "Enigma"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "a crucial role",
+        "target": "the German Enigma code"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "a crucial role",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the German Enigma code",
+        "target": "World War II"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the German Enigma code",
+        "target": "Bletchley Park"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the German Enigma code",
+        "target": "German"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the German Enigma code",
+        "target": "Enigma"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the German Enigma code",
+        "target": "a crucial role"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the German Enigma code",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Bombe",
+        "target": "Enigma"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Bombe",
+        "target": "Bombe"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the Bombe",
+        "target": "an electromechanical device"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the Bombe",
+        "target": "Enigma-encrypted messages"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "an electromechanical device",
+        "target": "Enigma"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "an electromechanical device",
+        "target": "Bombe"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "an electromechanical device",
+        "target": "the Bombe"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "an electromechanical device",
+        "target": "Enigma-encrypted messages"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Enigma-encrypted messages",
+        "target": "Enigma"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Enigma-encrypted messages",
+        "target": "Bombe"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Enigma-encrypted messages",
+        "target": "the Bombe"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Enigma-encrypted messages",
+        "target": "an electromechanical device"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the war",
+        "target": "the National Physical Laboratory"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the war",
+        "target": "the University of Manchester"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the war",
+        "target": "the University"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the war",
+        "target": "Manchester"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the war",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University",
+        "target": "the National Physical Laboratory"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University",
+        "target": "the University of Manchester"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the University",
+        "target": "the war"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the University",
+        "target": "Manchester"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the University",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University",
+        "target": "the University of Paris"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University",
+        "target": "first"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University",
+        "target": "Paris"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the University",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the University",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the University",
+        "target": "the first female professor"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Manchester",
+        "target": "the National Physical Laboratory"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Manchester",
+        "target": "the University of Manchester"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Manchester",
+        "target": "the war"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Manchester",
+        "target": "the University"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Manchester",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the father",
+        "target": "Intelligence"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the father",
+        "target": "theoretical computer science"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the father",
+        "target": "artificial intelligence"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "theoretical computer science",
+        "target": "Intelligence"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "theoretical computer science",
+        "target": "the father"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "theoretical computer science",
+        "target": "artificial intelligence"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "artificial intelligence",
+        "target": "Intelligence"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "artificial intelligence",
+        "target": "the father"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "artificial intelligence",
+        "target": "theoretical computer science"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "His 1950 paper",
+        "target": "1950"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "His 1950 paper",
+        "target": "Computing Machinery"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "His 1950 paper",
+        "target": "Intelligence"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "His 1950 paper",
+        "target": "the Turing Test"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "significant contributions",
+        "target": "mathematical biology"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "significant contributions",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "significant contributions",
+        "target": "morphogenesis"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "mathematical biology",
+        "target": "significant contributions"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "mathematical biology",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "mathematical biology",
+        "target": "morphogenesis"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "World War II"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "Bletchley Park"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "German"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "Enigma"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "a crucial role"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "the German Enigma code"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "the National Physical Laboratory"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "the University of Manchester"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "the war"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "the University"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "Manchester"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "significant contributions"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "mathematical biology"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "work",
+        "target": "morphogenesis"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "morphogenesis",
+        "target": "significant contributions"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "morphogenesis",
+        "target": "mathematical biology"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "morphogenesis",
+        "target": "work"
+      },
+      {
+        "predicates": [
+          "lives_in"
+        ],
+        "weight": 1,
+        "source": "Marie Curie",
+        "target": "Warsaw"
+      },
+      {
+        "predicates": [
+          "lives_in"
+        ],
+        "weight": 1,
+        "source": "Marie Curie",
+        "target": "Poland"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Marie Curie",
+        "target": "1867"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Marie Curie",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Marie Curie",
+        "target": "1934"
+      },
+      {
+        "predicates": [
+          "lives_in"
+        ],
+        "weight": 1,
+        "source": "Marie Curie",
+        "target": "Passy"
+      },
+      {
+        "predicates": [
+          "lives_in"
+        ],
+        "weight": 1,
+        "source": "Marie Curie",
+        "target": "France"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Marie Curie",
+        "target": "aplastic anemia"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Marie Curie",
+        "target": "her long-term exposure"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Marie Curie",
+        "target": "radiation"
+      },
+      {
+        "predicates": [
+          "lives_in"
+        ],
+        "weight": 1,
+        "source": "Warsaw",
+        "target": "Marie Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Warsaw",
+        "target": "Poland"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Warsaw",
+        "target": "1867"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Warsaw",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "located_in"
+        ],
+        "weight": 1,
+        "source": "Warsaw",
+        "target": "the Curie Institutes"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Warsaw",
+        "target": "Paris"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Warsaw",
+        "target": "today"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Warsaw",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Warsaw",
+        "target": "which"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Warsaw",
+        "target": "major medical research centers"
+      },
+      {
+        "predicates": [
+          "lives_in"
+        ],
+        "weight": 1,
+        "source": "Poland",
+        "target": "Marie Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Poland",
+        "target": "Warsaw"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Poland",
+        "target": "1867"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Poland",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1867",
+        "target": "Marie Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1867",
+        "target": "Warsaw"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1867",
+        "target": "Poland"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1867",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University of Paris",
+        "target": "first"
+      },
+      {
+        "predicates": [
+          "located_in"
+        ],
+        "weight": 1,
+        "source": "the University of Paris",
+        "target": "Paris"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University of Paris",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University of Paris",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University of Paris",
+        "target": "the University"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the University of Paris",
+        "target": "the first female professor"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "first",
+        "target": "the University of Paris"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "first",
+        "target": "Paris"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "first",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "first",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "first",
+        "target": "the University"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "first",
+        "target": "the first female professor"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1903",
+        "target": "the Nobel Prize in Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1903",
+        "target": "Pierre Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1903",
+        "target": "Henri Becquerel"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1903",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1903",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1903",
+        "target": "radioactivity"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1903",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1903",
+        "target": "the Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1903",
+        "target": "Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1903",
+        "target": "their work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize in Physics",
+        "target": "1903"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize in Physics",
+        "target": "Pierre Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize in Physics",
+        "target": "Henri Becquerel"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize in Physics",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize in Physics",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize in Physics",
+        "target": "radioactivity"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize in Physics",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize in Physics",
+        "target": "the Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize in Physics",
+        "target": "Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize in Physics",
+        "target": "their work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Pierre Curie",
+        "target": "1903"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Pierre Curie",
+        "target": "the Nobel Prize in Physics"
+      },
+      {
+        "predicates": [
+          "knows"
+        ],
+        "weight": 1,
+        "source": "Pierre Curie",
+        "target": "Henri Becquerel"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Pierre Curie",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Pierre Curie",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Pierre Curie",
+        "target": "radioactivity"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Pierre Curie",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Pierre Curie",
+        "target": "the Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Pierre Curie",
+        "target": "Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Pierre Curie",
+        "target": "their work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Henri Becquerel",
+        "target": "1903"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Henri Becquerel",
+        "target": "the Nobel Prize in Physics"
+      },
+      {
+        "predicates": [
+          "knows"
+        ],
+        "weight": 1,
+        "source": "Henri Becquerel",
+        "target": "Pierre Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Henri Becquerel",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Henri Becquerel",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Henri Becquerel",
+        "target": "radioactivity"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Henri Becquerel",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Henri Becquerel",
+        "target": "the Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Henri Becquerel",
+        "target": "Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Henri Becquerel",
+        "target": "their work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1911",
+        "target": "second"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1911",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1911",
+        "target": "Chemistry"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1911",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1911",
+        "target": "polonium"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1911",
+        "target": "radium"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1911",
+        "target": "a second Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1911",
+        "target": "this time"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1911",
+        "target": "her discovery"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "second",
+        "target": "1911"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "second",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "second",
+        "target": "Chemistry"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "second",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "second",
+        "target": "polonium"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "second",
+        "target": "radium"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "second",
+        "target": "a second Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "second",
+        "target": "this time"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "second",
+        "target": "her discovery"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "1903"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "the Nobel Prize in Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "Pierre Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "Henri Becquerel"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "radioactivity"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "the Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "their work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "1911"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "second"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "Chemistry"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "polonium"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "radium"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "a second Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "this time"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Nobel Prize",
+        "target": "her discovery"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Chemistry",
+        "target": "1911"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Chemistry",
+        "target": "second"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Chemistry",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Chemistry",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Chemistry",
+        "target": "polonium"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Chemistry",
+        "target": "radium"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Chemistry",
+        "target": "a second Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Chemistry",
+        "target": "this time"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Chemistry",
+        "target": "her discovery"
+      },
+      {
+        "predicates": [
+          "located_in"
+        ],
+        "weight": 1,
+        "source": "the Curie Institutes",
+        "target": "Warsaw"
+      },
+      {
+        "predicates": [
+          "located_in"
+        ],
+        "weight": 1,
+        "source": "the Curie Institutes",
+        "target": "Paris"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Curie Institutes",
+        "target": "today"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Curie Institutes",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Curie Institutes",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Curie Institutes",
+        "target": "which"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Curie Institutes",
+        "target": "major medical research centers"
+      },
+      {
+        "predicates": [
+          "located_in"
+        ],
+        "weight": 1,
+        "source": "Paris",
+        "target": "the University of Paris"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Paris",
+        "target": "first"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Paris",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Paris",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Paris",
+        "target": "the University"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Paris",
+        "target": "the first female professor"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Paris",
+        "target": "Warsaw"
+      },
+      {
+        "predicates": [
+          "located_in"
+        ],
+        "weight": 1,
+        "source": "Paris",
+        "target": "the Curie Institutes"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Paris",
+        "target": "today"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Paris",
+        "target": "which"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Paris",
+        "target": "major medical research centers"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "today",
+        "target": "Warsaw"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "today",
+        "target": "the Curie Institutes"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "today",
+        "target": "Paris"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "today",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "today",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "today",
+        "target": "which"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "today",
+        "target": "major medical research centers"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1934",
+        "target": "Marie Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1934",
+        "target": "Passy"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1934",
+        "target": "France"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1934",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1934",
+        "target": "aplastic anemia"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1934",
+        "target": "her long-term exposure"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "1934",
+        "target": "radiation"
+      },
+      {
+        "predicates": [
+          "lives_in"
+        ],
+        "weight": 1,
+        "source": "Passy",
+        "target": "Marie Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Passy",
+        "target": "1934"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Passy",
+        "target": "France"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Passy",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Passy",
+        "target": "aplastic anemia"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Passy",
+        "target": "her long-term exposure"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Passy",
+        "target": "radiation"
+      },
+      {
+        "predicates": [
+          "lives_in"
+        ],
+        "weight": 1,
+        "source": "France",
+        "target": "Marie Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "France",
+        "target": "1934"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "France",
+        "target": "Passy"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "France",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "France",
+        "target": "aplastic anemia"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "France",
+        "target": "her long-term exposure"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "France",
+        "target": "radiation"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "her pioneering research"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "radioactivity"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "the elements"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "polonium"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "radium"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "the University of Paris"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "first"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "Paris"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "the University"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "the first female professor"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "1903"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "the Nobel Prize in Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "Pierre Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "Henri Becquerel"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "the Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "Physics"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "their work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "1911"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "second"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "Chemistry"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "a second Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "this time"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "her discovery"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "Warsaw"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "the Curie Institutes"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "today"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "which"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "She",
+        "target": "major medical research centers"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "her pioneering research",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "her pioneering research",
+        "target": "radioactivity"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radioactivity",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radioactivity",
+        "target": "her pioneering research"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "radioactivity",
+        "target": "1903"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "radioactivity",
+        "target": "the Nobel Prize in Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "radioactivity",
+        "target": "Pierre Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "radioactivity",
+        "target": "Henri Becquerel"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "radioactivity",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radioactivity",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radioactivity",
+        "target": "the Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radioactivity",
+        "target": "Physics"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radioactivity",
+        "target": "their work"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the elements",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the elements",
+        "target": "polonium"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the elements",
+        "target": "radium"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "polonium",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "polonium",
+        "target": "the elements"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "polonium",
+        "target": "radium"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "polonium",
+        "target": "1911"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "polonium",
+        "target": "second"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "polonium",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "polonium",
+        "target": "Chemistry"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "polonium",
+        "target": "a second Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "polonium",
+        "target": "this time"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "polonium",
+        "target": "her discovery"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radium",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radium",
+        "target": "the elements"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radium",
+        "target": "polonium"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "radium",
+        "target": "1911"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "radium",
+        "target": "second"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "radium",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "radium",
+        "target": "Chemistry"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radium",
+        "target": "a second Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radium",
+        "target": "this time"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radium",
+        "target": "her discovery"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "Marie Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "Warsaw"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "Poland"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "1867"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "the University of Paris"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "first"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "Paris"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "the University"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "the first female professor"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "1903"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "the Nobel Prize in Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "Pierre Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "Henri Becquerel"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "radioactivity"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "the Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "Physics"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "their work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "the Curie Institutes"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "today"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "which"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "major medical research centers"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "1934"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "Passy"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "France"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "aplastic anemia"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "her long-term exposure"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Curie",
+        "target": "radiation"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the first female professor",
+        "target": "the University of Paris"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the first female professor",
+        "target": "first"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the first female professor",
+        "target": "Paris"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the first female professor",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the first female professor",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the first female professor",
+        "target": "the University"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize",
+        "target": "1903"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize",
+        "target": "the Nobel Prize in Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize",
+        "target": "Pierre Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize",
+        "target": "Henri Becquerel"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize",
+        "target": "radioactivity"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize",
+        "target": "Physics"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "the Nobel Prize",
+        "target": "their work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Physics",
+        "target": "1903"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Physics",
+        "target": "the Nobel Prize in Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Physics",
+        "target": "Pierre Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Physics",
+        "target": "Henri Becquerel"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "Physics",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Physics",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Physics",
+        "target": "radioactivity"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Physics",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Physics",
+        "target": "the Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "Physics",
+        "target": "their work"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "their work",
+        "target": "1903"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "their work",
+        "target": "the Nobel Prize in Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "their work",
+        "target": "Pierre Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "their work",
+        "target": "Henri Becquerel"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "their work",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "their work",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "their work",
+        "target": "radioactivity"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "their work",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "their work",
+        "target": "the Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "their work",
+        "target": "Physics"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "a second Nobel Prize",
+        "target": "1911"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "a second Nobel Prize",
+        "target": "second"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "a second Nobel Prize",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "a second Nobel Prize",
+        "target": "Chemistry"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "a second Nobel Prize",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "a second Nobel Prize",
+        "target": "polonium"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "a second Nobel Prize",
+        "target": "radium"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "a second Nobel Prize",
+        "target": "this time"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "a second Nobel Prize",
+        "target": "her discovery"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "this time",
+        "target": "1911"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "this time",
+        "target": "second"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "this time",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "this time",
+        "target": "Chemistry"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "this time",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "this time",
+        "target": "polonium"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "this time",
+        "target": "radium"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "this time",
+        "target": "a second Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "this time",
+        "target": "her discovery"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "her discovery",
+        "target": "1911"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "her discovery",
+        "target": "second"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "her discovery",
+        "target": "Nobel Prize"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "her discovery",
+        "target": "Chemistry"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "her discovery",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "her discovery",
+        "target": "polonium"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "her discovery",
+        "target": "radium"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "her discovery",
+        "target": "a second Nobel Prize"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "her discovery",
+        "target": "this time"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "which",
+        "target": "Warsaw"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "which",
+        "target": "the Curie Institutes"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "which",
+        "target": "Paris"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "which",
+        "target": "today"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "which",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "which",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "which",
+        "target": "major medical research centers"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "major medical research centers",
+        "target": "Warsaw"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "major medical research centers",
+        "target": "the Curie Institutes"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "major medical research centers",
+        "target": "Paris"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "major medical research centers",
+        "target": "today"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "major medical research centers",
+        "target": "She"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "major medical research centers",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "major medical research centers",
+        "target": "which"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "aplastic anemia",
+        "target": "Marie Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "aplastic anemia",
+        "target": "1934"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "aplastic anemia",
+        "target": "Passy"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "aplastic anemia",
+        "target": "France"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "aplastic anemia",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "aplastic anemia",
+        "target": "her long-term exposure"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "aplastic anemia",
+        "target": "radiation"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "her long-term exposure",
+        "target": "Marie Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "her long-term exposure",
+        "target": "1934"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "her long-term exposure",
+        "target": "Passy"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "her long-term exposure",
+        "target": "France"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "her long-term exposure",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "her long-term exposure",
+        "target": "aplastic anemia"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "her long-term exposure",
+        "target": "radiation"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "radiation",
+        "target": "Marie Curie"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "radiation",
+        "target": "1934"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "radiation",
+        "target": "Passy"
+      },
+      {
+        "predicates": [
+          "associated_with"
+        ],
+        "weight": 1,
+        "source": "radiation",
+        "target": "France"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radiation",
+        "target": "Curie"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radiation",
+        "target": "aplastic anemia"
+      },
+      {
+        "predicates": [
+          "related_to"
+        ],
+        "weight": 1,
+        "source": "radiation",
+        "target": "her long-term exposure"
+      }
+    ]
+  },
+  "entities": [
+    {
+      "name": "Alan Turing",
+      "label": "PERSON",
+      "mentions": [
+        "Alan Turing"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "London",
+      "label": "GPE",
+      "mentions": [
+        "London"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "England",
+      "label": "GPE",
+      "mentions": [
+        "England"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "1912",
+      "label": "DATE",
+      "mentions": [
+        "1912"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "King's College",
+      "label": "ORG",
+      "mentions": [
+        "King's College"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Cambridge",
+      "label": "GPE",
+      "mentions": [
+        "Cambridge"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "PhD",
+      "label": "WORK_OF_ART",
+      "mentions": [
+        "PhD"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Princeton University",
+      "label": "ORG",
+      "mentions": [
+        "Princeton University"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "World War II",
+      "label": "EVENT",
+      "mentions": [
+        "World War II"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Bletchley Park",
+      "label": "FAC",
+      "mentions": [
+        "Bletchley Park"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "German",
+      "label": "NORP",
+      "mentions": [
+        "German"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Enigma",
+      "label": "PRODUCT",
+      "mentions": [
+        "Enigma"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Bombe",
+      "label": "GPE",
+      "mentions": [
+        "Bombe"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "the National Physical Laboratory",
+      "label": "ORG",
+      "mentions": [
+        "the National Physical Laboratory"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "the University of Manchester",
+      "label": "ORG",
+      "mentions": [
+        "the University of Manchester"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "1950",
+      "label": "DATE",
+      "mentions": [
+        "1950"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Computing Machinery",
+      "label": "WORK_OF_ART",
+      "mentions": [
+        "Computing Machinery"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Intelligence",
+      "label": "ORG",
+      "mentions": [
+        "Intelligence"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "the Turing Test",
+      "label": "WORK_OF_ART",
+      "mentions": [
+        "the Turing Test"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "1954",
+      "label": "DATE",
+      "mentions": [
+        "1954"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Wilmslow",
+      "label": "GPE",
+      "mentions": [
+        "Wilmslow"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "his PhD",
+      "label": "CONCEPT",
+      "mentions": [
+        "his PhD"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "a crucial role",
+      "label": "CONCEPT",
+      "mentions": [
+        "a crucial role"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "the German Enigma code",
+      "label": "CONCEPT",
+      "mentions": [
+        "the German Enigma code"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "the Bombe",
+      "label": "CONCEPT",
+      "mentions": [
+        "the Bombe"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "an electromechanical device",
+      "label": "CONCEPT",
+      "mentions": [
+        "an electromechanical device"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "Enigma-encrypted messages",
+      "label": "CONCEPT",
+      "mentions": [
+        "Enigma-encrypted messages"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "the war",
+      "label": "CONCEPT",
+      "mentions": [
+        "the war"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "the University",
+      "label": "CONCEPT",
+      "mentions": [
+        "the University"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "Manchester",
+      "label": "CONCEPT",
+      "mentions": [
+        "Manchester"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "the father",
+      "label": "CONCEPT",
+      "mentions": [
+        "the father"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "theoretical computer science",
+      "label": "CONCEPT",
+      "mentions": [
+        "theoretical computer science"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "artificial intelligence",
+      "label": "CONCEPT",
+      "mentions": [
+        "artificial intelligence"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "His 1950 paper",
+      "label": "CONCEPT",
+      "mentions": [
+        "His 1950 paper"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "significant contributions",
+      "label": "CONCEPT",
+      "mentions": [
+        "significant contributions"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "mathematical biology",
+      "label": "CONCEPT",
+      "mentions": [
+        "mathematical biology"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "work",
+      "label": "CONCEPT",
+      "mentions": [
+        "work"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "morphogenesis",
+      "label": "CONCEPT",
+      "mentions": [
+        "morphogenesis"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "Marie Curie",
+      "label": "PERSON",
+      "mentions": [
+        "Marie Curie"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Warsaw",
+      "label": "GPE",
+      "mentions": [
+        "Warsaw"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Poland",
+      "label": "GPE",
+      "mentions": [
+        "Poland"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "1867",
+      "label": "DATE",
+      "mentions": [
+        "1867"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "the University of Paris",
+      "label": "ORG",
+      "mentions": [
+        "the University of Paris"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "first",
+      "label": "ORDINAL",
+      "mentions": [
+        "first"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "1903",
+      "label": "DATE",
+      "mentions": [
+        "1903"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "the Nobel Prize in Physics",
+      "label": "WORK_OF_ART",
+      "mentions": [
+        "the Nobel Prize in Physics"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Pierre Curie",
+      "label": "PERSON",
+      "mentions": [
+        "Pierre Curie"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Henri Becquerel",
+      "label": "PERSON",
+      "mentions": [
+        "Henri Becquerel"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "1911",
+      "label": "DATE",
+      "mentions": [
+        "1911"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "second",
+      "label": "ORDINAL",
+      "mentions": [
+        "second"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Nobel Prize",
+      "label": "WORK_OF_ART",
+      "mentions": [
+        "Nobel Prize"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Chemistry",
+      "label": "ORG",
+      "mentions": [
+        "Chemistry"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "the Curie Institutes",
+      "label": "ORG",
+      "mentions": [
+        "the Curie Institutes"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Paris",
+      "label": "GPE",
+      "mentions": [
+        "Paris"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "today",
+      "label": "DATE",
+      "mentions": [
+        "today"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "1934",
+      "label": "DATE",
+      "mentions": [
+        "1934"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "Passy",
+      "label": "GPE",
+      "mentions": [
+        "Passy"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "France",
+      "label": "GPE",
+      "mentions": [
+        "France"
+      ],
+      "attributes": {},
+      "confidence": 0.9
+    },
+    {
+      "name": "She",
+      "label": "CONCEPT",
+      "mentions": [
+        "She"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "her pioneering research",
+      "label": "CONCEPT",
+      "mentions": [
+        "her pioneering research"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "radioactivity",
+      "label": "CONCEPT",
+      "mentions": [
+        "radioactivity"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "the elements",
+      "label": "CONCEPT",
+      "mentions": [
+        "the elements"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "polonium",
+      "label": "CONCEPT",
+      "mentions": [
+        "polonium"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "radium",
+      "label": "CONCEPT",
+      "mentions": [
+        "radium"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "Curie",
+      "label": "CONCEPT",
+      "mentions": [
+        "Curie"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "the first female professor",
+      "label": "CONCEPT",
+      "mentions": [
+        "the first female professor"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "the Nobel Prize",
+      "label": "CONCEPT",
+      "mentions": [
+        "the Nobel Prize"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "Physics",
+      "label": "CONCEPT",
+      "mentions": [
+        "Physics"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "their work",
+      "label": "CONCEPT",
+      "mentions": [
+        "their work"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "a second Nobel Prize",
+      "label": "CONCEPT",
+      "mentions": [
+        "a second Nobel Prize"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "this time",
+      "label": "CONCEPT",
+      "mentions": [
+        "this time"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "her discovery",
+      "label": "CONCEPT",
+      "mentions": [
+        "her discovery"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "which",
+      "label": "CONCEPT",
+      "mentions": [
+        "which"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "major medical research centers",
+      "label": "CONCEPT",
+      "mentions": [
+        "major medical research centers"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "aplastic anemia",
+      "label": "CONCEPT",
+      "mentions": [
+        "aplastic anemia"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "her long-term exposure",
+      "label": "CONCEPT",
+      "mentions": [
+        "her long-term exposure"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    },
+    {
+      "name": "radiation",
+      "label": "CONCEPT",
+      "mentions": [
+        "radiation"
+      ],
+      "attributes": {},
+      "confidence": 0.7
+    }
+  ],
+  "triples": [
+    {
+      "subject": "Alan Turing",
+      "predicate": "lives_in",
+      "object": "London"
+    },
+    {
+      "subject": "Alan Turing",
+      "predicate": "lives_in",
+      "object": "England"
+    },
+    {
+      "subject": "Alan Turing",
+      "predicate": "associated_with",
+      "object": "1912"
+    },
+    {
+      "subject": "London",
+      "predicate": "lives_in",
+      "object": "Alan Turing"
+    },
+    {
+      "subject": "London",
+      "predicate": "related_to",
+      "object": "England"
+    },
+    {
+      "subject": "London",
+      "predicate": "associated_with",
+      "object": "1912"
+    },
+    {
+      "subject": "England",
+      "predicate": "lives_in",
+      "object": "Alan Turing"
+    },
+    {
+      "subject": "England",
+      "predicate": "related_to",
+      "object": "London"
+    },
+    {
+      "subject": "England",
+      "predicate": "associated_with",
+      "object": "1912"
+    },
+    {
+      "subject": "1912",
+      "predicate": "associated_with",
+      "object": "Alan Turing"
+    },
+    {
+      "subject": "1912",
+      "predicate": "associated_with",
+      "object": "London"
+    },
+    {
+      "subject": "1912",
+      "predicate": "associated_with",
+      "object": "England"
+    },
+    {
+      "subject": "King's College",
+      "predicate": "located_in",
+      "object": "Cambridge"
+    },
+    {
+      "subject": "King's College",
+      "predicate": "associated_with",
+      "object": "PhD"
+    },
+    {
+      "subject": "King's College",
+      "predicate": "subsidiary_of",
+      "object": "Princeton University"
+    },
+    {
+      "subject": "King's College",
+      "predicate": "associated_with",
+      "object": "his PhD"
+    },
+    {
+      "subject": "Cambridge",
+      "predicate": "located_in",
+      "object": "King's College"
+    },
+    {
+      "subject": "Cambridge",
+      "predicate": "associated_with",
+      "object": "PhD"
+    },
+    {
+      "subject": "Cambridge",
+      "predicate": "located_in",
+      "object": "Princeton University"
+    },
+    {
+      "subject": "Cambridge",
+      "predicate": "associated_with",
+      "object": "his PhD"
+    },
+    {
+      "subject": "PhD",
+      "predicate": "associated_with",
+      "object": "King's College"
+    },
+    {
+      "subject": "PhD",
+      "predicate": "associated_with",
+      "object": "Cambridge"
+    },
+    {
+      "subject": "PhD",
+      "predicate": "associated_with",
+      "object": "Princeton University"
+    },
+    {
+      "subject": "PhD",
+      "predicate": "associated_with",
+      "object": "his PhD"
+    },
+    {
+      "subject": "Princeton University",
+      "predicate": "subsidiary_of",
+      "object": "King's College"
+    },
+    {
+      "subject": "Princeton University",
+      "predicate": "located_in",
+      "object": "Cambridge"
+    },
+    {
+      "subject": "Princeton University",
+      "predicate": "associated_with",
+      "object": "PhD"
+    },
+    {
+      "subject": "Princeton University",
+      "predicate": "associated_with",
+      "object": "his PhD"
+    },
+    {
+      "subject": "his PhD",
+      "predicate": "associated_with",
+      "object": "King's College"
+    },
+    {
+      "subject": "his PhD",
+      "predicate": "associated_with",
+      "object": "Cambridge"
+    },
+    {
+      "subject": "his PhD",
+      "predicate": "associated_with",
+      "object": "PhD"
+    },
+    {
+      "subject": "his PhD",
+      "predicate": "associated_with",
+      "object": "Princeton University"
+    },
+    {
+      "subject": "World War II",
+      "predicate": "associated_with",
+      "object": "Bletchley Park"
+    },
+    {
+      "subject": "World War II",
+      "predicate": "associated_with",
+      "object": "German"
+    },
+    {
+      "subject": "World War II",
+      "predicate": "associated_with",
+      "object": "Enigma"
+    },
+    {
+      "subject": "World War II",
+      "predicate": "associated_with",
+      "object": "a crucial role"
+    },
+    {
+      "subject": "World War II",
+      "predicate": "associated_with",
+      "object": "the German Enigma code"
+    },
+    {
+      "subject": "World War II",
+      "predicate": "associated_with",
+      "object": "work"
+    },
+    {
+      "subject": "Bletchley Park",
+      "predicate": "associated_with",
+      "object": "World War II"
+    },
+    {
+      "subject": "Bletchley Park",
+      "predicate": "associated_with",
+      "object": "German"
+    },
+    {
+      "subject": "Bletchley Park",
+      "predicate": "associated_with",
+      "object": "Enigma"
+    },
+    {
+      "subject": "Bletchley Park",
+      "predicate": "associated_with",
+      "object": "a crucial role"
+    },
+    {
+      "subject": "Bletchley Park",
+      "predicate": "associated_with",
+      "object": "the German Enigma code"
+    },
+    {
+      "subject": "Bletchley Park",
+      "predicate": "associated_with",
+      "object": "work"
+    },
+    {
+      "subject": "German",
+      "predicate": "associated_with",
+      "object": "World War II"
+    },
+    {
+      "subject": "German",
+      "predicate": "associated_with",
+      "object": "Bletchley Park"
+    },
+    {
+      "subject": "German",
+      "predicate": "associated_with",
+      "object": "Enigma"
+    },
+    {
+      "subject": "German",
+      "predicate": "associated_with",
+      "object": "a crucial role"
+    },
+    {
+      "subject": "German",
+      "predicate": "associated_with",
+      "object": "the German Enigma code"
+    },
+    {
+      "subject": "German",
+      "predicate": "associated_with",
+      "object": "work"
+    },
+    {
+      "subject": "Enigma",
+      "predicate": "associated_with",
+      "object": "World War II"
+    },
+    {
+      "subject": "Enigma",
+      "predicate": "associated_with",
+      "object": "Bletchley Park"
+    },
+    {
+      "subject": "Enigma",
+      "predicate": "associated_with",
+      "object": "German"
+    },
+    {
+      "subject": "Enigma",
+      "predicate": "associated_with",
+      "object": "a crucial role"
+    },
+    {
+      "subject": "Enigma",
+      "predicate": "associated_with",
+      "object": "the German Enigma code"
+    },
+    {
+      "subject": "Enigma",
+      "predicate": "associated_with",
+      "object": "work"
+    },
+    {
+      "subject": "a crucial role",
+      "predicate": "associated_with",
+      "object": "World War II"
+    },
+    {
+      "subject": "a crucial role",
+      "predicate": "associated_with",
+      "object": "Bletchley Park"
+    },
+    {
+      "subject": "a crucial role",
+      "predicate": "associated_with",
+      "object": "German"
+    },
+    {
+      "subject": "a crucial role",
+      "predicate": "associated_with",
+      "object": "Enigma"
+    },
+    {
+      "subject": "a crucial role",
+      "predicate": "related_to",
+      "object": "the German Enigma code"
+    },
+    {
+      "subject": "a crucial role",
+      "predicate": "related_to",
+      "object": "work"
+    },
+    {
+      "subject": "the German Enigma code",
+      "predicate": "associated_with",
+      "object": "World War II"
+    },
+    {
+      "subject": "the German Enigma code",
+      "predicate": "associated_with",
+      "object": "Bletchley Park"
+    },
+    {
+      "subject": "the German Enigma code",
+      "predicate": "associated_with",
+      "object": "German"
+    },
+    {
+      "subject": "the German Enigma code",
+      "predicate": "associated_with",
+      "object": "Enigma"
+    },
+    {
+      "subject": "the German Enigma code",
+      "predicate": "related_to",
+      "object": "a crucial role"
+    },
+    {
+      "subject": "the German Enigma code",
+      "predicate": "related_to",
+      "object": "work"
+    },
+    {
+      "subject": "work",
+      "predicate": "associated_with",
+      "object": "World War II"
+    },
+    {
+      "subject": "work",
+      "predicate": "associated_with",
+      "object": "Bletchley Park"
+    },
+    {
+      "subject": "work",
+      "predicate": "associated_with",
+      "object": "German"
+    },
+    {
+      "subject": "work",
+      "predicate": "associated_with",
+      "object": "Enigma"
+    },
+    {
+      "subject": "work",
+      "predicate": "related_to",
+      "object": "a crucial role"
+    },
+    {
+      "subject": "work",
+      "predicate": "related_to",
+      "object": "the German Enigma code"
+    },
+    {
+      "subject": "Enigma",
+      "predicate": "associated_with",
+      "object": "Bombe"
+    },
+    {
+      "subject": "Enigma",
+      "predicate": "associated_with",
+      "object": "the Bombe"
+    },
+    {
+      "subject": "Enigma",
+      "predicate": "associated_with",
+      "object": "an electromechanical device"
+    },
+    {
+      "subject": "Enigma",
+      "predicate": "associated_with",
+      "object": "Enigma-encrypted messages"
+    },
+    {
+      "subject": "Bombe",
+      "predicate": "associated_with",
+      "object": "Enigma"
+    },
+    {
+      "subject": "Bombe",
+      "predicate": "associated_with",
+      "object": "the Bombe"
+    },
+    {
+      "subject": "Bombe",
+      "predicate": "associated_with",
+      "object": "an electromechanical device"
+    },
+    {
+      "subject": "Bombe",
+      "predicate": "associated_with",
+      "object": "Enigma-encrypted messages"
+    },
+    {
+      "subject": "the Bombe",
+      "predicate": "associated_with",
+      "object": "Enigma"
+    },
+    {
+      "subject": "the Bombe",
+      "predicate": "associated_with",
+      "object": "Bombe"
+    },
+    {
+      "subject": "the Bombe",
+      "predicate": "related_to",
+      "object": "an electromechanical device"
+    },
+    {
+      "subject": "the Bombe",
+      "predicate": "related_to",
+      "object": "Enigma-encrypted messages"
+    },
+    {
+      "subject": "an electromechanical device",
+      "predicate": "associated_with",
+      "object": "Enigma"
+    },
+    {
+      "subject": "an electromechanical device",
+      "predicate": "associated_with",
+      "object": "Bombe"
+    },
+    {
+      "subject": "an electromechanical device",
+      "predicate": "related_to",
+      "object": "the Bombe"
+    },
+    {
+      "subject": "an electromechanical device",
+      "predicate": "related_to",
+      "object": "Enigma-encrypted messages"
+    },
+    {
+      "subject": "Enigma-encrypted messages",
+      "predicate": "associated_with",
+      "object": "Enigma"
+    },
+    {
+      "subject": "Enigma-encrypted messages",
+      "predicate": "associated_with",
+      "object": "Bombe"
+    },
+    {
+      "subject": "Enigma-encrypted messages",
+      "predicate": "related_to",
+      "object": "the Bombe"
+    },
+    {
+      "subject": "Enigma-encrypted messages",
+      "predicate": "related_to",
+      "object": "an electromechanical device"
+    },
+    {
+      "subject": "the National Physical Laboratory",
+      "predicate": "subsidiary_of",
+      "object": "the University of Manchester"
+    },
+    {
+      "subject": "the National Physical Laboratory",
+      "predicate": "associated_with",
+      "object": "the war"
+    },
+    {
+      "subject": "the National Physical Laboratory",
+      "predicate": "associated_with",
+      "object": "the University"
+    },
+    {
+      "subject": "the National Physical Laboratory",
+      "predicate": "associated_with",
+      "object": "Manchester"
+    },
+    {
+      "subject": "the National Physical Laboratory",
+      "predicate": "associated_with",
+      "object": "work"
+    },
+    {
+      "subject": "the University of Manchester",
+      "predicate": "subsidiary_of",
+      "object": "the National Physical Laboratory"
+    },
+    {
+      "subject": "the University of Manchester",
+      "predicate": "associated_with",
+      "object": "the war"
+    },
+    {
+      "subject": "the University of Manchester",
+      "predicate": "associated_with",
+      "object": "the University"
+    },
+    {
+      "subject": "the University of Manchester",
+      "predicate": "associated_with",
+      "object": "Manchester"
+    },
+    {
+      "subject": "the University of Manchester",
+      "predicate": "associated_with",
+      "object": "work"
+    },
+    {
+      "subject": "the war",
+      "predicate": "associated_with",
+      "object": "the National Physical Laboratory"
+    },
+    {
+      "subject": "the war",
+      "predicate": "associated_with",
+      "object": "the University of Manchester"
+    },
+    {
+      "subject": "the war",
+      "predicate": "related_to",
+      "object": "the University"
+    },
+    {
+      "subject": "the war",
+      "predicate": "related_to",
+      "object": "Manchester"
+    },
+    {
+      "subject": "the war",
+      "predicate": "related_to",
+      "object": "work"
+    },
+    {
+      "subject": "the University",
+      "predicate": "associated_with",
+      "object": "the National Physical Laboratory"
+    },
+    {
+      "subject": "the University",
+      "predicate": "associated_with",
+      "object": "the University of Manchester"
+    },
+    {
+      "subject": "the University",
+      "predicate": "related_to",
+      "object": "the war"
+    },
+    {
+      "subject": "the University",
+      "predicate": "related_to",
+      "object": "Manchester"
+    },
+    {
+      "subject": "the University",
+      "predicate": "related_to",
+      "object": "work"
+    },
+    {
+      "subject": "Manchester",
+      "predicate": "associated_with",
+      "object": "the National Physical Laboratory"
+    },
+    {
+      "subject": "Manchester",
+      "predicate": "associated_with",
+      "object": "the University of Manchester"
+    },
+    {
+      "subject": "Manchester",
+      "predicate": "related_to",
+      "object": "the war"
+    },
+    {
+      "subject": "Manchester",
+      "predicate": "related_to",
+      "object": "the University"
+    },
+    {
+      "subject": "Manchester",
+      "predicate": "related_to",
+      "object": "work"
+    },
+    {
+      "subject": "work",
+      "predicate": "associated_with",
+      "object": "the National Physical Laboratory"
+    },
+    {
+      "subject": "work",
+      "predicate": "associated_with",
+      "object": "the University of Manchester"
+    },
+    {
+      "subject": "work",
+      "predicate": "related_to",
+      "object": "the war"
+    },
+    {
+      "subject": "work",
+      "predicate": "related_to",
+      "object": "the University"
+    },
+    {
+      "subject": "work",
+      "predicate": "related_to",
+      "object": "Manchester"
+    },
+    {
+      "subject": "Intelligence",
+      "predicate": "associated_with",
+      "object": "the father"
+    },
+    {
+      "subject": "Intelligence",
+      "predicate": "associated_with",
+      "object": "theoretical computer science"
+    },
+    {
+      "subject": "Intelligence",
+      "predicate": "associated_with",
+      "object": "artificial intelligence"
+    },
+    {
+      "subject": "the father",
+      "predicate": "associated_with",
+      "object": "Intelligence"
+    },
+    {
+      "subject": "the father",
+      "predicate": "related_to",
+      "object": "theoretical computer science"
+    },
+    {
+      "subject": "the father",
+      "predicate": "related_to",
+      "object": "artificial intelligence"
+    },
+    {
+      "subject": "theoretical computer science",
+      "predicate": "associated_with",
+      "object": "Intelligence"
+    },
+    {
+      "subject": "theoretical computer science",
+      "predicate": "related_to",
+      "object": "the father"
+    },
+    {
+      "subject": "theoretical computer science",
+      "predicate": "related_to",
+      "object": "artificial intelligence"
+    },
+    {
+      "subject": "artificial intelligence",
+      "predicate": "associated_with",
+      "object": "Intelligence"
+    },
+    {
+      "subject": "artificial intelligence",
+      "predicate": "related_to",
+      "object": "the father"
+    },
+    {
+      "subject": "artificial intelligence",
+      "predicate": "related_to",
+      "object": "theoretical computer science"
+    },
+    {
+      "subject": "1950",
+      "predicate": "associated_with",
+      "object": "Computing Machinery"
+    },
+    {
+      "subject": "1950",
+      "predicate": "associated_with",
+      "object": "Intelligence"
+    },
+    {
+      "subject": "1950",
+      "predicate": "associated_with",
+      "object": "the Turing Test"
+    },
+    {
+      "subject": "1950",
+      "predicate": "associated_with",
+      "object": "His 1950 paper"
+    },
+    {
+      "subject": "Computing Machinery",
+      "predicate": "associated_with",
+      "object": "1950"
+    },
+    {
+      "subject": "Computing Machinery",
+      "predicate": "associated_with",
+      "object": "Intelligence"
+    },
+    {
+      "subject": "Computing Machinery",
+      "predicate": "related_to",
+      "object": "the Turing Test"
+    },
+    {
+      "subject": "Computing Machinery",
+      "predicate": "associated_with",
+      "object": "His 1950 paper"
+    },
+    {
+      "subject": "Intelligence",
+      "predicate": "associated_with",
+      "object": "1950"
+    },
+    {
+      "subject": "Intelligence",
+      "predicate": "associated_with",
+      "object": "Computing Machinery"
+    },
+    {
+      "subject": "Intelligence",
+      "predicate": "associated_with",
+      "object": "the Turing Test"
+    },
+    {
+      "subject": "Intelligence",
+      "predicate": "associated_with",
+      "object": "His 1950 paper"
+    },
+    {
+      "subject": "the Turing Test",
+      "predicate": "associated_with",
+      "object": "1950"
+    },
+    {
+      "subject": "the Turing Test",
+      "predicate": "related_to",
+      "object": "Computing Machinery"
+    },
+    {
+      "subject": "the Turing Test",
+      "predicate": "associated_with",
+      "object": "Intelligence"
+    },
+    {
+      "subject": "the Turing Test",
+      "predicate": "associated_with",
+      "object": "His 1950 paper"
+    },
+    {
+      "subject": "His 1950 paper",
+      "predicate": "associated_with",
+      "object": "1950"
+    },
+    {
+      "subject": "His 1950 paper",
+      "predicate": "associated_with",
+      "object": "Computing Machinery"
+    },
+    {
+      "subject": "His 1950 paper",
+      "predicate": "associated_with",
+      "object": "Intelligence"
+    },
+    {
+      "subject": "His 1950 paper",
+      "predicate": "associated_with",
+      "object": "the Turing Test"
+    },
+    {
+      "subject": "significant contributions",
+      "predicate": "related_to",
+      "object": "mathematical biology"
+    },
+    {
+      "subject": "significant contributions",
+      "predicate": "related_to",
+      "object": "work"
+    },
+    {
+      "subject": "significant contributions",
+      "predicate": "related_to",
+      "object": "morphogenesis"
+    },
+    {
+      "subject": "mathematical biology",
+      "predicate": "related_to",
+      "object": "significant contributions"
+    },
+    {
+      "subject": "mathematical biology",
+      "predicate": "related_to",
+      "object": "work"
+    },
+    {
+      "subject": "mathematical biology",
+      "predicate": "related_to",
+      "object": "morphogenesis"
+    },
+    {
+      "subject": "work",
+      "predicate": "related_to",
+      "object": "significant contributions"
+    },
+    {
+      "subject": "work",
+      "predicate": "related_to",
+      "object": "mathematical biology"
+    },
+    {
+      "subject": "work",
+      "predicate": "related_to",
+      "object": "morphogenesis"
+    },
+    {
+      "subject": "morphogenesis",
+      "predicate": "related_to",
+      "object": "significant contributions"
+    },
+    {
+      "subject": "morphogenesis",
+      "predicate": "related_to",
+      "object": "mathematical biology"
+    },
+    {
+      "subject": "morphogenesis",
+      "predicate": "related_to",
+      "object": "work"
+    },
+    {
+      "subject": "England",
+      "predicate": "associated_with",
+      "object": "1954"
+    },
+    {
+      "subject": "England",
+      "predicate": "related_to",
+      "object": "Wilmslow"
+    },
+    {
+      "subject": "1954",
+      "predicate": "associated_with",
+      "object": "England"
+    },
+    {
+      "subject": "1954",
+      "predicate": "associated_with",
+      "object": "Wilmslow"
+    },
+    {
+      "subject": "Wilmslow",
+      "predicate": "related_to",
+      "object": "England"
+    },
+    {
+      "subject": "Wilmslow",
+      "predicate": "associated_with",
+      "object": "1954"
+    },
+    {
+      "subject": "Marie Curie",
+      "predicate": "lives_in",
+      "object": "Warsaw"
+    },
+    {
+      "subject": "Marie Curie",
+      "predicate": "lives_in",
+      "object": "Poland"
+    },
+    {
+      "subject": "Marie Curie",
+      "predicate": "associated_with",
+      "object": "1867"
+    },
+    {
+      "subject": "Marie Curie",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "Warsaw",
+      "predicate": "lives_in",
+      "object": "Marie Curie"
+    },
+    {
+      "subject": "Warsaw",
+      "predicate": "related_to",
+      "object": "Poland"
+    },
+    {
+      "subject": "Warsaw",
+      "predicate": "associated_with",
+      "object": "1867"
+    },
+    {
+      "subject": "Warsaw",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "Poland",
+      "predicate": "lives_in",
+      "object": "Marie Curie"
+    },
+    {
+      "subject": "Poland",
+      "predicate": "related_to",
+      "object": "Warsaw"
+    },
+    {
+      "subject": "Poland",
+      "predicate": "associated_with",
+      "object": "1867"
+    },
+    {
+      "subject": "Poland",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "1867",
+      "predicate": "associated_with",
+      "object": "Marie Curie"
+    },
+    {
+      "subject": "1867",
+      "predicate": "associated_with",
+      "object": "Warsaw"
+    },
+    {
+      "subject": "1867",
+      "predicate": "associated_with",
+      "object": "Poland"
+    },
+    {
+      "subject": "1867",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "Marie Curie"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "Warsaw"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "Poland"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "1867"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "her pioneering research"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "radioactivity"
+    },
+    {
+      "subject": "her pioneering research",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "her pioneering research",
+      "predicate": "related_to",
+      "object": "radioactivity"
+    },
+    {
+      "subject": "radioactivity",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "radioactivity",
+      "predicate": "related_to",
+      "object": "her pioneering research"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "the elements"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "polonium"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "radium"
+    },
+    {
+      "subject": "the elements",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "the elements",
+      "predicate": "related_to",
+      "object": "polonium"
+    },
+    {
+      "subject": "the elements",
+      "predicate": "related_to",
+      "object": "radium"
+    },
+    {
+      "subject": "polonium",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "polonium",
+      "predicate": "related_to",
+      "object": "the elements"
+    },
+    {
+      "subject": "polonium",
+      "predicate": "related_to",
+      "object": "radium"
+    },
+    {
+      "subject": "radium",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "radium",
+      "predicate": "related_to",
+      "object": "the elements"
+    },
+    {
+      "subject": "radium",
+      "predicate": "related_to",
+      "object": "polonium"
+    },
+    {
+      "subject": "the University of Paris",
+      "predicate": "associated_with",
+      "object": "first"
+    },
+    {
+      "subject": "the University of Paris",
+      "predicate": "located_in",
+      "object": "Paris"
+    },
+    {
+      "subject": "the University of Paris",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "the University of Paris",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "the University of Paris",
+      "predicate": "associated_with",
+      "object": "the University"
+    },
+    {
+      "subject": "the University of Paris",
+      "predicate": "associated_with",
+      "object": "the first female professor"
+    },
+    {
+      "subject": "first",
+      "predicate": "associated_with",
+      "object": "the University of Paris"
+    },
+    {
+      "subject": "first",
+      "predicate": "associated_with",
+      "object": "Paris"
+    },
+    {
+      "subject": "first",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "first",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "first",
+      "predicate": "associated_with",
+      "object": "the University"
+    },
+    {
+      "subject": "first",
+      "predicate": "associated_with",
+      "object": "the first female professor"
+    },
+    {
+      "subject": "Paris",
+      "predicate": "located_in",
+      "object": "the University of Paris"
+    },
+    {
+      "subject": "Paris",
+      "predicate": "associated_with",
+      "object": "first"
+    },
+    {
+      "subject": "Paris",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "Paris",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "Paris",
+      "predicate": "associated_with",
+      "object": "the University"
+    },
+    {
+      "subject": "Paris",
+      "predicate": "associated_with",
+      "object": "the first female professor"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "the University of Paris"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "first"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "Paris"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "the University"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "the first female professor"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "the University of Paris"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "first"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "Paris"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "the University"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "the first female professor"
+    },
+    {
+      "subject": "the University",
+      "predicate": "associated_with",
+      "object": "the University of Paris"
+    },
+    {
+      "subject": "the University",
+      "predicate": "associated_with",
+      "object": "first"
+    },
+    {
+      "subject": "the University",
+      "predicate": "associated_with",
+      "object": "Paris"
+    },
+    {
+      "subject": "the University",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "the University",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "the University",
+      "predicate": "related_to",
+      "object": "the first female professor"
+    },
+    {
+      "subject": "the first female professor",
+      "predicate": "associated_with",
+      "object": "the University of Paris"
+    },
+    {
+      "subject": "the first female professor",
+      "predicate": "associated_with",
+      "object": "first"
+    },
+    {
+      "subject": "the first female professor",
+      "predicate": "associated_with",
+      "object": "Paris"
+    },
+    {
+      "subject": "the first female professor",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "the first female professor",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "the first female professor",
+      "predicate": "related_to",
+      "object": "the University"
+    },
+    {
+      "subject": "1903",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize in Physics"
+    },
+    {
+      "subject": "1903",
+      "predicate": "associated_with",
+      "object": "Pierre Curie"
+    },
+    {
+      "subject": "1903",
+      "predicate": "associated_with",
+      "object": "Henri Becquerel"
+    },
+    {
+      "subject": "1903",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "1903",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "1903",
+      "predicate": "associated_with",
+      "object": "radioactivity"
+    },
+    {
+      "subject": "1903",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "1903",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize"
+    },
+    {
+      "subject": "1903",
+      "predicate": "associated_with",
+      "object": "Physics"
+    },
+    {
+      "subject": "1903",
+      "predicate": "associated_with",
+      "object": "their work"
+    },
+    {
+      "subject": "the Nobel Prize in Physics",
+      "predicate": "associated_with",
+      "object": "1903"
+    },
+    {
+      "subject": "the Nobel Prize in Physics",
+      "predicate": "associated_with",
+      "object": "Pierre Curie"
+    },
+    {
+      "subject": "the Nobel Prize in Physics",
+      "predicate": "associated_with",
+      "object": "Henri Becquerel"
+    },
+    {
+      "subject": "the Nobel Prize in Physics",
+      "predicate": "related_to",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "the Nobel Prize in Physics",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "the Nobel Prize in Physics",
+      "predicate": "associated_with",
+      "object": "radioactivity"
+    },
+    {
+      "subject": "the Nobel Prize in Physics",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "the Nobel Prize in Physics",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize"
+    },
+    {
+      "subject": "the Nobel Prize in Physics",
+      "predicate": "associated_with",
+      "object": "Physics"
+    },
+    {
+      "subject": "the Nobel Prize in Physics",
+      "predicate": "associated_with",
+      "object": "their work"
+    },
+    {
+      "subject": "Pierre Curie",
+      "predicate": "associated_with",
+      "object": "1903"
+    },
+    {
+      "subject": "Pierre Curie",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize in Physics"
+    },
+    {
+      "subject": "Pierre Curie",
+      "predicate": "knows",
+      "object": "Henri Becquerel"
+    },
+    {
+      "subject": "Pierre Curie",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "Pierre Curie",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "Pierre Curie",
+      "predicate": "associated_with",
+      "object": "radioactivity"
+    },
+    {
+      "subject": "Pierre Curie",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "Pierre Curie",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize"
+    },
+    {
+      "subject": "Pierre Curie",
+      "predicate": "associated_with",
+      "object": "Physics"
+    },
+    {
+      "subject": "Pierre Curie",
+      "predicate": "associated_with",
+      "object": "their work"
+    },
+    {
+      "subject": "Henri Becquerel",
+      "predicate": "associated_with",
+      "object": "1903"
+    },
+    {
+      "subject": "Henri Becquerel",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize in Physics"
+    },
+    {
+      "subject": "Henri Becquerel",
+      "predicate": "knows",
+      "object": "Pierre Curie"
+    },
+    {
+      "subject": "Henri Becquerel",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "Henri Becquerel",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "Henri Becquerel",
+      "predicate": "associated_with",
+      "object": "radioactivity"
+    },
+    {
+      "subject": "Henri Becquerel",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "Henri Becquerel",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize"
+    },
+    {
+      "subject": "Henri Becquerel",
+      "predicate": "associated_with",
+      "object": "Physics"
+    },
+    {
+      "subject": "Henri Becquerel",
+      "predicate": "associated_with",
+      "object": "their work"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "1903"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "related_to",
+      "object": "the Nobel Prize in Physics"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "Pierre Curie"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "Henri Becquerel"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "radioactivity"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "Physics"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "their work"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "1903"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize in Physics"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "Pierre Curie"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "Henri Becquerel"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "radioactivity"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "the Nobel Prize"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "Physics"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "their work"
+    },
+    {
+      "subject": "radioactivity",
+      "predicate": "associated_with",
+      "object": "1903"
+    },
+    {
+      "subject": "radioactivity",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize in Physics"
+    },
+    {
+      "subject": "radioactivity",
+      "predicate": "associated_with",
+      "object": "Pierre Curie"
+    },
+    {
+      "subject": "radioactivity",
+      "predicate": "associated_with",
+      "object": "Henri Becquerel"
+    },
+    {
+      "subject": "radioactivity",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "radioactivity",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "radioactivity",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "radioactivity",
+      "predicate": "related_to",
+      "object": "the Nobel Prize"
+    },
+    {
+      "subject": "radioactivity",
+      "predicate": "related_to",
+      "object": "Physics"
+    },
+    {
+      "subject": "radioactivity",
+      "predicate": "related_to",
+      "object": "their work"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "1903"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize in Physics"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "Pierre Curie"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "Henri Becquerel"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "radioactivity"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "the Nobel Prize"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "Physics"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "their work"
+    },
+    {
+      "subject": "the Nobel Prize",
+      "predicate": "associated_with",
+      "object": "1903"
+    },
+    {
+      "subject": "the Nobel Prize",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize in Physics"
+    },
+    {
+      "subject": "the Nobel Prize",
+      "predicate": "associated_with",
+      "object": "Pierre Curie"
+    },
+    {
+      "subject": "the Nobel Prize",
+      "predicate": "associated_with",
+      "object": "Henri Becquerel"
+    },
+    {
+      "subject": "the Nobel Prize",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "the Nobel Prize",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "the Nobel Prize",
+      "predicate": "related_to",
+      "object": "radioactivity"
+    },
+    {
+      "subject": "the Nobel Prize",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "the Nobel Prize",
+      "predicate": "related_to",
+      "object": "Physics"
+    },
+    {
+      "subject": "the Nobel Prize",
+      "predicate": "related_to",
+      "object": "their work"
+    },
+    {
+      "subject": "Physics",
+      "predicate": "associated_with",
+      "object": "1903"
+    },
+    {
+      "subject": "Physics",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize in Physics"
+    },
+    {
+      "subject": "Physics",
+      "predicate": "associated_with",
+      "object": "Pierre Curie"
+    },
+    {
+      "subject": "Physics",
+      "predicate": "associated_with",
+      "object": "Henri Becquerel"
+    },
+    {
+      "subject": "Physics",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "Physics",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "Physics",
+      "predicate": "related_to",
+      "object": "radioactivity"
+    },
+    {
+      "subject": "Physics",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "Physics",
+      "predicate": "related_to",
+      "object": "the Nobel Prize"
+    },
+    {
+      "subject": "Physics",
+      "predicate": "related_to",
+      "object": "their work"
+    },
+    {
+      "subject": "their work",
+      "predicate": "associated_with",
+      "object": "1903"
+    },
+    {
+      "subject": "their work",
+      "predicate": "associated_with",
+      "object": "the Nobel Prize in Physics"
+    },
+    {
+      "subject": "their work",
+      "predicate": "associated_with",
+      "object": "Pierre Curie"
+    },
+    {
+      "subject": "their work",
+      "predicate": "associated_with",
+      "object": "Henri Becquerel"
+    },
+    {
+      "subject": "their work",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "their work",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "their work",
+      "predicate": "related_to",
+      "object": "radioactivity"
+    },
+    {
+      "subject": "their work",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "their work",
+      "predicate": "related_to",
+      "object": "the Nobel Prize"
+    },
+    {
+      "subject": "their work",
+      "predicate": "related_to",
+      "object": "Physics"
+    },
+    {
+      "subject": "1911",
+      "predicate": "associated_with",
+      "object": "second"
+    },
+    {
+      "subject": "1911",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "1911",
+      "predicate": "associated_with",
+      "object": "Chemistry"
+    },
+    {
+      "subject": "1911",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "1911",
+      "predicate": "associated_with",
+      "object": "polonium"
+    },
+    {
+      "subject": "1911",
+      "predicate": "associated_with",
+      "object": "radium"
+    },
+    {
+      "subject": "1911",
+      "predicate": "associated_with",
+      "object": "a second Nobel Prize"
+    },
+    {
+      "subject": "1911",
+      "predicate": "associated_with",
+      "object": "this time"
+    },
+    {
+      "subject": "1911",
+      "predicate": "associated_with",
+      "object": "her discovery"
+    },
+    {
+      "subject": "second",
+      "predicate": "associated_with",
+      "object": "1911"
+    },
+    {
+      "subject": "second",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "second",
+      "predicate": "associated_with",
+      "object": "Chemistry"
+    },
+    {
+      "subject": "second",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "second",
+      "predicate": "associated_with",
+      "object": "polonium"
+    },
+    {
+      "subject": "second",
+      "predicate": "associated_with",
+      "object": "radium"
+    },
+    {
+      "subject": "second",
+      "predicate": "associated_with",
+      "object": "a second Nobel Prize"
+    },
+    {
+      "subject": "second",
+      "predicate": "associated_with",
+      "object": "this time"
+    },
+    {
+      "subject": "second",
+      "predicate": "associated_with",
+      "object": "her discovery"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "1911"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "second"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "Chemistry"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "polonium"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "radium"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "a second Nobel Prize"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "this time"
+    },
+    {
+      "subject": "Nobel Prize",
+      "predicate": "associated_with",
+      "object": "her discovery"
+    },
+    {
+      "subject": "Chemistry",
+      "predicate": "associated_with",
+      "object": "1911"
+    },
+    {
+      "subject": "Chemistry",
+      "predicate": "associated_with",
+      "object": "second"
+    },
+    {
+      "subject": "Chemistry",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "Chemistry",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "Chemistry",
+      "predicate": "associated_with",
+      "object": "polonium"
+    },
+    {
+      "subject": "Chemistry",
+      "predicate": "associated_with",
+      "object": "radium"
+    },
+    {
+      "subject": "Chemistry",
+      "predicate": "associated_with",
+      "object": "a second Nobel Prize"
+    },
+    {
+      "subject": "Chemistry",
+      "predicate": "associated_with",
+      "object": "this time"
+    },
+    {
+      "subject": "Chemistry",
+      "predicate": "associated_with",
+      "object": "her discovery"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "1911"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "second"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "Chemistry"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "polonium"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "radium"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "a second Nobel Prize"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "this time"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "her discovery"
+    },
+    {
+      "subject": "polonium",
+      "predicate": "associated_with",
+      "object": "1911"
+    },
+    {
+      "subject": "polonium",
+      "predicate": "associated_with",
+      "object": "second"
+    },
+    {
+      "subject": "polonium",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "polonium",
+      "predicate": "associated_with",
+      "object": "Chemistry"
+    },
+    {
+      "subject": "polonium",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "polonium",
+      "predicate": "related_to",
+      "object": "radium"
+    },
+    {
+      "subject": "polonium",
+      "predicate": "related_to",
+      "object": "a second Nobel Prize"
+    },
+    {
+      "subject": "polonium",
+      "predicate": "related_to",
+      "object": "this time"
+    },
+    {
+      "subject": "polonium",
+      "predicate": "related_to",
+      "object": "her discovery"
+    },
+    {
+      "subject": "radium",
+      "predicate": "associated_with",
+      "object": "1911"
+    },
+    {
+      "subject": "radium",
+      "predicate": "associated_with",
+      "object": "second"
+    },
+    {
+      "subject": "radium",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "radium",
+      "predicate": "associated_with",
+      "object": "Chemistry"
+    },
+    {
+      "subject": "radium",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "radium",
+      "predicate": "related_to",
+      "object": "polonium"
+    },
+    {
+      "subject": "radium",
+      "predicate": "related_to",
+      "object": "a second Nobel Prize"
+    },
+    {
+      "subject": "radium",
+      "predicate": "related_to",
+      "object": "this time"
+    },
+    {
+      "subject": "radium",
+      "predicate": "related_to",
+      "object": "her discovery"
+    },
+    {
+      "subject": "a second Nobel Prize",
+      "predicate": "associated_with",
+      "object": "1911"
+    },
+    {
+      "subject": "a second Nobel Prize",
+      "predicate": "associated_with",
+      "object": "second"
+    },
+    {
+      "subject": "a second Nobel Prize",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "a second Nobel Prize",
+      "predicate": "associated_with",
+      "object": "Chemistry"
+    },
+    {
+      "subject": "a second Nobel Prize",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "a second Nobel Prize",
+      "predicate": "related_to",
+      "object": "polonium"
+    },
+    {
+      "subject": "a second Nobel Prize",
+      "predicate": "related_to",
+      "object": "radium"
+    },
+    {
+      "subject": "a second Nobel Prize",
+      "predicate": "related_to",
+      "object": "this time"
+    },
+    {
+      "subject": "a second Nobel Prize",
+      "predicate": "related_to",
+      "object": "her discovery"
+    },
+    {
+      "subject": "this time",
+      "predicate": "associated_with",
+      "object": "1911"
+    },
+    {
+      "subject": "this time",
+      "predicate": "associated_with",
+      "object": "second"
+    },
+    {
+      "subject": "this time",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "this time",
+      "predicate": "associated_with",
+      "object": "Chemistry"
+    },
+    {
+      "subject": "this time",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "this time",
+      "predicate": "related_to",
+      "object": "polonium"
+    },
+    {
+      "subject": "this time",
+      "predicate": "related_to",
+      "object": "radium"
+    },
+    {
+      "subject": "this time",
+      "predicate": "related_to",
+      "object": "a second Nobel Prize"
+    },
+    {
+      "subject": "this time",
+      "predicate": "related_to",
+      "object": "her discovery"
+    },
+    {
+      "subject": "her discovery",
+      "predicate": "associated_with",
+      "object": "1911"
+    },
+    {
+      "subject": "her discovery",
+      "predicate": "associated_with",
+      "object": "second"
+    },
+    {
+      "subject": "her discovery",
+      "predicate": "associated_with",
+      "object": "Nobel Prize"
+    },
+    {
+      "subject": "her discovery",
+      "predicate": "associated_with",
+      "object": "Chemistry"
+    },
+    {
+      "subject": "her discovery",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "her discovery",
+      "predicate": "related_to",
+      "object": "polonium"
+    },
+    {
+      "subject": "her discovery",
+      "predicate": "related_to",
+      "object": "radium"
+    },
+    {
+      "subject": "her discovery",
+      "predicate": "related_to",
+      "object": "a second Nobel Prize"
+    },
+    {
+      "subject": "her discovery",
+      "predicate": "related_to",
+      "object": "this time"
+    },
+    {
+      "subject": "Warsaw",
+      "predicate": "located_in",
+      "object": "the Curie Institutes"
+    },
+    {
+      "subject": "Warsaw",
+      "predicate": "related_to",
+      "object": "Paris"
+    },
+    {
+      "subject": "Warsaw",
+      "predicate": "associated_with",
+      "object": "today"
+    },
+    {
+      "subject": "Warsaw",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "Warsaw",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "Warsaw",
+      "predicate": "associated_with",
+      "object": "which"
+    },
+    {
+      "subject": "Warsaw",
+      "predicate": "associated_with",
+      "object": "major medical research centers"
+    },
+    {
+      "subject": "the Curie Institutes",
+      "predicate": "located_in",
+      "object": "Warsaw"
+    },
+    {
+      "subject": "the Curie Institutes",
+      "predicate": "located_in",
+      "object": "Paris"
+    },
+    {
+      "subject": "the Curie Institutes",
+      "predicate": "associated_with",
+      "object": "today"
+    },
+    {
+      "subject": "the Curie Institutes",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "the Curie Institutes",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "the Curie Institutes",
+      "predicate": "associated_with",
+      "object": "which"
+    },
+    {
+      "subject": "the Curie Institutes",
+      "predicate": "associated_with",
+      "object": "major medical research centers"
+    },
+    {
+      "subject": "Paris",
+      "predicate": "related_to",
+      "object": "Warsaw"
+    },
+    {
+      "subject": "Paris",
+      "predicate": "located_in",
+      "object": "the Curie Institutes"
+    },
+    {
+      "subject": "Paris",
+      "predicate": "associated_with",
+      "object": "today"
+    },
+    {
+      "subject": "Paris",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "Paris",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "Paris",
+      "predicate": "associated_with",
+      "object": "which"
+    },
+    {
+      "subject": "Paris",
+      "predicate": "associated_with",
+      "object": "major medical research centers"
+    },
+    {
+      "subject": "today",
+      "predicate": "associated_with",
+      "object": "Warsaw"
+    },
+    {
+      "subject": "today",
+      "predicate": "associated_with",
+      "object": "the Curie Institutes"
+    },
+    {
+      "subject": "today",
+      "predicate": "associated_with",
+      "object": "Paris"
+    },
+    {
+      "subject": "today",
+      "predicate": "associated_with",
+      "object": "She"
+    },
+    {
+      "subject": "today",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "today",
+      "predicate": "associated_with",
+      "object": "which"
+    },
+    {
+      "subject": "today",
+      "predicate": "associated_with",
+      "object": "major medical research centers"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "Warsaw"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "the Curie Institutes"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "Paris"
+    },
+    {
+      "subject": "She",
+      "predicate": "associated_with",
+      "object": "today"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "which"
+    },
+    {
+      "subject": "She",
+      "predicate": "related_to",
+      "object": "major medical research centers"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "Warsaw"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "the Curie Institutes"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "Paris"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "today"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "which"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "major medical research centers"
+    },
+    {
+      "subject": "which",
+      "predicate": "associated_with",
+      "object": "Warsaw"
+    },
+    {
+      "subject": "which",
+      "predicate": "associated_with",
+      "object": "the Curie Institutes"
+    },
+    {
+      "subject": "which",
+      "predicate": "associated_with",
+      "object": "Paris"
+    },
+    {
+      "subject": "which",
+      "predicate": "associated_with",
+      "object": "today"
+    },
+    {
+      "subject": "which",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "which",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "which",
+      "predicate": "related_to",
+      "object": "major medical research centers"
+    },
+    {
+      "subject": "major medical research centers",
+      "predicate": "associated_with",
+      "object": "Warsaw"
+    },
+    {
+      "subject": "major medical research centers",
+      "predicate": "associated_with",
+      "object": "the Curie Institutes"
+    },
+    {
+      "subject": "major medical research centers",
+      "predicate": "associated_with",
+      "object": "Paris"
+    },
+    {
+      "subject": "major medical research centers",
+      "predicate": "associated_with",
+      "object": "today"
+    },
+    {
+      "subject": "major medical research centers",
+      "predicate": "related_to",
+      "object": "She"
+    },
+    {
+      "subject": "major medical research centers",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "major medical research centers",
+      "predicate": "related_to",
+      "object": "which"
+    },
+    {
+      "subject": "Marie Curie",
+      "predicate": "associated_with",
+      "object": "1934"
+    },
+    {
+      "subject": "Marie Curie",
+      "predicate": "lives_in",
+      "object": "Passy"
+    },
+    {
+      "subject": "Marie Curie",
+      "predicate": "lives_in",
+      "object": "France"
+    },
+    {
+      "subject": "Marie Curie",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "Marie Curie",
+      "predicate": "associated_with",
+      "object": "aplastic anemia"
+    },
+    {
+      "subject": "Marie Curie",
+      "predicate": "associated_with",
+      "object": "her long-term exposure"
+    },
+    {
+      "subject": "Marie Curie",
+      "predicate": "associated_with",
+      "object": "radiation"
+    },
+    {
+      "subject": "1934",
+      "predicate": "associated_with",
+      "object": "Marie Curie"
+    },
+    {
+      "subject": "1934",
+      "predicate": "associated_with",
+      "object": "Passy"
+    },
+    {
+      "subject": "1934",
+      "predicate": "associated_with",
+      "object": "France"
+    },
+    {
+      "subject": "1934",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "1934",
+      "predicate": "associated_with",
+      "object": "aplastic anemia"
+    },
+    {
+      "subject": "1934",
+      "predicate": "associated_with",
+      "object": "her long-term exposure"
+    },
+    {
+      "subject": "1934",
+      "predicate": "associated_with",
+      "object": "radiation"
+    },
+    {
+      "subject": "Passy",
+      "predicate": "lives_in",
+      "object": "Marie Curie"
+    },
+    {
+      "subject": "Passy",
+      "predicate": "associated_with",
+      "object": "1934"
+    },
+    {
+      "subject": "Passy",
+      "predicate": "related_to",
+      "object": "France"
+    },
+    {
+      "subject": "Passy",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "Passy",
+      "predicate": "associated_with",
+      "object": "aplastic anemia"
+    },
+    {
+      "subject": "Passy",
+      "predicate": "associated_with",
+      "object": "her long-term exposure"
+    },
+    {
+      "subject": "Passy",
+      "predicate": "associated_with",
+      "object": "radiation"
+    },
+    {
+      "subject": "France",
+      "predicate": "lives_in",
+      "object": "Marie Curie"
+    },
+    {
+      "subject": "France",
+      "predicate": "associated_with",
+      "object": "1934"
+    },
+    {
+      "subject": "France",
+      "predicate": "related_to",
+      "object": "Passy"
+    },
+    {
+      "subject": "France",
+      "predicate": "associated_with",
+      "object": "Curie"
+    },
+    {
+      "subject": "France",
+      "predicate": "associated_with",
+      "object": "aplastic anemia"
+    },
+    {
+      "subject": "France",
+      "predicate": "associated_with",
+      "object": "her long-term exposure"
+    },
+    {
+      "subject": "France",
+      "predicate": "associated_with",
+      "object": "radiation"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "Marie Curie"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "1934"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "Passy"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "associated_with",
+      "object": "France"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "aplastic anemia"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "her long-term exposure"
+    },
+    {
+      "subject": "Curie",
+      "predicate": "related_to",
+      "object": "radiation"
+    },
+    {
+      "subject": "aplastic anemia",
+      "predicate": "associated_with",
+      "object": "Marie Curie"
+    },
+    {
+      "subject": "aplastic anemia",
+      "predicate": "associated_with",
+      "object": "1934"
+    },
+    {
+      "subject": "aplastic anemia",
+      "predicate": "associated_with",
+      "object": "Passy"
+    },
+    {
+      "subject": "aplastic anemia",
+      "predicate": "associated_with",
+      "object": "France"
+    },
+    {
+      "subject": "aplastic anemia",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "aplastic anemia",
+      "predicate": "related_to",
+      "object": "her long-term exposure"
+    },
+    {
+      "subject": "aplastic anemia",
+      "predicate": "related_to",
+      "object": "radiation"
+    },
+    {
+      "subject": "her long-term exposure",
+      "predicate": "associated_with",
+      "object": "Marie Curie"
+    },
+    {
+      "subject": "her long-term exposure",
+      "predicate": "associated_with",
+      "object": "1934"
+    },
+    {
+      "subject": "her long-term exposure",
+      "predicate": "associated_with",
+      "object": "Passy"
+    },
+    {
+      "subject": "her long-term exposure",
+      "predicate": "associated_with",
+      "object": "France"
+    },
+    {
+      "subject": "her long-term exposure",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "her long-term exposure",
+      "predicate": "related_to",
+      "object": "aplastic anemia"
+    },
+    {
+      "subject": "her long-term exposure",
+      "predicate": "related_to",
+      "object": "radiation"
+    },
+    {
+      "subject": "radiation",
+      "predicate": "associated_with",
+      "object": "Marie Curie"
+    },
+    {
+      "subject": "radiation",
+      "predicate": "associated_with",
+      "object": "1934"
+    },
+    {
+      "subject": "radiation",
+      "predicate": "associated_with",
+      "object": "Passy"
+    },
+    {
+      "subject": "radiation",
+      "predicate": "associated_with",
+      "object": "France"
+    },
+    {
+      "subject": "radiation",
+      "predicate": "related_to",
+      "object": "Curie"
+    },
+    {
+      "subject": "radiation",
+      "predicate": "related_to",
+      "object": "aplastic anemia"
+    },
+    {
+      "subject": "radiation",
+      "predicate": "related_to",
+      "object": "her long-term exposure"
+    }
+  ],
+  "stats": {
+    "num_nodes": 77,
+    "num_edges": 544,
+    "num_triples": 566
+  }
+}

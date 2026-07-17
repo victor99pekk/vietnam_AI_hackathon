@@ -1,0 +1,10 @@
+{
+  "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "train_samples": 60,
+  "eval_samples": 16,
+  "max_steps": 300,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "load_in_4bit": true,
+  "gpu": "cpu"
+}
