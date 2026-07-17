@@ -1,9 +1,12 @@
 """CLI entry point for the Knowledge Graph Generator."""
 
-import sys
 from pathlib import Path
 
 import click
+from dotenv import load_dotenv
+
+# Load .env file before anything else
+load_dotenv()
 
 from kg_generator.config import PipelineConfig, load_config
 from kg_generator.pipeline import Pipeline
