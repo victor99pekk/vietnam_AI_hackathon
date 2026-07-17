@@ -15,7 +15,7 @@ dataset_kg.wikipedia       := generated_KGs/output/knowledge_graph.json
 MODEL   ?= Qwen/Qwen2.5-1.5B-Instruct
 model   ?= all
 
-.PHONY: help test ingest upload download install clean \
+.PHONY: help test ingest upload download plots install clean \
         eval-install eval-install-model eval-method1 eval-method2 eval-all
 
 help:
@@ -26,6 +26,7 @@ help:
 	@echo "   ingest           Run the KG generation pipeline"
 	@echo "   upload           Upload generated graph to Neo4j"
 	@echo "   download         Download graph from Neo4j → knowledge_graph.json"
+	@echo "   plots            Generate PNG plots from evaluation results"
 	@echo "   install          Set up the project and install dependencies"
 	@echo "   clean            Remove generated output folders"
 	@echo ""
@@ -77,6 +78,10 @@ upload:
 ## download: Download the graph from Neo4j (e.g., for Colab evaluation)  [dataset=small|wikipedia]
 download:
 	$(VENV) && kg-gen neo4j-download -o ./generated_KGs/output_$(dataset)/knowledge_graph.json
+
+## plots: Generate visual plots from evaluation results  [dataset=small|wikipedia]
+plots:
+	$(VENV) && python -m generate_plots
 
 ## install: Set up the project and install dependencies
 install:

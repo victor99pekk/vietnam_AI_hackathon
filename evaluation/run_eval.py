@@ -84,6 +84,31 @@ def load_config(config_path: Path | None) -> dict[str, Any]:
     return config
 
 
+def _auto_plot_method1(output_dir: Path) -> None:
+    """Auto-generate plots after Method 1 completes (best-effort, non-fatal)."""
+    try:
+        from generate_plots.plot_structural import plot_structural_audit
+        from generate_plots.plot_sft_quality import plot_sft_quality
+
+        audit_path = output_dir / "structural_audit.json"
+        quality_path = output_dir / "sft_quality_report.json"
+
+        if audit_path.exists():
+            logger.info("Auto-generating structural audit plots…")
+            plot_structural_audit(audit_path, output_dir)
+
+        if quality_path.exists():
+            logger.info("Auto-generating SFT quality plots…")
+            plot_sft_quality(quality_path, output_dir)
+
+        logger.info("Plots saved → %s", output_dir)
+    except ImportError:
+        logger.info("matplotlib not installed — skipping plot generation.")
+        logger.info("Install with: pip install matplotlib")
+    except Exception as exc:
+        logger.warning("Plot generation skipped (non-fatal): %s", exc)
+
+
 # ═══════════════════════════════════════════════════════════════
 # Method 1: SFT Data Quality Assessment
 # ═══════════════════════════════════════════════════════════════
@@ -187,6 +212,9 @@ def run_method1(kg_path: Path, config: dict[str, Any], output_base: Path) -> dic
     with open(combined_path, "w") as f:
         json.dump(results, f, indent=2)
     logger.info("Method 1 complete → %s", combined_path)
+
+    # ── Auto-generate plots ──────────────────────────────────
+    _auto_plot_method1(output_dir)
 
     return results
 
