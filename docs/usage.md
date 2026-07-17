@@ -3,11 +3,11 @@
 ## Quick Start
 
 ```bash
-# Install
-pip install -e .
-
-# Download spaCy model (for English extraction)
-python -m spacy download en_core_web_lg
+# Using uv (recommended — see docs/UV_SETUP.md if you're new to uv)
+uv venv
+source .venv/bin/activate
+uv pip install -e "."
+python -m spacy download en_core_web_sm
 
 # Run with defaults on sample data
 kg-gen quick -i data/sample/
@@ -52,8 +52,7 @@ kg-gen evaluate -i output/knowledge_graph.json
 2. **Dedup & Quality Filter** — Remove low-quality and duplicate content
 3. **Extract** — NER + relation extraction → (subject, predicate, object) triples
 4. **Resolve** — Merge duplicate entity mentions
-5. **Build Graph** — Construct directed graph, validate against ontology
-6. **Export** — JSON, GraphML, Neo4j CSV, RDF/Turtle, Cytoscape.js
+5. **Build Graph & Export** — Construct directed graph, validate against ontology, export to multiple formats
 
 ## Output Files
 
@@ -73,14 +72,21 @@ See `configs/pipeline.yaml` for all options and `configs/default_ontology.yaml` 
 ### Adding Vietnamese Support
 
 ```bash
-pip install -e ".[vi]"
+uv pip install -e ".[vi]"
 kg-gen run -l vi -i vietnamese_data/
+```
+
+### Using Embedding-based Entity Resolution
+
+```bash
+uv pip install -e ".[embeddings]"
+# The resolver will automatically use sentence-transformers for better accuracy
 ```
 
 ### Using LLM-based Extraction
 
 ```bash
-pip install -e ".[llm]"
+uv pip install -e ".[llm]"
 export OPENAI_API_KEY=your_key
 kg-gen run --llm -i data/
 ```
@@ -88,7 +94,7 @@ kg-gen run --llm -i data/
 ### Neo4j Export
 
 ```bash
-pip install -e ".[neo4j]"
-# Update config: graph_backend: neo4j
+uv pip install -e ".[neo4j]"
+# Update configs/pipeline.yaml: graph_backend: neo4j
 kg-gen run -c configs/pipeline.yaml
 ```
