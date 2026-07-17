@@ -48,6 +48,7 @@ kg-gen curate -i data/sample/ -m configs/example_source_manifest.yaml
 
 See [the curation guide](docs/dataset_curation.md) for the source-manifest format, outputs, and demo procedure.
 See [deduplication experiments](docs/deduplication_experiments.md) for MinHash and semantic experiment commands.
+See the [Wikimedia Wikipedia pilot guide](docs/wikipedia_dataset.md) to stream English or Vietnamese samples into the pipeline.
 
 ## Component Guides
 

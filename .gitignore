@@ -21,6 +21,7 @@ htmlcov/
 
 # Output
 output/
+data/external/
 
 # OS
 .DS_Store

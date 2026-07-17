@@ -30,6 +30,10 @@ embeddings = [
 vi = [
     "underthesea>=1.4",
 ]
+# Public dataset download and streaming
+data = [
+    "datasets>=3.0",
+]
 # Graph DB export support
 neo4j = [
     "neo4j>=5.15",
@@ -45,7 +49,7 @@ dev = [
 ]
 # All extras
 all = [
-    "kg-generator[embeddings,vi,neo4j,llm,dev]",
+    "kg-generator[embeddings,vi,data,neo4j,llm,dev]",
 ]
 
 [project.scripts]
