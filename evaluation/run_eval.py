@@ -672,7 +672,6 @@ Examples:
         action="store_true",
         help="Skip the ablation benchmark in Method 2 (run dataset gen + fine-tuning only)",
     )
-    )
     args = parser.parse_args()
 
     # Validate KG path
