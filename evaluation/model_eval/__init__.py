@@ -10,6 +10,15 @@ from evaluation.model_eval.dataset_gen import (
     load_kg,
     load_raw_documents,
 )
+from evaluation.model_eval.metrics import AblationBenchmark
+
+# Fine-tuning support requires torch + GPU — only export if available
+try:
+    from evaluation.model_eval.finetune import FineTuner, FineTuneConfig, _TORCH_AVAILABLE
+except ImportError:
+    _TORCH_AVAILABLE = False
+    FineTuner = None        # type: ignore
+    FineTuneConfig = None   # type: ignore
 
 __all__ = [
     "QADatasetGenerator",
@@ -18,6 +27,7 @@ __all__ = [
     "FineTuner",
     "FineTuneConfig",
     "AblationBenchmark",
+    "_TORCH_AVAILABLE",
 ]
 
 # Fine-tuning and benchmarking are imported by run_method2 only. Keeping those

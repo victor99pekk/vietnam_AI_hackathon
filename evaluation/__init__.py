@@ -22,6 +22,26 @@ from evaluation.data_eval import (
     TemplateSFTGenerator,
     SFTEvaluator,
 )
+
+# dataset_gen (no torch needed) — always import
+from evaluation.model_eval.dataset_gen import (
+    QADatasetGenerator,
+    load_kg,
+    load_raw_documents,
+)
+
+# Fine-tuning & benchmarking require torch+GPU — only export if available
+try:
+    from evaluation.model_eval.finetune import FineTuner, FineTuneConfig, _TORCH_AVAILABLE
+    from evaluation.model_eval.metrics import AblationBenchmark
+    if not _TORCH_AVAILABLE:
+        raise ImportError("torch not installed")
+except ImportError:
+    _TORCH_AVAILABLE = False
+    FineTuner = None               # type: ignore
+    FineTuneConfig = None          # type: ignore
+    AblationBenchmark = None       # type: ignore
+
 __all__ = [
     # data_eval
     "QualityEvaluator",
@@ -36,6 +56,7 @@ __all__ = [
     "FineTuner",
     "FineTuneConfig",
     "AblationBenchmark",
+    "_TORCH_AVAILABLE",
 ]
 
 # Model-evaluation dependencies (notably PyTorch) are optional and intentionally

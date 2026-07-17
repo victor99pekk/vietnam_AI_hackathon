@@ -1,3 +1,4 @@
+SHELL   := /bin/bash
 VENV    := source .venv/bin/activate
 dataset ?= small
 
