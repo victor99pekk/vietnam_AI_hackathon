@@ -50,11 +50,18 @@ from evaluation.model_eval.dataset_gen import (
     load_kg,
     load_raw_documents,
 )
-from evaluation.graphgen import (
-    GraphGenQAGenerator,
-    GraphGenSubgraphSampler,
-    load_graphgen_kg,
-)
+
+# Fine-tuning & benchmarking require torch+GPU — gracefully degrade on CPU
+try:
+    from evaluation.model_eval.finetune import FineTuner, FineTuneConfig, _TORCH_AVAILABLE
+    from evaluation.model_eval.metrics import AblationBenchmark
+    if not _TORCH_AVAILABLE:
+        raise ImportError("torch not installed")
+except ImportError:
+    _TORCH_AVAILABLE = False
+    FineTuner = None          # type: ignore
+    FineTuneConfig = None     # type: ignore
+    AblationBenchmark = None  # type: ignore
 
 logging.basicConfig(
     level=logging.INFO,
@@ -352,6 +359,14 @@ def run_method2(
             results["finetune"]["raw_adapter"] = str(raw_adapter_path)
     else:
         logger.info("\n--- Step 2.2: Fine-Tuning ---")
+        if not _TORCH_AVAILABLE:
+            logger.error(
+                "Fine-tuning requires torch + GPU. Install with: "
+                "uv pip install -e '.[eval-model]'"
+            )
+            logger.error("Or re-run with --skip-finetune to skip this step.")
+            return {"error": "torch not installed — cannot fine-tune on CPU"}
+
         lora_config = m2_config.get("lora", {})
         training_config = m2_config.get("training", {})
 
@@ -441,6 +456,14 @@ def run_method2(
         logger.info("\n--- Step 2.3: Ablation Benchmark (SKIPPED) ---")
     else:
         logger.info("\n--- Step 2.3: Ablation Benchmark ---")
+        if not _TORCH_AVAILABLE:
+            logger.error(
+                "Benchmarking requires torch + GPU. Install with: "
+                "uv pip install -e '.[eval-model]'"
+            )
+            logger.error("Or re-run with --skip-benchmark to skip this step.")
+            return {"error": "torch not installed — cannot benchmark on CPU"}
+
         benchmark_config = m2_config.get("benchmark", {})
 
         benchmark = AblationBenchmark(

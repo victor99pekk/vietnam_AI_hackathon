@@ -24,18 +24,23 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-import torch
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    BitsAndBytesConfig,
-    TrainingArguments,
-    Trainer,
-    DataCollatorForLanguageModeling,
-)
-from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, TaskType
-
 logger = logging.getLogger(__name__)
+
+_TORCH_AVAILABLE = False
+try:
+    import torch
+    from transformers import (
+        AutoModelForCausalLM,
+        AutoTokenizer,
+        BitsAndBytesConfig,
+        TrainingArguments,
+        Trainer,
+        DataCollatorForLanguageModeling,
+    )
+    from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, TaskType
+    _TORCH_AVAILABLE = True
+except ImportError:
+    pass
 
 # ── Optional: Unsloth (~2x faster on Colab) ─────────────────
 try:
@@ -45,12 +50,14 @@ except ImportError:
     UNSLOTH_AVAILABLE = False
 
 # ── CUDA check ───────────────────────────────────────────────
-CUDA_AVAILABLE = torch.cuda.is_available()
-if not CUDA_AVAILABLE:
-    logger.warning(
-        "CUDA not available — model_eval requires a GPU (Google Colab recommended). "
-        "Fine-tuning on CPU will be extremely slow."
-    )
+CUDA_AVAILABLE = False
+if _TORCH_AVAILABLE:
+    CUDA_AVAILABLE = torch.cuda.is_available()
+    if not CUDA_AVAILABLE:
+        logger.warning(
+            "CUDA not available — model_eval requires a GPU (Google Colab recommended). "
+            "Fine-tuning on CPU will be extremely slow."
+        )
 
 
 @dataclass
