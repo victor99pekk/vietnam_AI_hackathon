@@ -25,7 +25,7 @@ help:
 	@echo "── Pipeline ────────────────────────────────────────────"
 	@echo "   test             Run the test suite"
 	@echo "   ingest           Run the KG generation pipeline"
-	@echo "   upload           Upload generated graph to Neo4j"
+	@echo "   upload           Replace Neo4j contents with the generated graph"
 	@echo "   download         Download graph from Neo4j → knowledge_graph.json"
 	@echo "   plots            Generate PNG plots from evaluation results"
 	@echo "   install          Set up the project and install dependencies"
@@ -75,9 +75,9 @@ test:
 ingest:
 	$(VENV) && kg-gen run -c $(dataset_conf.$(dataset)) $(dataset_input.$(dataset)) -o ./generated_KGs/output_$(dataset)
 
-## upload: Upload the generated graph to Neo4j  [dataset=small|wikipedia]
+## upload: Clear Neo4j, then upload the generated graph  [dataset=small|wikipedia]
 upload:
-	$(VENV) && kg-gen neo4j-upload -o ./generated_KGs/output_$(dataset)
+	$(VENV) && kg-gen neo4j-upload -o ./generated_KGs/output_$(dataset) --clear
 
 ## download: Download the graph from Neo4j (e.g., for Colab evaluation)  [dataset=small|wikipedia]
 download:
