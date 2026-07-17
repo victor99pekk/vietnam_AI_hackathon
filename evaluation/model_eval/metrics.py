@@ -39,8 +39,8 @@ class AblationBenchmark:
 
     def __init__(
         self,
-        base_model: str = "Qwen/Qwen2.5-1.5B-Instruct",
-        max_test_samples: int = 200,
+        base_model: str = "Qwen/Qwen2.5-0.5B-Instruct",
+        max_test_samples: int = 50,
         seed: int = 42,
     ) -> None:
         self.base_model = base_model
@@ -485,7 +485,7 @@ class AblationBenchmark:
             "# KG → LLM Ablation Study Report",
             "",
             f"**Test samples**: {results.get('test_samples', 'N/A')}",
-            f"**Base model**: Qwen2.5-1.5B-Instruct",
+            f"**Base model**: Qwen2.5-0.5B-Instruct",
             "",
             "---",
             "",

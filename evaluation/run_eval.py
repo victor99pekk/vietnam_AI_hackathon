@@ -240,6 +240,7 @@ def run_method2(
     output_base: Path,
     fine_tune_target: str = "both",
     model_override: str | None = None,
+    device: str = "cpu",
     skip_dataset_gen: bool = False,
     skip_benchmark: bool = False,
     skip_finetune: bool = False,
@@ -361,18 +362,18 @@ def run_method2(
         logger.info("\n--- Step 2.2: Fine-Tuning ---")
         if not _TORCH_AVAILABLE:
             logger.error(
-                "Fine-tuning requires torch + GPU. Install with: "
+                "Fine-tuning requires torch. Install with: "
                 "uv pip install -e '.[eval-model]'"
             )
             logger.error("Or re-run with --skip-finetune to skip this step.")
-            return {"error": "torch not installed — cannot fine-tune on CPU"}
+            return {"error": "torch not installed — cannot fine-tune"}
 
         lora_config = m2_config.get("lora", {})
         training_config = m2_config.get("training", {})
 
         # Allow CLI override of the base model
         base_model = model_override or m2_config.get(
-            "base_model", "unsloth/Qwen2.5-1.5B-Instruct-bnb-4bit"
+            "base_model", "Qwen/Qwen2.5-0.5B-Instruct"
         )
         logger.info("Base model: %s", base_model)
         logger.info("Fine-tune target: %s", fine_tune_target)
@@ -380,6 +381,7 @@ def run_method2(
         ft_config = FineTuneConfig(
             base_model=base_model,
             output_dir=output_dir,
+            device=device,
             lora_r=lora_config.get("r", 16),
             lora_alpha=lora_config.get("alpha", 32),
             lora_dropout=lora_config.get("dropout", 0.05),
@@ -467,7 +469,7 @@ def run_method2(
         benchmark_config = m2_config.get("benchmark", {})
 
         benchmark = AblationBenchmark(
-            base_model=m2_config.get("base_model", "Qwen/Qwen2.5-1.5B-Instruct"),
+            base_model=m2_config.get("base_model", "Qwen/Qwen2.5-0.5B-Instruct"),
             max_test_samples=benchmark_config.get("max_test_samples", 200),
             seed=common_config.get("seed", 42),
         )
@@ -672,6 +674,12 @@ Examples:
         action="store_true",
         help="Skip the ablation benchmark in Method 2 (run dataset gen + fine-tuning only)",
     )
+    parser.add_argument(
+        "--device",
+        choices=["cpu", "cuda", "auto"],
+        default="cpu",
+        help="Device for fine-tuning: cpu (default), cuda, or auto",
+    )
     args = parser.parse_args()
 
     # Validate KG path
@@ -704,6 +712,7 @@ Examples:
                 args.kg, config, output_base,
                 fine_tune_target=args.fine_tune_target,
                 model_override=args.model,
+                device=args.device,
                 skip_dataset_gen=args.skip_dataset_gen,
                 skip_benchmark=args.skip_benchmark,
                 skip_finetune=args.skip_finetune,

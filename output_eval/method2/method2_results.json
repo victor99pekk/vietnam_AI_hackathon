@@ -1,9 +1,0 @@
-{
-  "dataset_gen": {
-    "kg_train": "output_eval/method2/kg_qa_train.jsonl",
-    "kg_test": "output_eval/method2/kg_qa_test.jsonl",
-    "raw_train": "output_eval/method2/raw_qa_train.jsonl",
-    "raw_test": "output_eval/method2/raw_qa_test.jsonl"
-  },
-  "finetune": {}
-}

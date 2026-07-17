@@ -1,0 +1,43 @@
+{
+  "pairs_evaluated": 35,
+  "metrics": {
+    "faithfulness": 0.171,
+    "faithfulness_detail": "29/35 responses contain entities not in source triples",
+    "answer_relevancy": 0.56,
+    "relevancy_detail": "Keyword overlap between instruction and response (heuristic proxy)",
+    "factual_correctness": 0.952,
+    "factual_detail": "Presence of triple entities in response (heuristic proxy)",
+    "note": "Heuristic evaluation (deepeval not available). Install deepeval for LLM-as-Judge scoring.",
+    "semantic_diversity": {
+      "score": 0.371,
+      "unique_bigram_ratio": 0.371,
+      "most_common_bigrams": [
+        {
+          "bigram": "the_first",
+          "count": 15
+        },
+        {
+          "bigram": "first_female",
+          "count": 15
+        },
+        {
+          "bigram": "female_professor",
+          "count": 13
+        },
+        {
+          "bigram": "the_university",
+          "count": 12
+        },
+        {
+          "bigram": "who_was",
+          "count": 12
+        }
+      ],
+      "flag": "red",
+      "detail": "Low diversity \u2014 only 37% unique bigrams. Instructions may be too templated."
+    }
+  },
+  "details": [],
+  "overall_score": 0.513,
+  "verdict": "\ud83d\udd36 Fair \u2014 consider improving the KG before generating SFT data."
+}

@@ -43,7 +43,7 @@ method1:
 # ── Method 2: Fine-Tuning Ablation Study ─────────────────────
 method2:
   # Model to fine-tune
-  base_model: Qwen/Qwen2.5-1.5B-Instruct
+  base_model: Qwen/Qwen2.5-0.5B-Instruct
   # Alternatives: Qwen/Qwen2.5-1.5B-Instruct, Qwen/Qwen2.5-7B-Instruct
 
   # LoRA configuration
@@ -87,7 +87,7 @@ method2:
   # Evaluation
   benchmark:
     # Number of test QA pairs to evaluate on
-    max_test_samples: 200
+    max_test_samples: 50
     # Metrics to compute
     metrics:
       - factual_accuracy

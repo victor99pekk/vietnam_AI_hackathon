@@ -13,8 +13,9 @@ dataset_input.wikipedia    := -i data/wikipedia/
 dataset_kg.wikipedia       := generated_KGs/output/knowledge_graph.json
 
 # ── Eval overrides ──
-MODEL   ?= Qwen/Qwen2.5-1.5B-Instruct
+MODEL   ?= Qwen/Qwen2.5-0.5B-Instruct
 model   ?= all
+DEVICE  ?= cpu
 
 .PHONY: help test ingest upload download plots install clean \
         eval-install eval-install-model eval-method1 eval-method2 eval-graphgen eval-all \
@@ -38,17 +39,18 @@ help:
 	@echo "     → audits graph health (orphans, density, schema, dups)"
 	@echo "     → generates & scores SFT training pairs via deepeval + DeepSeek"
 	@echo ""
-	@echo "   model_eval — Fine-tuning ablation study (Colab GPU only)"
+	@echo "   model_eval — Fine-tuning ablation study (CPU or GPU)"
 	@echo "     → trains Model B (KG-structured QA pairs)"
 	@echo "     → trains Model C (raw-text QA pairs)"
 	@echo "     → benchmarks both vs. base Qwen2.5 (Model A)"
+	@echo "     → defaults to CPU — set DEVICE=cuda for GPU"
 	@echo ""
 	@echo "   eval-install           Install data_eval deps (deepeval, sentence-transformers)"
-	@echo "   eval-install-model     Install model_eval deps (Colab only: transformers, peft, bitsandbytes)"
+	@echo "   eval-install-model     Install model_eval deps (torch, transformers, peft — for fine-tuning)"
 	@echo "   eval-method1           Run data_eval only"
-	@echo "   eval-method2           Run model_eval [model=b|c|all] (GPU required, model=a for benchmark)"
+	@echo "   eval-method2           Run model_eval [model=b|c|all] (CPU by default, DEVICE=cuda for GPU)"
 	@echo "   eval-graphgen          Build audited k-hop subgraphs and multi-hop QA"
-	@echo "   eval-local             Run data_eval + QA dataset generation (CPU, local Mac)"
+	@echo "   eval-local             Run data_eval + QA dataset generation (CPU, fast)"
 	@echo "   eval-datasets          Generate QA datasets only (no fine-tuning, no benchmark)"
 	@echo "   eval-all               Run data_eval + model_eval end-to-end"
 	@echo ""
@@ -59,14 +61,16 @@ help:
 	@echo "              c = raw-text (Model C)"
 	@echo "              a = benchmark only (skip fine-tuning)"
 	@echo "   MODEL    = Qwen/Qwen2.5-{0.5B,1.5B,3B,7B}-Instruct"
-	@echo "             (default: Qwen2.5-1.5B)"
+	@echo "             (default: Qwen2.5-0.5B — small enough for CPU)"
+	@echo "   DEVICE   = cpu | cuda                 (default: cpu)"
 	@echo ""
 	@echo "── Examples ────────────────────────────────────────────"
 	@echo "   make eval-method1                              # quick KG health check"
 	@echo "   make eval-local                               # full local eval: audit + QA datasets"
 	@echo "   make eval-datasets                            # generate QA datasets for Colab"
-	@echo "   make eval-method2 model=b                     # fine-tune KG model (GPU only)"
-	@echo "   make eval-method2 model=b MODEL=Qwen/Qwen2.5-3B-Instruct"
+	@echo "   make eval-method2 model=b                     # fine-tune KG model (CPU)"
+	@echo "   make eval-method2 model=b DEVICE=cuda          # fine-tune KG model (GPU)"
+	@echo "   make eval-method2 model=b MODEL=Qwen/Qwen2.5-1.5B-Instruct"
 
 ## test: Run the test suite
 test:
@@ -112,7 +116,7 @@ eval-install-model:
 eval-method1:
 	$(VENV) && python evaluation/run_eval.py --method 1 --kg $(dataset_kg.$(dataset))
 
-## eval-method2: Run Method 2  [model=a|b|c|all] [dataset=small|wikipedia] [MODEL=...]
+## eval-method2: Run Method 2  [model=a|b|c|all] [dataset=small|wikipedia] [MODEL=...] [DEVICE=cpu|cuda]
 eval-method2:
 	@case "$(model)" in \
 		a) target="--skip-finetune" ;; \
@@ -120,7 +124,7 @@ eval-method2:
 		c) target="-t raw" ;; \
 		*) target="-t both" ;; \
 	esac; \
-	$(VENV) && python evaluation/run_eval.py --method 2 --kg $(dataset_kg.$(dataset)) $$target --model $(MODEL)
+	$(VENV) && python evaluation/run_eval.py --method 2 --kg $(dataset_kg.$(dataset)) $$target --model $(MODEL) --device $(DEVICE)
 
 ## eval-graphgen: Run GraphGen-style subgraph + QA generation [dataset=small|wikipedia]
 eval-graphgen:
