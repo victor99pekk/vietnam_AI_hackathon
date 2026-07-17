@@ -18,10 +18,26 @@ pipeline:
   dedup_method: minhash            # minhash | simhash | ngram
   dedup_threshold: 0.85
 
-  # Entity extraction
+  # Entity and relationship extraction
   spacy_model: en_core_web_lg
-  use_llm: false
-  llm_model: deepseek-chat
+  use_llm: false                    # true = GraphGen-style joint DeepSeek extraction
+  llm_model: deepseek-v4-pro        # use deepseek-v4-flash for cheaper experiments
+  graphgen_max_gleanings: 3         # Figure 8 iterative missed-entity checks
+  graphgen_entity_types:
+    - concept
+    - date
+    - location
+    - keyword
+    - organization
+    - person
+    - event
+    - work
+    - nature
+    - artificial
+    - science
+    - technology
+    - mission
+    - gene
 
   # Entity resolution
   resolve_method: string        # string | embedding

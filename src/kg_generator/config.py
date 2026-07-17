@@ -19,6 +19,24 @@ class GraphBackend(str, Enum):
     NEO4J = "neo4j"
 
 
+DEFAULT_GRAPHGEN_ENTITY_TYPES = [
+    "concept",
+    "date",
+    "location",
+    "keyword",
+    "organization",
+    "person",
+    "event",
+    "work",
+    "nature",
+    "artificial",
+    "science",
+    "technology",
+    "mission",
+    "gene",
+]
+
+
 @dataclass
 class Ontology:
     """Defines the schema for a knowledge graph: entity types, relations, attributes."""
@@ -59,9 +77,13 @@ class PipelineConfig:
     dedup_method: str = "minhash"  # minhash, simhash, ngram
 
     # Extract
-    llm_model: str = "deepseek-chat"
+    llm_model: str = "deepseek-v4-pro"
     use_llm: bool = False
     spacy_model: str = "en_core_web_sm"
+    graphgen_entity_types: list[str] = field(
+        default_factory=lambda: list(DEFAULT_GRAPHGEN_ENTITY_TYPES)
+    )
+    graphgen_max_gleanings: int = 3
 
     # Resolve (string matching is safer than embedding-based for short/ID-like names)
     resolve_threshold: float = 0.85
@@ -87,9 +109,13 @@ class PipelineConfig:
             file_formats=pipeline.get("file_formats", ["txt", "json", "csv"]),
             dedup_threshold=pipeline.get("dedup_threshold", 0.85),
             dedup_method=pipeline.get("dedup_method", "minhash"),
-            llm_model=pipeline.get("llm_model", "gpt-4o-mini"),
+            llm_model=pipeline.get("llm_model", "deepseek-v4-pro"),
             use_llm=pipeline.get("use_llm", False),
             spacy_model=pipeline.get("spacy_model", "en_core_web_sm"),
+            graphgen_entity_types=pipeline.get(
+                "graphgen_entity_types", list(DEFAULT_GRAPHGEN_ENTITY_TYPES)
+            ),
+            graphgen_max_gleanings=pipeline.get("graphgen_max_gleanings", 3),
             resolve_threshold=pipeline.get("resolve_threshold", 0.85),
             resolve_method=pipeline.get("resolve_method", "string"),
             export_formats=pipeline.get("export_formats", ["json", "graphml"]),

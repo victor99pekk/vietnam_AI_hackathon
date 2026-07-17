@@ -19,7 +19,8 @@ pipeline:
   # Entity extraction — small model for speed
   spacy_model: en_core_web_sm
   use_llm: false
-  llm_model: deepseek-chat
+  llm_model: deepseek-v4-pro
+  graphgen_max_gleanings: 3
 
   # Entity resolution — string similarity (no model download)
   resolve_method: string_similarity

@@ -1,6 +1,7 @@
 """CLI entry point for the Knowledge Graph Generator."""
 
 from pathlib import Path
+import re
 
 import click
 from dotenv import load_dotenv
@@ -47,15 +48,15 @@ def main() -> None:
 )
 @click.option(
     "--llm/--no-llm",
-    default=False,
-    help="Enable LLM-based entity/relation extraction.",
+    default=None,
+    help="Enable GraphGen-style joint entity/relation extraction with DeepSeek.",
 )
 def run(
     input_paths: tuple[str, ...],
     config_path: str | None,
     output_dir: str,
     language: str,
-    llm: bool,
+    llm: bool | None,
 ) -> None:
     """Run the full knowledge graph generation pipeline."""
     config = load_config(Path(config_path) if config_path else None)
@@ -63,7 +64,8 @@ def run(
     if input_paths:
         config.input_paths = [Path(p) for p in input_paths]
     config.language = Language(language)
-    config.use_llm = llm
+    if llm is not None:
+        config.use_llm = llm
 
     pipeline = Pipeline(config, Path(output_dir))
     pipeline.execute()
@@ -118,7 +120,18 @@ def quick(input_paths: tuple[str, ...], output_dir: str) -> None:
     default=None,
     help="Neo4j password (default: $NEO4J_PASSWORD).",
 )
-def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: str | None) -> None:
+@click.option(
+    "--clear",
+    is_flag=True,
+    help="Delete all existing Neo4j nodes and relationships before uploading.",
+)
+def neo4j_upload(
+    output_dir: str,
+    uri: str | None,
+    user: str | None,
+    password: str | None,
+    clear: bool,
+) -> None:
     """Upload a generated knowledge graph to a Neo4j database."""
     import json
     import os
@@ -143,15 +156,14 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
         click.echo("Neo4j driver not installed. Run: uv pip install -e \".[neo4j]\"")
         raise click.Abort()
 
-    import hashlib
-    import secrets
-
     driver = GraphDatabase.driver(uri, auth=(user, password))
 
     with driver.session() as session:
-        # Wipe existing graph to avoid stale labels/properties from previous uploads
-        click.echo("Clearing existing graph...")
-        session.run("MATCH (n) DETACH DELETE n")
+        if clear:
+            click.echo("Clearing existing graph (--clear was supplied)...")
+            session.run("MATCH (n) DETACH DELETE n")
+        else:
+            click.echo("Preserving existing graph (use --clear for a clean replacement)...")
 
         # Upload nodes — separate by type (already normalized by exporter)
         nodes = data["graph"]["nodes"]
@@ -163,14 +175,16 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
         click.echo(f"Uploading {len(documents)} Document nodes...")
         for doc in documents:
             session.run(
-                "MERGE (d:Document {name: $name}) "
-                "SET d.id = $id, "
+                "MERGE (d:Document {id: $id}) "
+                "SET d.name = $name, "
+                "d.type = $type, "
                 "d.entityType = $entityType, "
                 "d.description = $description, "
                 "d.source = $source, "
                 "d.chunk_count = $chunk_count",
                 name=doc["name"],
                 id=doc["id"],
+                type=doc.get("type", "Document"),
                 entityType=doc.get("entityType", "Document"),
                 description=doc.get("description", ""),
                 source=doc.get("source", []),
@@ -181,8 +195,9 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
         click.echo(f"Uploading {len(entities)} Entity nodes...")
         for node in entities:
             session.run(
-                "MERGE (n:Entity {name: $name}) "
-                "SET n.id = $id, "
+                "MERGE (n:Entity {id: $id}) "
+                "SET n.name = $name, "
+                "n.type = $type, "
                 "n.entityType = $entityType, "
                 "n.description = $description, "
                 "n.importanceScore = $importanceScore, "
@@ -190,6 +205,7 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
                 "n.embedding = $embedding",
                 name=node["name"],
                 id=node["id"],
+                type=node.get("type", "Entity"),
                 entityType=node.get("entityType", "Entity"),
                 description=node.get("description", ""),
                 importanceScore=node.get("importanceScore", 0.0),
@@ -197,47 +213,69 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
                 embedding=node.get("embedding"),
             )
 
-        # Upload Chunk nodes with random hash id
+        # Upload Chunk nodes with deterministic IDs from the pipeline
         click.echo(f"Uploading {len(chunks)} Chunk nodes...")
         for chunk in chunks:
-            raw = secrets.token_bytes(32)
-            chunk_id = hashlib.sha256(raw).hexdigest()[:16]
-
             session.run(
-                "CREATE (c:Chunk {id: $id}) "
-                "SET c.source = $source, "
+                "MERGE (c:Chunk {id: $id}) "
+                "SET c.type = $type, "
+                "c.source = $source, "
                 "c.text = $text, "
                 "c.tokenCount = $tokenCount, "
                 "c.index = $index",
-                id=chunk_id,
+                id=chunk["id"],
+                type=chunk.get("type", "Chunk"),
                 source=chunk.get("source", ""),
                 text=chunk.get("text", ""),
                 tokenCount=chunk.get("tokenCount", 0),
                 index=chunk.get("index", 0),
             )
 
-        # Upload edges — match on any label using name property
+        # Upload edges using stable IDs for every node type
         edges = data["graph"]["links"] if "links" in data["graph"] else data["graph"]["edges"]
         click.echo(f"Uploading {len(edges)} relationships...")
         edge_count = 0
         for edge in edges:
-            predicates = edge.get("predicates", ["RELATED_TO"])
+            predicates = edge.get("predicates", ["RELATION"])
             for pred in predicates:
-                safe_pred = pred.upper().replace(" ", "_")
+                safe_pred = re.sub(r"[^A-Z0-9_]", "_", pred.upper()).strip("_")
+                safe_pred = safe_pred or "RELATION"
+                relation_records = [
+                    relation
+                    for relation in edge.get("relations", [])
+                    if relation.get("predicate") == pred
+                ]
+                evidence_sentences = list(dict.fromkeys(
+                    relation.get("evidence_sentence", "")
+                    for relation in relation_records
+                    if relation.get("evidence_sentence")
+                ))
+                source_chunk_ids = list(dict.fromkeys(
+                    relation.get("source_chunk_id", "")
+                    for relation in relation_records
+                    if relation.get("source_chunk_id")
+                ))
+                descriptions = list(dict.fromkeys(
+                    relation.get("description", "")
+                    for relation in relation_records
+                    if relation.get("description")
+                ))
                 session.run(
-                    "MATCH (a {name: $source}) "
-                    "MATCH (b {name: $target}) "
+                    "MATCH (a {id: $source}) "
+                    "MATCH (b {id: $target}) "
                     f"MERGE (a)-[r:{safe_pred}]->(b) "
-                    "SET r.weight = $weight",
+                    "SET r.weight = $weight, "
+                    "r.evidenceSentences = $evidence_sentences, "
+                    "r.sourceChunkIds = $source_chunk_ids, "
+                    "r.description = $description",
                     source=edge["source"],
                     target=edge["target"],
                     weight=edge.get("weight", 1),
+                    evidence_sentences=evidence_sentences,
+                    source_chunk_ids=source_chunk_ids,
+                    description=descriptions[0] if descriptions else "",
                 )
                 edge_count += 1
-
-        # Strip name property from Entity nodes (no longer needed after edges are created)
-        click.echo("Removing name property from Entity nodes...")
-        session.run("MATCH (n:Entity) REMOVE n.name")
 
         click.echo(f"Done! Uploaded {len(documents)} docs, {len(chunks)} chunks, {len(entities)} entities, {edge_count} relationships to {uri}")
 

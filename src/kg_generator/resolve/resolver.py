@@ -46,6 +46,33 @@ class EntityResolver:
             return self._embedding_resolve(entities)
         return self._string_resolve(entities)
 
+    def resolve_with_mapping(
+        self, entities: list[dict[str, Any]]
+    ) -> tuple[list[dict[str, Any]], dict[str, str]]:
+        """Resolve entities and map every input ID to its canonical output ID."""
+        resolved = self.resolve(entities)
+        alias_index: dict[tuple[str, str], str] = {}
+
+        for canonical in resolved:
+            canonical_id = canonical.get("id", "")
+            entity_type = canonical.get("type", canonical.get("label", "ENTITY"))
+            names = [canonical.get("name", ""), *canonical.get("aliases", [])]
+            for name in names:
+                if name:
+                    alias_index[(entity_type, str(name).casefold().strip())] = canonical_id
+
+        id_map: dict[str, str] = {}
+        for entity in entities:
+            original_id = entity.get("id", "")
+            entity_type = entity.get("type", entity.get("label", "ENTITY"))
+            canonical_id = alias_index.get(
+                (entity_type, str(entity.get("name", "")).casefold().strip())
+            )
+            if original_id and canonical_id:
+                id_map[original_id] = canonical_id
+
+        return resolved, id_map
+
     def _embedding_resolve(self, entities: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Cluster entities by embedding similarity."""
         names = [e["name"] for e in entities]
@@ -62,6 +89,10 @@ class EntityResolver:
             assigned.add(i)
             for j in range(i + 1, len(names)):
                 if j in assigned:
+                    continue
+                first_type = entities[i].get("type", entities[i].get("label", "ENTITY"))
+                second_type = entities[j].get("type", entities[j].get("label", "ENTITY"))
+                if first_type != second_type:
                     continue
                 sim = float(np.dot(embeddings[i], embeddings[j]) / (
                     np.linalg.norm(embeddings[i]) * np.linalg.norm(embeddings[j])
@@ -90,6 +121,10 @@ class EntityResolver:
             matched = False
 
             for i, existing in enumerate(seen):
+                existing_type = resolved[i].get("type", resolved[i].get("label", "ENTITY"))
+                entity_type = entity.get("type", entity.get("label", "ENTITY"))
+                if existing_type != entity_type:
+                    continue
                 if self._string_similarity(name, existing) >= self.threshold:
                     # Merge into existing canonical entity
                     canonical = resolved[i]

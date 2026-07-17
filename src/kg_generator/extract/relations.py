@@ -1,6 +1,7 @@
 """Relation extraction between entities."""
 
 import logging
+import re
 from typing import Any
 
 from kg_generator.config import Language
@@ -64,24 +65,29 @@ class RelationExtractor:
         self.use_llm = use_llm
         self.model_name = model_name
 
-    def extract(self, text: str, entities: list[Entity]) -> list[tuple[str, str, str, str]]:
+    def extract(
+        self,
+        text: str,
+        entities: list[Entity],
+        source_chunk_id: str = "",
+    ) -> list[tuple[str, str, str, str, str]]:
         """Extract relation triples from text given extracted entities.
         
-        Returns: list of (subject, predicate, object, source_text) tuples.
+        Returns: (subject_id, predicate, object_id, evidence_sentence, source_chunk_id).
         """
         if self.use_llm:
-            return self._llm_extract(text, entities)
-        return self._rule_based_extract(text, entities)
+            return self._llm_extract(text, entities, source_chunk_id)
+        return self._rule_based_extract(text, entities, source_chunk_id)
 
     def _rule_based_extract(
-        self, text: str, entities: list[Entity]
-    ) -> list[tuple[str, str, str, str]]:
+        self, text: str, entities: list[Entity], source_chunk_id: str = ""
+    ) -> list[tuple[str, str, str, str, str]]:
         """Rule-based relation extraction using entity co-occurrence and heuristics."""
-        triples: list[tuple[str, str, str, str]] = []
+        triples: list[tuple[str, str, str, str, str]] = []
         entity_map = {e.name.lower(): e for e in entities}
 
         # Use entity co-occurrence within the same sentence
-        sentences = [s.strip() for s in text.replace("!", ".").replace("?", ".").split(".") if s.strip()]
+        sentences = self._sentences(text)
 
         for sentence in sentences:
             sent_lower = sentence.lower()
@@ -97,7 +103,7 @@ class RelationExtractor:
                         continue
                     predicate = self._infer_predicate(sentence, e1, e2, entity_map)
                     if predicate:
-                        triples.append((e1.name, predicate, e2.name, sentence))
+                        triples.append((e1.id, predicate, e2.id, sentence, source_chunk_id))
 
         logger.debug(f"RuleBasedRelationExtractor: found {len(triples)} triples")
         return triples
@@ -122,8 +128,8 @@ class RelationExtractor:
         return "associated_with"
 
     def _llm_extract(
-        self, text: str, entities: list[Entity]
-    ) -> list[tuple[str, str, str, str]]:
+        self, text: str, entities: list[Entity], source_chunk_id: str = ""
+    ) -> list[tuple[str, str, str, str, str]]:
         """LLM-based relation extraction using DeepSeek (OpenAI-compatible API)."""
         import os
 
@@ -131,17 +137,20 @@ class RelationExtractor:
             from openai import OpenAI
         except ImportError:
             logger.warning("openai not installed — falling back to rule-based extraction")
-            return self._rule_based_extract(text, entities)
+            return self._rule_based_extract(text, entities, source_chunk_id)
 
         entity_list = "\n".join(f"- {e.name} ({e.label})" for e in entities)
 
         prompt = (
             f"Given the following text and extracted entities, identify all relationships "
-            f"between entities. Output as a JSON list of [subject, predicate, object] triples.\n\n"
+            f"between entities. For each relationship, include the exact sentence from the "
+            f"text that supports it. Output a JSON list of objects with subject, predicate, "
+            f"object, and evidence fields.\n\n"
             f"Text:\n{text[:2000]}\n\n"
             f"Entities:\n{entity_list}\n\n"
-            f"Return ONLY a JSON array of arrays, e.g.: "
-            f'[["Alice", "works_at", "Acme Corp"], ["Bob", "lives_in", "Hanoi"]]'
+            f"Return ONLY JSON, e.g. "
+            f'[{"{"}"subject":"Alice","predicate":"works_at",'
+            f'"object":"Acme Corp","evidence":"Alice works at Acme Corp."{"}"}]'
         )
 
         client = OpenAI(
@@ -158,13 +167,45 @@ class RelationExtractor:
         import json
         try:
             raw_triples = json.loads(content)
-            triples = [
-                (str(t[0]), str(t[1]), str(t[2]), text[:500])
-                for t in raw_triples
-                if len(t) == 3
-            ]
+            entity_ids = {entity.name.casefold(): entity.id for entity in entities}
+            triples = []
+            for triple in raw_triples:
+                if isinstance(triple, dict):
+                    subject_name = str(triple.get("subject", ""))
+                    predicate = str(triple.get("predicate", ""))
+                    object_name = str(triple.get("object", ""))
+                    evidence = str(triple.get("evidence", "")).strip()
+                elif isinstance(triple, list) and len(triple) >= 3:
+                    subject_name, predicate, object_name = map(str, triple[:3])
+                    evidence = str(triple[3]).strip() if len(triple) > 3 else ""
+                else:
+                    continue
+                subject_id = entity_ids.get(subject_name.casefold())
+                object_id = entity_ids.get(object_name.casefold())
+                if subject_id and object_id:
+                    if not evidence or evidence not in text:
+                        evidence = self._find_evidence(text, subject_name, object_name)
+                    triples.append(
+                        (subject_id, predicate, object_id, evidence, source_chunk_id)
+                    )
             logger.debug(f"LLM extraction: found {len(triples)} triples")
             return triples
         except (json.JSONDecodeError, IndexError):
             logger.warning("Failed to parse LLM relation output")
             return []
+
+    @staticmethod
+    def _sentences(text: str) -> list[str]:
+        """Split text into evidence-sized sentences while retaining punctuation."""
+        return [part.strip() for part in re.split(r"(?<=[.!?])\s+|[\r\n]+", text) if part.strip()]
+
+    @classmethod
+    def _find_evidence(cls, text: str, subject: str, object_: str) -> str:
+        """Find the sentence containing both relation endpoints."""
+        subject_key = subject.casefold()
+        object_key = object_.casefold()
+        for sentence in cls._sentences(text):
+            sentence_key = sentence.casefold()
+            if subject_key in sentence_key and object_key in sentence_key:
+                return sentence
+        return ""

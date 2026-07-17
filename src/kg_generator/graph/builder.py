@@ -6,6 +6,7 @@ from typing import Any
 import networkx as nx
 
 from kg_generator.config import GraphBackend, Ontology
+from kg_generator.identity import entity_id
 
 logger = logging.getLogger(__name__)
 
@@ -24,18 +25,20 @@ class GraphBuilder:
     def build(
         self,
         entities: list[dict[str, Any]],
-        triples: list[tuple[str, str, str, str]],
+        triples: list[tuple[str, ...]],
     ) -> nx.DiGraph:
-        """Build a directed graph from entities and (subject, predicate, object, source_text) triples."""
+        """Build a graph from ID-based triples with evidence and chunk provenance."""
         graph = nx.DiGraph()
 
-        # Add entity nodes with GraphRAG properties
+        # IDs are graph keys. Names are display properties only.
         for entity in entities:
+            node_type = entity.get("type", entity.get("label", "ENTITY"))
+            node_id = entity.get("id") or entity_id(node_type, entity.get("name", ""))
             graph.add_node(
-                entity["name"],
-                id=entity.get("id", ""),
+                node_id,
+                id=node_id,
                 name=entity.get("name", ""),
-                type=entity.get("type", "ENTITY"),
+                type=node_type,
                 aliases=entity.get("aliases", []),
                 description=entity.get("description", ""),
                 importanceScore=entity.get("importanceScore", 0.0),
@@ -53,13 +56,23 @@ class GraphBuilder:
         # Add relation edges
         for triple in triples:
             subj, pred, obj = triple[0], triple[1], triple[2]
-            source_text = triple[3] if len(triple) > 3 else ""
+            evidence_sentence = triple[3] if len(triple) > 3 else ""
+            source_chunk_id = triple[4] if len(triple) > 4 else ""
+            relation_record = {
+                "predicate": pred,
+                "evidence_sentence": evidence_sentence,
+                "source_chunk_id": source_chunk_id,
+            }
+            if len(triple) > 5:
+                relation_record["description"] = triple[5]
+            if len(triple) > 6:
+                relation_record["confidenceScore"] = triple[6]
 
             # Ensure both endpoints exist as nodes
             if subj not in graph:
-                graph.add_node(subj, label="ENTITY", type="ENTITY", name=subj)
+                graph.add_node(subj, id=subj, type="ENTITY", name=subj)
             if obj not in graph:
-                graph.add_node(obj, label="ENTITY", type="ENTITY", name=obj)
+                graph.add_node(obj, id=obj, type="ENTITY", name=obj)
 
             # Add or update the edge
             if graph.has_edge(subj, obj):
@@ -69,15 +82,28 @@ class GraphBuilder:
                 graph.edges[subj, obj]["predicates"] = existing
                 graph.edges[subj, obj]["weight"] = len(existing)
                 existing_sources = graph.edges[subj, obj].get("source_texts", [])
-                if source_text and source_text not in existing_sources:
-                    existing_sources.append(source_text)
+                if evidence_sentence and evidence_sentence not in existing_sources:
+                    existing_sources.append(evidence_sentence)
                     graph.edges[subj, obj]["source_texts"] = existing_sources
+                source_chunks = graph.edges[subj, obj].get("source_chunk_ids", [])
+                if source_chunk_id and source_chunk_id not in source_chunks:
+                    source_chunks.append(source_chunk_id)
+                    graph.edges[subj, obj]["source_chunk_ids"] = source_chunks
+                relation_records = graph.edges[subj, obj].get("relations", [])
+                if relation_record not in relation_records:
+                    relation_records.append(relation_record)
+                    graph.edges[subj, obj]["relations"] = relation_records
+                if relation_record.get("description"):
+                    graph.edges[subj, obj]["description"] = relation_record["description"]
             else:
                 graph.add_edge(
                     subj, obj,
                     predicates=[pred],
                     weight=1,
-                    source_texts=[source_text] if source_text else [],
+                    source_texts=[evidence_sentence] if evidence_sentence else [],
+                    source_chunk_ids=[source_chunk_id] if source_chunk_id else [],
+                    relations=[relation_record],
+                    description=relation_record.get("description", ""),
                 )
 
         # Compute PageRank-based importance scores
@@ -115,7 +141,7 @@ class GraphBuilder:
         edge_relation_mismatches = 0
 
         for _, data in graph.nodes(data=True):
-            label = data.get("label", "")
+            label = data.get("type", data.get("label", ""))
             if label and label not in ontology_labels:
                 node_label_mismatches += 1
 
@@ -146,7 +172,7 @@ class GraphBuilder:
     def _label_distribution(graph: nx.DiGraph) -> dict[str, int]:
         dist: dict[str, int] = {}
         for _, data in graph.nodes(data=True):
-            label = data.get("label", "UNKNOWN")
+            label = data.get("type", data.get("label", "UNKNOWN"))
             dist[label] = dist.get(label, 0) + 1
         return dist
 

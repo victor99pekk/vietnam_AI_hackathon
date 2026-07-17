@@ -7,10 +7,10 @@ from kg_generator.graph.builder import GraphBuilder
 
 def test_build_graph():
     entities = [
-        {"name": "Alice", "label": "PERSON", "mentions": ["Alice"], "confidence": 0.9},
-        {"name": "Acme Corp", "label": "ORG", "mentions": ["Acme Corp"], "confidence": 0.95},
+        {"id": "entity:alice", "name": "Alice", "type": "PERSON", "aliases": ["alice"], "confidenceScore": 0.9},
+        {"id": "entity:acme", "name": "Acme Corp", "type": "ORG", "aliases": ["acme corp"], "confidenceScore": 0.95},
     ]
-    triples = [("Alice", "works_at", "Acme Corp")]
+    triples = [("entity:alice", "works_at", "entity:acme")]
 
     builder = GraphBuilder()
     graph = builder.build(entities, triples)
@@ -18,8 +18,45 @@ def test_build_graph():
     assert isinstance(graph, nx.DiGraph)
     assert graph.number_of_nodes() == 2
     assert graph.number_of_edges() == 1
-    assert graph.has_edge("Alice", "Acme Corp")
-    assert "works_at" in graph.edges["Alice", "Acme Corp"]["predicates"]
+    assert graph.has_edge("entity:alice", "entity:acme")
+    assert graph.nodes["entity:alice"]["name"] == "Alice"
+    assert "works_at" in graph.edges["entity:alice", "entity:acme"]["predicates"]
+
+
+def test_graph_builder_does_not_merge_nodes_with_same_name():
+    entities = [
+        {"id": "document:one", "name": "article.json", "type": "Document"},
+        {"id": "document:two", "name": "article.json", "type": "Document"},
+    ]
+
+    graph = GraphBuilder().build(entities, [])
+
+    assert set(graph.nodes) == {"document:one", "document:two"}
+
+
+def test_graph_edge_preserves_relationship_provenance():
+    entities = [
+        {"id": "entity:alice", "name": "Alice", "type": "PERSON"},
+        {"id": "entity:acme", "name": "Acme", "type": "ORG"},
+    ]
+    triples = [
+        (
+            "entity:alice",
+            "works_at",
+            "entity:acme",
+            "Alice works at Acme.",
+            "chunk:123",
+        )
+    ]
+
+    graph = GraphBuilder().build(entities, triples)
+    edge = graph.edges["entity:alice", "entity:acme"]
+
+    assert edge["relations"] == [{
+        "predicate": "works_at",
+        "evidence_sentence": "Alice works at Acme.",
+        "source_chunk_id": "chunk:123",
+    }]
 
 
 def test_deduplication_removes_exact_duplicates():

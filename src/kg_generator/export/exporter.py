@@ -1,5 +1,6 @@
 """Graph export to multiple output formats."""
 
+import csv
 import json
 import logging
 from pathlib import Path
@@ -17,7 +18,7 @@ class GraphExporter:
         self,
         graph: nx.DiGraph,
         entities: list[dict[str, Any]],
-        triples: list[tuple[str, str, str, str]],
+        triples: list[tuple[str, ...]],
         output_dir: Path,
         formats: list[str] | None = None,
     ) -> list[Path]:
@@ -85,7 +86,7 @@ class GraphExporter:
         self,
         graph: nx.DiGraph,
         entities: list[dict[str, Any]],
-        triples: list[tuple[str, str, str, str]],
+        triples: list[tuple[str, ...]],
         output_dir: Path,
     ) -> Path:
         """Export as a single JSON file (node-link + entity/triple lists).
@@ -107,7 +108,9 @@ class GraphExporter:
                 "subject": t[0],
                 "predicate": t[1],
                 "object": t[2],
-                "source_text": t[3] if len(t) > 3 else "",
+                "evidence_sentence": t[3] if len(t) > 3 else "",
+                "source_chunk_id": t[4] if len(t) > 4 else "",
+                "description": t[5] if len(t) > 5 else "",
             }
             for t in triples
         ]
@@ -173,20 +176,45 @@ class GraphExporter:
 
         # Nodes CSV
         nodes_path = neo4j_dir / "nodes.csv"
-        with open(nodes_path, "w", encoding="utf-8") as f:
-            f.write("id:ID,name,label,:LABEL\n")
+        with open(nodes_path, "w", encoding="utf-8", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(["id:ID", "name", "type", ":LABEL"])
             for node, data in graph.nodes(data=True):
-                label = data.get("label", "Entity")
-                f.write(f"{node},{node},{label},Entity;{label}\n")
+                node_type = data.get("type", "Entity")
+                labels = node_type if node_type in ("Document", "Chunk") else "Entity"
+                writer.writerow([node, data.get("name", ""), node_type, labels])
 
         # Relationships CSV
         rels_path = neo4j_dir / "relationships.csv"
-        with open(rels_path, "w", encoding="utf-8") as f:
-            f.write(":START_ID,predicate,:END_ID,:TYPE\n")
+        with open(rels_path, "w", encoding="utf-8", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow([
+                ":START_ID",
+                "predicate",
+                ":END_ID",
+                ":TYPE",
+                "evidence_sentence",
+                "source_chunk_id",
+                "description",
+            ])
             for subj, obj, data in graph.edges(data=True):
-                predicates = data.get("predicates", ["related_to"])
-                for pred in predicates:
-                    f.write(f"{subj},{pred},{obj},RELATES_TO\n")
+                relation_records = data.get("relations", [])
+                if not relation_records:
+                    relation_records = [
+                        {"predicate": pred, "evidence_sentence": "", "source_chunk_id": ""}
+                        for pred in data.get("predicates", ["related_to"])
+                    ]
+                for relation in relation_records:
+                    pred = relation["predicate"]
+                    writer.writerow([
+                        subj,
+                        pred,
+                        obj,
+                        pred.upper(),
+                        relation.get("evidence_sentence", ""),
+                        relation.get("source_chunk_id", ""),
+                        relation.get("description", ""),
+                    ])
 
         logger.info(f"  Neo4j CSV -> {nodes_path}, {rels_path}")
         return [nodes_path, rels_path]
@@ -195,7 +223,7 @@ class GraphExporter:
         self,
         graph: nx.DiGraph,
         entities: list[dict[str, Any]],
-        triples: list[tuple[str, str, str, str]],
+        triples: list[tuple[str, ...]],
         output_dir: Path,
     ) -> Path:
         """Export as RDF/Turtle format."""

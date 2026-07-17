@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from kg_generator.config import Language
+from kg_generator.identity import entity_id
 
 logger = logging.getLogger(__name__)
 
@@ -31,12 +32,12 @@ class Entity:
     description: str = ""
     source: str = ""
     embedding: list[float] | None = None
+    node_id: str = ""
 
     @property
     def id(self) -> str:
-        """Unique structured ID derived from the entity label and canonical name."""
-        safe_name = self.name.lower().replace(" ", "_").replace("'", "").replace('"', "")
-        return f"{self.label.lower()}:{safe_name}"
+        """Stable Unicode-safe ID derived from entity type and canonical name."""
+        return self.node_id or entity_id(self.label, self.name)
 
     @property
     def aliases(self) -> list[str]:

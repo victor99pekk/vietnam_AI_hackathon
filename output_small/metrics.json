@@ -1,20 +1,20 @@
 {
-  "num_nodes": 88,
-  "num_edges": 625,
-  "num_triples": 691,
-  "completeness": 1.0,
+  "num_nodes": 7,
+  "num_edges": 8,
+  "num_triples": 8,
+  "completeness": 0.7619047619047619,
   "completeness_breakdown": {
-    "has_type": 1.0,
-    "has_aliases": 1.0,
-    "has_name": 1.0
+    "has_name": 1.0,
+    "has_aliases": 0.2857142857142857,
+    "has_type": 1.0
   },
   "consistency": 1.0,
-  "duplication_level": 0.04775687409551377,
+  "duplication_level": 0.0,
   "entity_duplication_rate": 0.0,
-  "triple_duplication_rate": 0.09551374819102754,
-  "missing_information": 0.0,
+  "triple_duplication_rate": 0.0,
+  "missing_information": 0.7142857142857143,
   "format_errors": 0.0,
-  "labeling_quality": 0.5632183908045977,
-  "reusability": 0.9839080459770115,
-  "overall_score": 0.9284813660980137
+  "labeling_quality": 1.0,
+  "reusability": 0.7142857142857144,
+  "overall_score": 0.8231292517006803
 }
