@@ -21,7 +21,7 @@ pipeline:
   # Entity extraction
   spacy_model: en_core_web_lg
   use_llm: false
-  llm_model: gpt-4o-mini
+  llm_model: deepseek-chat
 
   # Entity resolution
   resolve_method: embedding        # embedding | string_similarity

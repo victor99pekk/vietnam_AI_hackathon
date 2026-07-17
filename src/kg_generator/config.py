@@ -54,7 +54,7 @@ class PipelineConfig:
     dedup_method: str = "minhash"  # minhash, simhash, ngram
 
     # Extract
-    llm_model: str = "gpt-4o-mini"
+    llm_model: str = "deepseek-chat"
     use_llm: bool = False
     spacy_model: str = "en_core_web_sm"
 
