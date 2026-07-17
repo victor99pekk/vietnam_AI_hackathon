@@ -244,5 +244,68 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
     driver.close()
 
 
+@main.command("neo4j-download")
+@click.option(
+    "-o", "--output",
+    "output_path",
+    default="./generated_KGs/output/knowledge_graph.json",
+    type=click.Path(),
+    help="Path to save the downloaded knowledge_graph.json "
+         "(default: ./generated_KGs/output/knowledge_graph.json).",
+)
+@click.option(
+    "--uri",
+    default=None,
+    help="Neo4j connection URI (default: $NEO4J_URI or bolt://localhost:7687).",
+)
+@click.option(
+    "--user",
+    default=None,
+    help="Neo4j username (default: $NEO4J_USER or neo4j).",
+)
+@click.option(
+    "--password",
+    default=None,
+    help="Neo4j password (default: $NEO4J_PASSWORD).",
+)
+def neo4j_download(
+    output_path: str,
+    uri: str | None,
+    user: str | None,
+    password: str | None,
+) -> None:
+    """Download a knowledge graph from Neo4j and save as knowledge_graph.json.
+
+    Connects to Neo4j using credentials from .env (or CLI overrides),
+    downloads all nodes and relationships, and reconstructs the
+    knowledge_graph.json format expected by the evaluation pipeline.
+
+    Typical workflow:
+      1. Local:  kg-gen run ... && kg-gen neo4j-upload -o output/
+      2. Colab:  kg-gen neo4j-download -o generated_KGs/output/
+      3. Colab:  python evaluation/run_eval.py --method all --kg generated_KGs/output/knowledge_graph.json
+    """
+    import os
+
+    # Override env vars with CLI options if provided
+    if uri:
+        os.environ["NEO4J_URI"] = uri
+    if user:
+        os.environ["NEO4J_USER"] = user
+    if password:
+        os.environ["NEO4J_PASSWORD"] = password
+
+    try:
+        from neo4j import GraphDatabase  # noqa: F401 — validate import
+    except ImportError:
+        click.echo("Neo4j driver not installed. Run: uv pip install -e \".[neo4j]\"")
+        raise click.Abort()
+
+    from kg_generator.export.neo4j_upload import download_graph
+
+    download_graph(output_path)
+    click.echo(f"\n Done! Graph saved to {output_path}")
+
+
 if __name__ == "__main__":
     main()

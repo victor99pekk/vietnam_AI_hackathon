@@ -45,7 +45,21 @@ llm = [
 ]
 # All extras
 all = [
-    "kg-generator[embeddings,vi,data,neo4j,llm,dev]",
+    "kg-generator[embeddings,vi,data,neo4j,llm,dev,eval-data,eval-model]",
+]
+# Evaluation — data_eval: SFT data quality (lightweight, works everywhere)
+eval-data = [
+    "deepeval>=2.0",
+    "sentence-transformers>=2.2",
+]
+# Evaluation — model_eval: fine-tuning ablation (Colab GPU only — NOT for Mac)
+eval-model = [
+    "kg-generator[eval-data]",
+    "transformers>=4.45",
+    "peft>=0.12",
+    "accelerate>=0.34",
+    "bitsandbytes>=0.44",
+    "torch>=2.4",
 ]
 
 [project.scripts]
