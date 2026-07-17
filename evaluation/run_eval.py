@@ -231,6 +231,7 @@ def run_method2(
     model_override: str | None = None,
     skip_dataset_gen: bool = False,
     skip_benchmark: bool = False,
+    skip_finetune: bool = False,
 ) -> dict[str, Any]:
     """Run Method 2: Fine-Tuning Ablation Study."""
     m2_config = config.get("method2", {})
@@ -332,90 +333,101 @@ def run_method2(
         logger.info("Dataset generation complete")
 
     # Step 2.2: Fine-Tuning
-    logger.info("\n--- Step 2.2: Fine-Tuning ---")
-    lora_config = m2_config.get("lora", {})
-    training_config = m2_config.get("training", {})
-
-    # Allow CLI override of the base model
-    base_model = model_override or m2_config.get(
-        "base_model", "unsloth/Qwen2.5-1.5B-Instruct-bnb-4bit"
-    )
-    logger.info("Base model: %s", base_model)
-    logger.info("Fine-tune target: %s", fine_tune_target)
-
-    ft_config = FineTuneConfig(
-        base_model=base_model,
-        output_dir=output_dir,
-        lora_r=lora_config.get("r", 16),
-        lora_alpha=lora_config.get("alpha", 32),
-        lora_dropout=lora_config.get("dropout", 0.05),
-        max_seq_length=training_config.get("max_seq_length", 2048),
-        per_device_train_batch_size=training_config.get("per_device_train_batch_size", 2),
-        gradient_accumulation_steps=training_config.get("gradient_accumulation_steps", 4),
-        learning_rate=training_config.get("learning_rate", 2.0e-4),
-        max_steps=training_config.get("max_steps", 300),
-        warmup_steps=training_config.get("warmup_steps", 30),
-        logging_steps=training_config.get("logging_steps", 10),
-        save_steps=training_config.get("save_steps", 100),
-        weight_decay=training_config.get("weight_decay", 0.01),
-        seed=common_config.get("seed", 42),
-    )
-
-    finetuner = FineTuner(ft_config)
-    results.setdefault("finetune", {})
-
-    # ── Fine-tune Model B (KG-Managed) ──
-    kg_adapter_path = None
-    if fine_tune_target in ("kg", "both"):
-        logger.info("\n>>> Fine-tuning Model B (KG-Managed)")
-        try:
-            kg_adapter_path = finetuner.fine_tune(
-                train_data_path=kg_train_path,
-                adapter_name="model_b_kg",
-                eval_data_path=kg_test_path,
-            )
+    if skip_finetune:
+        logger.info("\n--- Step 2.2: Fine-Tuning (SKIPPED) ---")
+        # Still resolve existing adapters for potential benchmark
+        kg_adapter_path = output_dir / "model_b_kg" if (output_dir / "model_b_kg").exists() else None
+        raw_adapter_path = output_dir / "model_c_raw" if (output_dir / "model_c_raw").exists() else None
+        results.setdefault("finetune", {})
+        if kg_adapter_path:
             results["finetune"]["kg_adapter"] = str(kg_adapter_path)
-            logger.info("Model B (KG-Managed) fine-tuned → %s", kg_adapter_path)
-        except Exception as e:
-            logger.error("Model B fine-tuning failed: %s", e)
-            results["finetune"]["kg_adapter_error"] = str(e)
-    else:
-        # Look for existing adapter
-        existing_kg = output_dir / "model_b_kg"
-        if existing_kg.exists():
-            kg_adapter_path = existing_kg
-            results["finetune"]["kg_adapter"] = str(kg_adapter_path)
-            logger.info("Using existing Model B adapter → %s", kg_adapter_path)
-        else:
-            logger.info("Skipping Model B fine-tuning (--fine-tune-target=%s)", fine_tune_target)
-
-    # ── Fine-tune Model C (Raw-Text) ──
-    raw_adapter_path = None
-    if fine_tune_target in ("raw", "both"):
-        raw_train = results.get("dataset_gen", {}).get("raw_train")
-        if raw_train:
-            logger.info("\n>>> Fine-tuning Model C (Raw-Text)")
-            try:
-                raw_adapter_path = finetuner.fine_tune(
-                    train_data_path=Path(raw_train),
-                    adapter_name="model_c_raw",
-                    eval_data_path=Path(results["dataset_gen"].get("raw_test", "")),
-                )
-                results["finetune"]["raw_adapter"] = str(raw_adapter_path)
-                logger.info("Model C (Raw-Text) fine-tuned → %s", raw_adapter_path)
-            except Exception as e:
-                logger.error("Model C fine-tuning failed: %s", e)
-                results["finetune"]["raw_adapter_error"] = str(e)
-        else:
-            logger.warning("No raw training data available for Model C")
-    else:
-        existing_raw = output_dir / "model_c_raw"
-        if existing_raw.exists():
-            raw_adapter_path = existing_raw
+        if raw_adapter_path:
             results["finetune"]["raw_adapter"] = str(raw_adapter_path)
-            logger.info("Using existing Model C adapter → %s", raw_adapter_path)
+    else:
+        logger.info("\n--- Step 2.2: Fine-Tuning ---")
+        lora_config = m2_config.get("lora", {})
+        training_config = m2_config.get("training", {})
+
+        # Allow CLI override of the base model
+        base_model = model_override or m2_config.get(
+            "base_model", "unsloth/Qwen2.5-1.5B-Instruct-bnb-4bit"
+        )
+        logger.info("Base model: %s", base_model)
+        logger.info("Fine-tune target: %s", fine_tune_target)
+
+        ft_config = FineTuneConfig(
+            base_model=base_model,
+            output_dir=output_dir,
+            lora_r=lora_config.get("r", 16),
+            lora_alpha=lora_config.get("alpha", 32),
+            lora_dropout=lora_config.get("dropout", 0.05),
+            max_seq_length=training_config.get("max_seq_length", 2048),
+            per_device_train_batch_size=training_config.get("per_device_train_batch_size", 2),
+            gradient_accumulation_steps=training_config.get("gradient_accumulation_steps", 4),
+            learning_rate=training_config.get("learning_rate", 2.0e-4),
+            max_steps=training_config.get("max_steps", 300),
+            warmup_steps=training_config.get("warmup_steps", 30),
+            logging_steps=training_config.get("logging_steps", 10),
+            save_steps=training_config.get("save_steps", 100),
+            weight_decay=training_config.get("weight_decay", 0.01),
+            seed=common_config.get("seed", 42),
+        )
+
+        finetuner = FineTuner(ft_config)
+        results.setdefault("finetune", {})
+
+        # ── Fine-tune Model B (KG-Managed) ──
+        kg_adapter_path = None
+        if fine_tune_target in ("kg", "both"):
+            logger.info("\n>>> Fine-tuning Model B (KG-Managed)")
+            try:
+                kg_adapter_path = finetuner.fine_tune(
+                    train_data_path=kg_train_path,
+                    adapter_name="model_b_kg",
+                    eval_data_path=kg_test_path,
+                )
+                results["finetune"]["kg_adapter"] = str(kg_adapter_path)
+                logger.info("Model B (KG-Managed) fine-tuned → %s", kg_adapter_path)
+            except Exception as e:
+                logger.error("Model B fine-tuning failed: %s", e)
+                results["finetune"]["kg_adapter_error"] = str(e)
         else:
-            logger.info("Skipping Model C fine-tuning (--fine-tune-target=%s)", fine_tune_target)
+            # Look for existing adapter
+            existing_kg = output_dir / "model_b_kg"
+            if existing_kg.exists():
+                kg_adapter_path = existing_kg
+                results["finetune"]["kg_adapter"] = str(kg_adapter_path)
+                logger.info("Using existing Model B adapter → %s", kg_adapter_path)
+            else:
+                logger.info("Skipping Model B fine-tuning (--fine-tune-target=%s)", fine_tune_target)
+
+        # ── Fine-tune Model C (Raw-Text) ──
+        raw_adapter_path = None
+        if fine_tune_target in ("raw", "both"):
+            raw_train = results.get("dataset_gen", {}).get("raw_train")
+            if raw_train:
+                logger.info("\n>>> Fine-tuning Model C (Raw-Text)")
+                try:
+                    raw_adapter_path = finetuner.fine_tune(
+                        train_data_path=Path(raw_train),
+                        adapter_name="model_c_raw",
+                        eval_data_path=Path(results["dataset_gen"].get("raw_test", "")),
+                    )
+                    results["finetune"]["raw_adapter"] = str(raw_adapter_path)
+                    logger.info("Model C (Raw-Text) fine-tuned → %s", raw_adapter_path)
+                except Exception as e:
+                    logger.error("Model C fine-tuning failed: %s", e)
+                    results["finetune"]["raw_adapter_error"] = str(e)
+            else:
+                logger.warning("No raw training data available for Model C")
+        else:
+            existing_raw = output_dir / "model_c_raw"
+            if existing_raw.exists():
+                raw_adapter_path = existing_raw
+                results["finetune"]["raw_adapter"] = str(raw_adapter_path)
+                logger.info("Using existing Model C adapter → %s", raw_adapter_path)
+            else:
+                logger.info("Skipping Model C fine-tuning (--fine-tune-target=%s)", fine_tune_target)
 
     # Step 2.3: Ablation Benchmark
     if skip_benchmark:
@@ -552,6 +564,7 @@ Examples:
                 model_override=args.model,
                 skip_dataset_gen=args.skip_dataset_gen,
                 skip_benchmark=args.skip_benchmark,
+                skip_finetune=args.skip_finetune,
             )
         except Exception as e:
             logger.error("Method 2 failed: %s", e, exc_info=True)
