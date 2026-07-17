@@ -1,0 +1,89 @@
+# Default Ontology Configuration
+# Defines the entity types, relationship types, and attributes for the knowledge graph.
+
+entity_types:
+  PERSON:
+    description: "A human individual"
+    example: "Marie Curie"
+  ORGANIZATION:
+    description: "A company, institution, or organized group"
+    example: "Google"
+  LOCATION:
+    description: "A physical or geographic place"
+    example: "Hanoi"
+  CONCEPT:
+    description: "An abstract idea, topic, or theme"
+    example: "Machine Learning"
+  EVENT:
+    description: "An occurrence or happening"
+    example: "Vietnam AI Challenge 2026"
+  PRODUCT:
+    description: "A tangible or digital product"
+    example: "iPhone"
+  WORK_OF_ART:
+    description: "A creative work (book, film, paper, etc.)"
+    example: "Attention Is All You Need"
+
+relationship_types:
+  works_at:
+    description: "Employment relationship"
+    domain: "PERSON"
+    range: "ORGANIZATION"
+  located_in:
+    description: "Physical containment"
+    domain: "ORGANIZATION"
+    range: "LOCATION"
+  founded_by:
+    description: "Founder relationship"
+    domain: "ORGANIZATION"
+    range: "PERSON"
+  authored_by:
+    description: "Authorship"
+    domain: "WORK_OF_ART"
+    range: "PERSON"
+  cites:
+    description: "Citation between works"
+    domain: "WORK_OF_ART"
+    range: "WORK_OF_ART"
+  studied_at:
+    description: "Educational relationship"
+    domain: "PERSON"
+    range: "ORGANIZATION"
+  lives_in:
+    description: "Residence"
+    domain: "PERSON"
+    range: "LOCATION"
+  part_of:
+    description: "Part-whole relationship"
+    domain: "ORGANIZATION"
+    range: "ORGANIZATION"
+  related_to:
+    description: "Generic association"
+  associated_with:
+    description: "Loose association"
+
+attributes:
+  PERSON:
+    - name
+    - birth_date
+    - nationality
+    - occupation
+  ORGANIZATION:
+    - name
+    - founded_date
+    - industry
+    - headquarters
+  LOCATION:
+    - name
+    - country
+    - coordinates
+  WORK_OF_ART:
+    - title
+    - publish_date
+    - authors
+    - url
+  EVENT:
+    - name
+    - date
+    - location
+    - participants

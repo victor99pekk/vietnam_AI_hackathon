@@ -1,0 +1,59 @@
+[project]
+name = "kg-generator"
+version = "0.1.0"
+description = "A tool for generating knowledge bases to support LLM training and Graph RAG workflows"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Vietnam AI Challenge" }
+]
+
+dependencies = [
+    "spacy>=3.7",
+    "networkx>=3.2",
+    "datasketch>=1.6",
+    "click>=8.1",
+    "pyyaml>=6.0",
+    "tqdm>=4.66",
+    "textstat>=0.7",
+    "pandas>=2.1",
+]
+
+[project.optional-dependencies]
+# Embedding-based entity resolution (recommended)
+embeddings = [
+    "sentence-transformers>=2.2",
+]
+# Vietnamese NLP support (install when switching to vi)
+vi = [
+    "underthesea>=1.4",
+]
+# Graph DB export support
+neo4j = [
+    "neo4j>=5.15",
+]
+# LLM-based extraction
+llm = [
+    "openai>=1.6",
+    "langchain>=0.1",
+]
+# All extras
+all = [
+    "kg-generator[embeddings,vi,neo4j,llm]",
+]
+
+[project.scripts]
+kg-gen = "kg_generator.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = ["-v", "--tb=short"]

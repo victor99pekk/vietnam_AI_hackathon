@@ -1,0 +1,33 @@
+# Pipeline Configuration
+# Use: kg-gen run -c configs/pipeline.yaml
+
+pipeline:
+  language: en                     # en | vi
+  graph_backend: networkx          # networkx | neo4j
+
+  # Input sources
+  input_paths:
+    - data/sample/
+
+  file_formats:
+    - txt
+    - json
+    - csv
+
+  # Deduplication
+  dedup_method: minhash            # minhash | simhash | ngram
+  dedup_threshold: 0.85
+
+  # Entity extraction
+  spacy_model: en_core_web_lg
+  use_llm: false
+  llm_model: gpt-4o-mini
+
+  # Entity resolution
+  resolve_method: embedding        # embedding | string_similarity
+  resolve_threshold: 0.80
+
+  # Export
+  export_formats:
+    - json
+    - graphml
