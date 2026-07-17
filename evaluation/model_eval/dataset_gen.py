@@ -460,18 +460,57 @@ def load_kg(path: Path) -> tuple[nx.DiGraph, list[dict[str, Any]], list[tuple[st
 
 
 def load_raw_documents(paths: list[Path]) -> list[dict[str, str]]:
-    """Load raw text documents from files/directories."""
+    """Load raw text documents from files/directories.
+
+    Supports .txt, .jsonl (one JSON object per line, reads "text" or "content" field),
+    and .json (array of objects or single object with "text"/"content").
+    """
     docs: list[dict[str, str]] = []
     for path in paths:
         if path.is_dir():
-            for txt_file in sorted(path.rglob("*.txt")):
-                docs.append({
-                    "content": txt_file.read_text(encoding="utf-8"),
-                    "source": str(txt_file),
-                })
-        elif path.suffix == ".txt":
-            docs.append({
-                "content": path.read_text(encoding="utf-8"),
-                "source": str(path),
-            })
+            for file_path in sorted(path.rglob("*")):
+                if file_path.suffix in (".txt", ".jsonl", ".json"):
+                    docs.extend(_load_single_document_file(file_path))
+        elif path.suffix in (".txt", ".jsonl", ".json"):
+            docs.extend(_load_single_document_file(path))
     return docs
+
+
+def _load_single_document_file(path: Path) -> list[dict[str, str]]:
+    """Load documents from a single file, dispatching by extension."""
+    suffix = path.suffix.lower()
+
+    if suffix == ".txt":
+        return [{"content": path.read_text(encoding="utf-8"), "source": str(path)}]
+
+    if suffix == ".jsonl":
+        docs: list[dict[str, str]] = []
+        with open(path, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    obj = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                content = obj.get("text", obj.get("content", ""))
+                if content:
+                    docs.append({"content": content, "source": str(path)})
+        return docs
+
+    if suffix == ".json":
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+        if isinstance(data, list):
+            return [
+                {"content": item.get("text", item.get("content", "")), "source": str(path)}
+                for item in data
+                if item.get("text") or item.get("content")
+            ]
+        content = data.get("text", data.get("content", ""))
+        if content:
+            return [{"content": content, "source": str(path)}]
+        return []
+
+    return []

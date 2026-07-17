@@ -10,6 +10,10 @@ what fraction did the KG capture?
 Two extraction modes (heuristic implemented; LLM mode stub for future):
   - Heuristic (regex): No API needed, covers common factual patterns
   - LLM (future): Uses DeepSeek API for comprehensive fact extraction
+
+Entity matching uses normalized comparison + substring fallback for robustness
+against minor text differences (e.g. "University of Manchester" vs
+"the University of Manchester").
 """
 
 import json
@@ -22,6 +26,11 @@ from typing import Any
 import networkx as nx
 
 logger = logging.getLogger(__name__)
+
+# ── Stopwords to strip from entity names during normalization ──
+_LEADING_STRIP = re.compile(r'^(?:the|a|an)\s+', re.IGNORECASE)
+_TRAILING_STRIP = re.compile(r'[,;:.!?\s]+$')
+_WHITESPACE = re.compile(r'\s+')
 
 
 class FactExtractor:
@@ -44,7 +53,15 @@ class FactExtractor:
         (r'(.+?)\s+(?:located|situated)\s+in\s+(.+?)(?:,|\.|$)', "located_in", "located in"),
         (r'(.+?)\s+(?:founded|established)\s+(.+?)(?:,|\.|$)', "founded", "founded"),
         (r'(.+?)\s+(?:married|wed)\s+(.+?)(?:,|\.|$)', "married", "married"),
+        # ── Additional patterns ──
+        (r'(.+?)\s+(?:won|received|was\s+awarded)\s+(?:the\s+)?(.+?)(?:,|\.|$)', "won", "won"),
+        (r'(.+?)\s+(?:attended|graduated\s+from)\s+(.+?)(?:,|\.|$)', "attended", "attended"),
+        (r'(.+?)\s+(?:is\s+)?(?:known|famous)\s+for\s+(.+?)(?:,|\.|$)', "known_for", "known for"),
+        (r'(.+?)\s+(?:served|acted)\s+as\s+(?:a|an|the)?\s*(.+?)(?:,|\.|$)', "served_as", "served as"),
     ]
+
+    # ── Pronoun patterns to resolve ──
+    _PRONOUNS = {"he", "she", "it", "they", "his", "her", "its", "their"}
 
     def __init__(
         self,
@@ -75,7 +92,6 @@ class FactExtractor:
             source = doc.get("source", "unknown")
 
             if self.mode == "llm":
-                # LLM mode not yet implemented — fall back to heuristic
                 logger.info("LLM mode not implemented — using heuristic extraction")
                 facts = self._extract_heuristic(content, source)
             else:
@@ -113,19 +129,23 @@ class FactExtractor:
     def _extract_heuristic(self, text: str, source: str) -> list[dict[str, Any]]:
         """Regex-based fact extraction — works offline, no API needed.
 
-        Looks for common factual patterns:
-          X was born in Y, X worked at Y, X studied at Y,
-          X died in Y, X discovered/invented/created Y,
-          X is a/an/the Y, X earned/received Y,
-          X located in Y, X founded Y, X married Y
+        Includes pronoun resolution and subject cleaning for better accuracy.
         """
         facts: list[dict[str, Any]] = []
         sentences = re.split(r'(?<=[.!?])\s+', text)
+
+        # Track the last proper-name entity seen per document for pronoun resolution
+        last_named_entity: str | None = None
 
         for sent in sentences:
             sent = sent.strip()
             if len(sent) < 20:
                 continue
+
+            # Update last_named_entity from this sentence for pronoun resolution
+            _named = self._extract_first_named_entity(sent)
+            if _named:
+                last_named_entity = _named
 
             for pattern, predicate, _evidence_label in self.PATTERNS:
                 match = re.search(pattern, sent, re.IGNORECASE)
@@ -135,15 +155,15 @@ class FactExtractor:
                 subject = match.group(1).strip().rstrip(".,;:!?")
                 obj = match.group(2).strip().rstrip(".,;:!?")
 
-                # Basic quality filter: skip if subject or object is too short/empty
+                # ── Clean subject (strip leading noise, resolve pronouns) ──
+                subject = self._clean_subject(subject)
+                subject = self._resolve_pronoun(subject, last_named_entity)
+
+                # ── Quality filters ──
                 if len(subject) < 2 or len(obj) < 2:
                     continue
-
-                # Skip if both look like generic phrases (not named entities)
                 if not self._looks_like_entity(subject) and not self._looks_like_entity(obj):
                     continue
-
-                # Skip overly long strings (likely full clauses, not entities)
                 if len(subject) > 120 or len(obj) > 120:
                     continue
 
@@ -157,12 +177,71 @@ class FactExtractor:
 
         return facts
 
+    # ── Subject cleaning helpers ──────────────────────────────
+
+    @staticmethod
+    def _clean_subject(raw: str) -> str:
+        """Strip leading noise from a regex-extracted subject.
+
+        Examples:
+            "During World War II, Turing" → "Turing"
+            "the University of Manchester" → "University of Manchester"
+            "In 1903, she" → "she"
+        """
+        # Strip leading adverbial/prepositional phrases ("During X, Y", "In 1903, Z")
+        cleaned = re.sub(r'^(?:during|in|after|before|by|at|on|from)\s+.+?,\s*', '', raw, flags=re.IGNORECASE)
+        # Strip leading articles
+        cleaned = _LEADING_STRIP.sub('', cleaned).strip()
+        # Strip trailing noise
+        cleaned = _TRAILING_STRIP.sub('', cleaned).strip()
+        return cleaned
+
+    @staticmethod
+    def _resolve_pronoun(subject: str, last_entity: str | None) -> str:
+        """Replace pronoun subjects with the last known proper entity.
+
+        Example: "He" → "Alan Turing" (if last_entity is "Alan Turing")
+        """
+        if not last_entity:
+            return subject
+
+        lower = subject.lower().strip()
+        if lower in FactExtractor._PRONOUNS:
+            return last_entity
+        # Handle multi-word phrases starting with pronoun: "he, after the war" → entity
+        if lower.split()[0] in FactExtractor._PRONOUNS:
+            return last_entity
+        return subject
+
+    @staticmethod
+    def _extract_first_named_entity(text: str) -> str | None:
+        """Extract the first capitalized proper name from a sentence.
+
+        Used to track the "current entity" for pronoun resolution across sentences.
+        Skips pronouns, sentence-initial words, and common title-case words.
+        """
+        # Simple approach: find first group of capitalized words
+        match = re.search(
+            r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})'
+            r'(?:\s+(?:is|was|are|were|has|had|will|would|can|could|may|might|shall|should|'
+            r'born|worked|studied|died|discovered|created|developed|earned|received|'
+            r'won|attended|graduated|known|served|founded|married|located|published))',
+            text,
+        )
+        if match:
+            candidate = match.group(1).strip()
+            # Skip if it's a pronoun
+            if candidate.lower() in FactExtractor._PRONOUNS:
+                return None
+            return candidate
+        return None
+
     @staticmethod
     def _looks_like_entity(text: str) -> bool:
         """Heuristic: does this text look like a named entity?
 
         Returns True if the text contains at least one capitalized word
-        longer than 2 characters (not at sentence start is assumed).
+        longer than 2 characters.
         """
         words = text.split()
         for w in words:
@@ -174,14 +253,19 @@ class FactExtractor:
 class CoverageEvaluator:
     """Evaluates how many source-document facts are captured by the KG.
 
-    Three levels of matching:
-      - exact_match: (subject, predicate, object) all match verbatim
-      - entity_pair_match: subject & object exist in KG and are connected
-      - entity_mention_match: at minimum the subject entity exists in KG
+    Three scored match levels:
+      - exact_match:   (S, P, O) all match after normalization
+      - entity_pair:   S & O exist in KG and are connected by any edge
+      - entity_mention: at minimum S exists in KG
+
+    Plus one diagnostic (unscored):
+      - partial_match: S or O is a substring of a KG node (or vice versa)
     """
 
     def __init__(self) -> None:
         pass
+
+    # ── Public API ────────────────────────────────────────────
 
     def evaluate(
         self,
@@ -199,20 +283,26 @@ class CoverageEvaluator:
                 "verdict": "No facts to evaluate.",
             }
 
-        # ── Build KG lookup structures ────────────────────────
-        kg_nodes_lower: dict[str, str] = {
-            n.lower(): n for n in graph.nodes()
-        }
+        # ── Build normalized KG lookups ───────────────────────
+        kg_nodes_norm: dict[str, str] = {}      # norm_name → original_name
+        kg_node_original_lower: dict[str, str] = {}  # original_lower → original
+        for n in graph.nodes():
+            norm = self._normalize_name(n)
+            kg_nodes_norm[norm] = n
+            kg_node_original_lower[n.lower()] = n
 
         kg_triple_keys: set[tuple[str, str, str]] = {
-            (s.lower().strip(), p.lower().strip(), o.lower().strip())
+            (self._normalize_name(s), p.lower().strip(), self._normalize_name(o))
             for s, p, o, _ in kg_triples
         }
 
-        # Adjacency: (subject_lower, object_lower) → True if any edge exists
+        # Adjacency: (norm_subj, norm_obj) → True if any edge exists
         kg_adjacency: set[tuple[str, str]] = set()
         for s, _p, o, _src in kg_triples:
-            kg_adjacency.add((s.lower().strip(), o.lower().strip()))
+            kg_adjacency.add((
+                self._normalize_name(s),
+                self._normalize_name(o),
+            ))
 
         # ── Match each extracted fact ─────────────────────────
         per_fact: list[dict[str, Any]] = []
@@ -226,21 +316,28 @@ class CoverageEvaluator:
             pred_raw = fact["predicate"]
             obj_raw = fact["object"]
 
-            subj = subj_raw.lower().strip()
+            subj = self._normalize_name(subj_raw)
             pred = pred_raw.lower().strip()
-            obj = obj_raw.lower().strip()
+            obj = self._normalize_name(obj_raw)
 
-            # 1. Exact triple match
+            # 1. Exact triple match (normalized)
             exact = (subj, pred, obj) in kg_triple_keys
 
-            # 2. Entity pair match: both in KG + connected (any edge)
-            subj_in_kg = subj in kg_nodes_lower
-            obj_in_kg = obj in kg_nodes_lower
+            # 2. Entity pair match: both in KG + connected
+            subj_in_kg = subj in kg_nodes_norm
+            obj_in_kg = obj in kg_nodes_norm
             connected = (subj, obj) in kg_adjacency if subj_in_kg and obj_in_kg else False
             pair_match = subj_in_kg and obj_in_kg and connected
 
             # 3. Entity mention match: at minimum subject in KG
             mention_match = subj_in_kg
+
+            # 4. Partial/substring match (diagnostic only)
+            partial_match = False
+            if not mention_match:
+                partial_match = self._is_partial_match(
+                    subj_raw, kg_node_original_lower,
+                )
 
             if exact:
                 exact_matches += 1
@@ -259,6 +356,7 @@ class CoverageEvaluator:
                 "subj_in_kg": subj_in_kg,
                 "obj_in_kg": obj_in_kg,
                 "connected": connected,
+                "partial_match": partial_match,
             })
 
         # ── Compute scores ────────────────────────────────────
@@ -287,6 +385,51 @@ class CoverageEvaluator:
             "missed_facts": missed[:20],
             "per_fact_results": per_fact,
         }
+
+    # ── Name normalization ────────────────────────────────────
+
+    @staticmethod
+    def _normalize_name(name: str) -> str:
+        """Normalize an entity name for comparison.
+
+        - Lowercase
+        - Strip leading articles (the, a, an)
+        - Strip trailing punctuation
+        - Collapse whitespace
+        """
+        if not name:
+            return ""
+        n = name.lower().strip()
+        n = _LEADING_STRIP.sub('', n)
+        n = _TRAILING_STRIP.sub('', n)
+        n = _WHITESPACE.sub(' ', n).strip()
+        return n
+
+    # ── Partial / substring matching ──────────────────────────
+
+    @staticmethod
+    def _is_partial_match(
+        fact_entity: str,
+        kg_nodes_lower: dict[str, str],
+    ) -> bool:
+        """Check if a fact entity is a substring of any KG node name (or vice versa).
+
+        This is a diagnostic (unscored) signal — it identifies cases where
+        the entity likely exists in the KG but with a slightly different name.
+        """
+        fact_lower = fact_entity.lower().strip()
+        if len(fact_lower) < 4:
+            return False
+
+        for kg_name_lower in kg_nodes_lower:
+            if len(kg_name_lower) < 4:
+                continue
+            # Substring in either direction
+            if fact_lower in kg_name_lower or kg_name_lower in fact_lower:
+                return True
+        return False
+
+    # ── Interpretation ────────────────────────────────────────
 
     @staticmethod
     def _interpret(score: float) -> str:

@@ -100,9 +100,11 @@ def _auto_plot_method1(output_dir: Path) -> None:
     try:
         from generate_plots.plot_structural import plot_structural_audit
         from generate_plots.plot_sft_quality import plot_sft_quality
+        from generate_plots.plot_coverage import plot_coverage
 
         audit_path = output_dir / "structural_audit.json"
         quality_path = output_dir / "sft_quality_report.json"
+        coverage_path = output_dir / "coverage_report.json"
 
         if audit_path.exists():
             logger.info("Auto-generating structural audit plots…")
@@ -111,6 +113,10 @@ def _auto_plot_method1(output_dir: Path) -> None:
         if quality_path.exists():
             logger.info("Auto-generating SFT quality plots…")
             plot_sft_quality(quality_path, output_dir)
+
+        if coverage_path.exists():
+            logger.info("Auto-generating coverage plots…")
+            plot_coverage(coverage_path, output_dir)
 
         logger.info("Plots saved → %s", output_dir)
     except ImportError:
