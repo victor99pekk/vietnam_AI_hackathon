@@ -16,7 +16,8 @@ MODEL   ?= Qwen/Qwen2.5-1.5B-Instruct
 model   ?= all
 
 .PHONY: help test ingest upload download plots install clean \
-        eval-install eval-install-model eval-method1 eval-method2 eval-graphgen eval-all
+        eval-install eval-install-model eval-method1 eval-method2 eval-graphgen eval-all \
+        eval-local eval-datasets
 
 help:
 	@echo "Usage: make <target> [dataset=<name>] [MODEL=<model>]"
@@ -44,25 +45,27 @@ help:
 	@echo "   eval-install           Install data_eval deps (deepeval, sentence-transformers)"
 	@echo "   eval-install-model     Install model_eval deps (Colab only: transformers, peft, bitsandbytes)"
 	@echo "   eval-method1           Run data_eval only"
-	@echo "   eval-method2           Run model_eval [model=a|b|c|all]  (GPU required)"
+	@echo "   eval-method2           Run model_eval [model=b|c|all] (GPU required, model=a for benchmark)"
 	@echo "   eval-graphgen          Build audited k-hop subgraphs and multi-hop QA"
+	@echo "   eval-local             Run data_eval + QA dataset generation (CPU, local Mac)"
+	@echo "   eval-datasets          Generate QA datasets only (no fine-tuning, no benchmark)"
 	@echo "   eval-all               Run data_eval + model_eval end-to-end"
 	@echo ""
 	@echo "── Variables ───────────────────────────────────────────"
 	@echo "   dataset  = small | wikipedia          (default: small)"
-	@echo "   model    = a | b | c | all           (default: all)"
-	@echo "              a = base model only (no fine-tuning)"
-	@echo "              b = KG-managed model (Model B)"
-	@echo "              c = raw-text model (Model C)"
+	@echo "   model    = b | c | all                (default: all)"
+	@echo "              b = KG-managed (Model B)"
+	@echo "              c = raw-text (Model C)"
+	@echo "              a = benchmark only (skip fine-tuning)"
 	@echo "   MODEL    = Qwen/Qwen2.5-{0.5B,1.5B,3B,7B}-Instruct"
 	@echo "             (default: Qwen2.5-1.5B)"
 	@echo ""
 	@echo "── Examples ────────────────────────────────────────────"
 	@echo "   make eval-method1                              # quick KG health check"
-	@echo "   make eval-method2 model=b                      # fine-tune KG model only"
-	@echo "   make eval-method2 model=a                      # benchmark base model only"
-	@echo "   make eval-method2 model=b MODEL=unsloth/Qwen2.5-3B-Instruct-bnb-4bit"
-	@echo "   make eval-all dataset=wikipedia"
+	@echo "   make eval-local                               # full local eval: audit + QA datasets"
+	@echo "   make eval-datasets                            # generate QA datasets for Colab"
+	@echo "   make eval-method2 model=b                     # fine-tune KG model (GPU only)"
+	@echo "   make eval-method2 model=b MODEL=Qwen/Qwen2.5-3B-Instruct"
 
 ## test: Run the test suite
 test:
@@ -125,3 +128,11 @@ eval-graphgen:
 ## eval-all: Run both evaluation methods end-to-end  [dataset=small|wikipedia] [MODEL=...]
 eval-all:
 	$(VENV) && python evaluation/run_eval.py --method all --kg $(dataset_kg.$(dataset)) --model $(MODEL)
+
+## eval-local: Run Method 1 + generate QA datasets — everything you can do on a Mac CPU  [dataset=small|wikipedia]
+eval-local:
+	$(VENV) && python evaluation/run_eval.py --method all --kg $(dataset_kg.$(dataset)) --skip-finetune --skip-benchmark
+
+## eval-datasets: Generate QA datasets only (no evaluation, no fine-tuning) — for Colab  [dataset=small|wikipedia]
+eval-datasets:
+	$(VENV) && python evaluation/run_eval.py --method 2 --kg $(dataset_kg.$(dataset)) --skip-finetune --skip-benchmark
