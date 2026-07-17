@@ -143,15 +143,15 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
         click.echo("Neo4j driver not installed. Run: uv pip install -e \".[neo4j]\"")
         raise click.Abort()
 
+    import hashlib
+    import secrets
+
     driver = GraphDatabase.driver(uri, auth=(user, password))
 
     with driver.session() as session:
         # Wipe existing graph to avoid stale labels/properties from previous uploads
         click.echo("Clearing existing graph...")
         session.run("MATCH (n) DETACH DELETE n")
-
-        # Create uniqueness constraints
-        session.run("CREATE CONSTRAINT IF NOT EXISTS FOR (n:Entity) REQUIRE n.name IS UNIQUE")
 
         # Upload nodes — separate by type: Chunk, Document, Entity
         nodes = data["graph"]["nodes"]
@@ -184,44 +184,38 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
                 "MERGE (n:Entity {name: $name}) "
                 "SET n.id = $id, "
                 "n.entityType = $entityType, "
-                "n.aliases = $aliases, "
                 "n.description = $description, "
                 "n.importanceScore = $importanceScore, "
                 "n.confidenceScore = $confidenceScore, "
-                "n.source = $source, "
-                "n.embedding = $embedding, "
-                "n.updatedAt = $updatedAt",
+                "n.embedding = $embedding",
                 name=node.get("name", node.get("id", "")),
                 id=node.get("id", ""),
                 entityType=node_type,
-                aliases=node.get("aliases", []),
                 description=node.get("description", ""),
                 importanceScore=node.get("importanceScore", 0.0),
                 confidenceScore=node.get("confidenceScore", 1.0),
-                source=node.get("source", []),
                 embedding=node.get("embedding") if isinstance(node.get("embedding"), list) else None,
-                updatedAt=node.get("updatedAt", ""),
             )
 
-        # Upload Chunk nodes with clean GraphRAG properties
+        # Upload Chunk nodes with random hash id, source as attribute, no name
         click.echo(f"Uploading {len(chunks)} Chunk nodes...")
         for chunk in chunks:
-            chunk_id = chunk.get("name", chunk.get("id", ""))
+            raw = secrets.token_bytes(32)
+            chunk_id = hashlib.sha256(raw).hexdigest()[:16]
+            source_list = chunk.get("source", [])
+            source_str = source_list[0] if source_list else ""
+
             session.run(
-                "MERGE (c:Chunk {name: $name}) "
-                "SET c.id = $id, "
-                "c.text = $text, "
+                "CREATE (c:Chunk {id: $id}) "
+                "SET c.text = $text, "
                 "c.tokenCount = $tokenCount, "
                 "c.index = $index, "
-                "c.embedding = $embedding, "
                 "c.source = $source",
-                name=chunk_id,
                 id=chunk_id,
                 text=chunk.get("text", ""),
                 tokenCount=chunk.get("tokenCount", 0),
                 index=chunk.get("index", 0),
-                embedding=chunk.get("embedding") if isinstance(chunk.get("embedding"), list) else None,
-                source=chunk.get("source", ""),
+                source=source_str,
             )
 
         # Upload edges — match on any label using name property
@@ -242,6 +236,10 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
                     weight=edge.get("weight", 1),
                 )
                 edge_count += 1
+
+        # Strip name property from Entity nodes (no longer needed after edges are created)
+        click.echo("Removing name property from Entity nodes...")
+        session.run("MATCH (n:Entity) REMOVE n.name")
 
         click.echo(f"Done! Uploaded {len(documents)} docs, {len(chunks)} chunks, {len(entities)} entities, {edge_count} relationships to {uri}")
 

@@ -1,8 +1,10 @@
 """Upload a generated knowledge graph to a Neo4j database."""
 
+import hashlib
 import json
 import logging
 import os
+import secrets
 from pathlib import Path
 
 from kg_generator.config import load_config
@@ -59,26 +61,54 @@ def upload_graph(json_path: str | Path) -> None:
         # Create nodes
         logger.info(f"Uploading {len(nodes)} nodes...")
         for node in nodes:
+            node_type = node.get("type", "Entity")
             node_id = node.get("id", "")
-            label = node.get("label", "Entity")
             mentions = node.get("mentions", [])
             confidence = node.get("confidence", 1.0)
 
-            session.run(
-                """
-                CREATE (n:Entity:%s {
-                    id: $id,
-                    name: $id,
-                    label: $label,
-                    confidence: $confidence,
-                    mentions: $mentions
-                })
-                """ % label,
-                id=node_id,
-                label=label,
-                confidence=confidence,
-                mentions=mentions,
-            )
+            is_chunk = node_type == "Chunk"
+
+            if is_chunk:
+                # Chunk nodes: random hash id, source as attribute, no name
+                raw = secrets.token_bytes(32)
+                chunk_id = hashlib.sha256(raw).hexdigest()[:16]
+                source_list = node.get("source", [])
+                source_str = source_list[0] if source_list else ""
+
+                session.run(
+                    """
+                    CREATE (n:Entity:Chunk {
+                        id: $id,
+                        source: $source,
+                        text: $text,
+                        tokenCount: $tokenCount,
+                        index: $index,
+                        confidence: $confidence
+                    })
+                    """,
+                    id=chunk_id,
+                    source=source_str,
+                    text=node.get("text", ""),
+                    tokenCount=node.get("tokenCount", 0),
+                    index=node.get("index", 0),
+                    confidence=confidence,
+                )
+            else:
+                session.run(
+                    """
+                    CREATE (n:Entity:%s {
+                        id: $id,
+                        name: $id,
+                        label: $label,
+                        confidence: $confidence,
+                        mentions: $mentions
+                    })
+                    """ % node_type,
+                    id=node_id,
+                    label=node_type,
+                    confidence=confidence,
+                    mentions=mentions,
+                )
 
         # Create relationships
         logger.info(f"Uploading {len(edges)} relationships...")
