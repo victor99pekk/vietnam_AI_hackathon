@@ -1,0 +1,97 @@
+# KG Evaluation Pipeline Configuration
+# Used by: scripts/run_eval.py --method 1|2|all
+
+# ── Common settings ───────────────────────────────────────────
+common:
+  seed: 42
+  output_dir: output_eval
+
+# ── Method 1: SFT Data Quality Assessment ────────────────────
+method1:
+  # Step 1.1 — Structural Audit
+  structural_audit:
+    # Entity duplication: threshold for cosine similarity to flag as potential duplicate
+    entity_dedup_threshold: 0.85
+    # Schema compliance: path to ontology YAML (uses default_ontology.yaml if null)
+    ontology_path: null
+
+  # Step 1.2 — SFT Data Generation
+  sft_generation:
+    # Number of subgraph samples to draw from the KG
+    num_samples: 50
+    # Mix of hop depths: [1-hop%, 2-hop%, 3-hop%]
+    hop_distribution: [0.3, 0.4, 0.3]
+    # LLM model for generating instruction/response pairs
+    llm_model: deepseek-chat
+    # LLM provider (openai-compatible API)
+    llm_provider: deepseek
+    # Max tokens for generated SFT pairs
+    max_tokens: 512
+    # Temperature for generation diversity
+    temperature: 0.7
+
+  # Step 1.3 — SFT Quality Evaluation (deepeval)
+  sft_evaluation:
+    # deepeval thresholds
+    faithfulness_threshold: 0.7
+    relevancy_threshold: 0.7
+    # Model used as the judge (uses same LLM as generation by default)
+    judge_model: deepseek-chat
+    # Semantic diversity: minimum unique n-gram ratio (0-1) before flagging
+    min_diversity_score: 0.4
+
+# ── Method 2: Fine-Tuning Ablation Study ─────────────────────
+method2:
+  # Model to fine-tune
+  base_model: Qwen/Qwen2.5-1.5B-Instruct
+  # Alternatives: Qwen/Qwen2.5-1.5B-Instruct, Qwen/Qwen2.5-7B-Instruct
+
+  # LoRA configuration
+  lora:
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules:
+      - q_proj
+      - k_proj
+      - v_proj
+      - o_proj
+      - gate_proj
+      - up_proj
+      - down_proj
+
+  # Training hyperparameters
+  training:
+    max_seq_length: 2048
+    per_device_train_batch_size: 2
+    gradient_accumulation_steps: 4
+    learning_rate: 2.0e-4
+    max_steps: 300          # Adjust based on dataset size
+    warmup_steps: 30
+    logging_steps: 10
+    save_steps: 100
+    eval_steps: 100
+    weight_decay: 0.01
+    lr_scheduler_type: cosine
+    optim: adamw_8bit
+    fp16: false             # Mac MPS doesn't support fp16; use bf16=false
+    bf16: false
+
+  # Dataset generation
+  dataset_gen:
+    test_split: 0.2
+    max_hops: 3
+    # Token volume matching: cap raw-text dataset to KG dataset size
+    match_token_volume: true
+
+  # Evaluation
+  benchmark:
+    # Number of test QA pairs to evaluate on
+    max_test_samples: 200
+    # Metrics to compute
+    metrics:
+      - factual_accuracy
+      - multi_hop_accuracy
+      - hallucination_rate
+      - consistency
+      - perplexity

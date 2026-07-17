@@ -5,17 +5,62 @@ dataset ?= small
 # Add new datasets here
 dataset_conf.small     := configs/debug.yaml
 dataset_input.small    := -i data/debugg_sample/
+dataset_kg.small       := generated_KGs/output_debug/knowledge_graph.json
 
 dataset_conf.wikipedia     := configs/pipeline.yaml
 dataset_input.wikipedia    := -i data/wikipedia/
+dataset_kg.wikipedia       := generated_KGs/output/knowledge_graph.json
 
-.PHONY: help test ingest upload install clean
+# ── Eval overrides ──
+MODEL   ?= Qwen/Qwen2.5-1.5B-Instruct
+model   ?= all
+
+.PHONY: help test ingest upload download install clean \
+        eval-install eval-install-model eval-method1 eval-method2 eval-all
 
 help:
-	@echo "Usage: make <target> [dataset=<name>]"
+	@echo "Usage: make <target> [dataset=<name>] [MODEL=<model>]"
 	@echo ""
-	@echo "Targets:"
-	@sed -n 's/^##//p' $(MAKEFILE_LIST) | column -t -s ':' | sed 's/^/ /'
+	@echo "── Pipeline ────────────────────────────────────────────"
+	@echo "   test             Run the test suite"
+	@echo "   ingest           Run the KG generation pipeline"
+	@echo "   upload           Upload generated graph to Neo4j"
+	@echo "   download         Download graph from Neo4j → knowledge_graph.json"
+	@echo "   install          Set up the project and install dependencies"
+	@echo "   clean            Remove generated output folders"
+	@echo ""
+	@echo "── Evaluation ──────────────────────────────────────────"
+	@echo ""
+	@echo "   data_eval — SFT data quality check (fast, ~seconds, runs locally)"
+	@echo "     → audits graph health (orphans, density, schema, dups)"
+	@echo "     → generates & scores SFT training pairs via deepeval + DeepSeek"
+	@echo ""
+	@echo "   model_eval — Fine-tuning ablation study (Colab GPU only)"
+	@echo "     → trains Model B (KG-structured QA pairs)"
+	@echo "     → trains Model C (raw-text QA pairs)"
+	@echo "     → benchmarks both vs. base Qwen2.5 (Model A)"
+	@echo ""
+	@echo "   eval-install           Install data_eval deps (deepeval, sentence-transformers)"
+	@echo "   eval-install-model     Install model_eval deps (Colab only: transformers, peft, bitsandbytes)"
+	@echo "   eval-method1           Run data_eval only"
+	@echo "   eval-method2           Run model_eval [model=a|b|c|all]  (GPU required)"
+	@echo "   eval-all               Run data_eval + model_eval end-to-end"
+	@echo ""
+	@echo "── Variables ───────────────────────────────────────────"
+	@echo "   dataset  = small | wikipedia          (default: small)"
+	@echo "   model    = a | b | c | all           (default: all)"
+	@echo "              a = base model only (no fine-tuning)"
+	@echo "              b = KG-managed model (Model B)"
+	@echo "              c = raw-text model (Model C)"
+	@echo "   MODEL    = Qwen/Qwen2.5-{0.5B,1.5B,3B,7B}-Instruct"
+	@echo "             (default: Qwen2.5-1.5B)"
+	@echo ""
+	@echo "── Examples ────────────────────────────────────────────"
+	@echo "   make eval-method1                              # quick KG health check"
+	@echo "   make eval-method2 model=b                      # fine-tune KG model only"
+	@echo "   make eval-method2 model=a                      # benchmark base model only"
+	@echo "   make eval-method2 model=b MODEL=unsloth/Qwen2.5-3B-Instruct-bnb-4bit"
+	@echo "   make eval-all dataset=wikipedia"
 
 ## test: Run the test suite
 test:
@@ -23,11 +68,15 @@ test:
 
 ## ingest: Run the pipeline  [dataset=small|wikipedia]
 ingest:
-	$(VENV) && kg-gen run -c $(dataset_conf.$(dataset)) $(dataset_input.$(dataset)) -o ./output_$(dataset)
+	$(VENV) && kg-gen run -c $(dataset_conf.$(dataset)) $(dataset_input.$(dataset)) -o ./generated_KGs/output_$(dataset)
 
 ## upload: Upload the generated graph to Neo4j  [dataset=small|wikipedia]
 upload:
-	$(VENV) && kg-gen neo4j-upload -o ./output_$(dataset)
+	$(VENV) && kg-gen neo4j-upload -o ./generated_KGs/output_$(dataset)
+
+## download: Download the graph from Neo4j (e.g., for Colab evaluation)  [dataset=small|wikipedia]
+download:
+	$(VENV) && kg-gen neo4j-download -o ./generated_KGs/output_$(dataset)/knowledge_graph.json
 
 ## install: Set up the project and install dependencies
 install:
@@ -37,4 +86,32 @@ install:
 
 ## clean: Remove generated output folders
 clean:
-	rm -rf output_small/ output_wikipedia/
+	rm -rf generated_KGs/
+
+# ── Evaluation ────────────────────────────────────────────────
+
+## eval-install: Install data_eval deps (deepeval + sentence-transformers)
+eval-install:
+	$(VENV) && uv pip install -e ".[eval-data]"
+
+## eval-install-model: Install model_eval deps (transformers, peft, accelerate — for fine-tuning)
+eval-install-model:
+	$(VENV) && uv pip install -e ".[eval-model]"
+
+## eval-method1: Run Method 1 — SFT data quality assessment  [dataset=small|wikipedia]
+eval-method1:
+	$(VENV) && python evaluation/run_eval.py --method 1 --kg $(dataset_kg.$(dataset))
+
+## eval-method2: Run Method 2  [model=a|b|c|all] [dataset=small|wikipedia] [MODEL=...]
+eval-method2:
+	@case "$(model)" in \
+		a) target="--skip-finetune" ;; \
+		b) target="-t kg" ;; \
+		c) target="-t raw" ;; \
+		*) target="-t both" ;; \
+	esac; \
+	$(VENV) && python evaluation/run_eval.py --method 2 --kg $(dataset_kg.$(dataset)) $$target --model $(MODEL)
+
+## eval-all: Run both evaluation methods end-to-end  [dataset=small|wikipedia] [MODEL=...]
+eval-all:
+	$(VENV) && python evaluation/run_eval.py --method all --kg $(dataset_kg.$(dataset)) --model $(MODEL)
