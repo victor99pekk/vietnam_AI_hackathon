@@ -361,7 +361,7 @@ def load_kg_for_audit(path: Path) -> tuple[nx.DiGraph, list[dict[str, Any]], lis
 
     entities = data.get("entities", [])
     triples_raw = data.get("triples", [])
-    graph = nx.node_link_graph(data.get("graph", {}))
+    graph = nx.node_link_graph(data.get("graph", {}), link="edges")
 
     triples: list[tuple[str, str, str, str]] = []
     for t in triples_raw:

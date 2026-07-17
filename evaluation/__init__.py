@@ -4,6 +4,7 @@ Two complementary evaluation types:
 
   data_eval  — Is my KG generating high-quality SFT training data?
     → structural audit + SFT generation + deepeval quality scoring
+    → fact coverage: how many source-document facts are in the KG?
 
   model_eval — Does KG-structured data produce a better model?
     → dataset generation + LoRA fine-tuning + A/B/C model comparison
@@ -21,6 +22,9 @@ from evaluation.data_eval import (
     SFTGenerator,
     TemplateSFTGenerator,
     SFTEvaluator,
+    FactExtractor,
+    CoverageEvaluator,
+    compute_kg_coverage,
 )
 
 # dataset_gen (no torch needed) — always import
@@ -50,6 +54,10 @@ __all__ = [
     "SFTGenerator",
     "TemplateSFTGenerator",
     "SFTEvaluator",
+    "FactExtractor",
+    "CoverageEvaluator",
+    "compute_kg_coverage",
+    # model_eval
     "QADatasetGenerator",
     "load_kg",
     "load_raw_documents",

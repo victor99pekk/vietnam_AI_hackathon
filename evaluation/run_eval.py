@@ -218,6 +218,62 @@ def run_method1(kg_path: Path, config: dict[str, Any], output_base: Path) -> dic
     logger.info("Overall SFT quality: %.3f — %s",
                  quality_report.get("overall_score", 0), quality_report.get("verdict", ""))
 
+    # Step 1.4: Source Document Fact Coverage
+    logger.info("\n--- Step 1.4: Source Fact Coverage ---")
+    coverage_config = m1_config.get("coverage", {})
+
+    if coverage_config.get("enabled", True):
+        from evaluation.data_eval.coverage import compute_kg_coverage
+
+        # Resolve source document paths from config
+        doc_paths_config = coverage_config.get("document_paths", ["data/"])
+        document_paths: list[Path] = []
+        for p in doc_paths_config:
+            path = Path(p)
+            if path.exists():
+                document_paths.append(path)
+            else:
+                logger.warning("Coverage: document path not found: %s", p)
+
+        # Fallback: try to find documents from triples' source_text fields
+        if not document_paths:
+            source_files = set()
+            for t in triples:
+                if len(t) > 3 and t[3]:
+                    source_files.add(t[3])
+            document_paths = [Path(f) for f in source_files if Path(f).exists()]
+
+        # Last resort: use data/ directory
+        if not document_paths:
+            data_dir = Path("data")
+            if data_dir.exists():
+                document_paths = [data_dir]
+                logger.info("Coverage: falling back to %s", data_dir)
+
+        if document_paths:
+            coverage_report = compute_kg_coverage(
+                kg_path=kg_path,
+                document_paths=document_paths,
+                extraction_mode=coverage_config.get("extraction_mode", "heuristic"),
+                fact_sample_size=coverage_config.get("fact_sample_size", 30),
+                seed=config.get("common", {}).get("seed", 42),
+            )
+            results["coverage"] = coverage_report
+
+            coverage_path = output_dir / "coverage_report.json"
+            with open(coverage_path, "w") as f:
+                json.dump(coverage_report, f, indent=2)
+            logger.info("Coverage report saved → %s", coverage_path)
+            logger.info("Fact coverage: %.1f/100 — %s",
+                         coverage_report.get("health_score", 0),
+                         coverage_report.get("verdict", ""))
+        else:
+            logger.warning("No source documents found — skipping coverage evaluation")
+            results["coverage"] = {"skipped": True, "reason": "No source documents found"}
+    else:
+        logger.info("Coverage evaluation disabled in config.")
+        results["coverage"] = {"skipped": True, "reason": "Disabled in config"}
+
     # Save combined results
     combined_path = output_dir / "method1_results.json"
     with open(combined_path, "w") as f:

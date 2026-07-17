@@ -40,6 +40,18 @@ method1:
     # Semantic diversity: minimum unique n-gram ratio (0-1) before flagging
     min_diversity_score: 0.4
 
+  # Step 1.4 — Source Document Fact Coverage
+  coverage:
+    # Set to false to skip this step
+    enabled: true
+    # How to extract facts: "heuristic" (regex, no API) or "llm" (future)
+    extraction_mode: heuristic
+    # Max number of unique facts to sample from the source documents
+    fact_sample_size: 30
+    # Paths to source documents (directories or individual files)
+    document_paths:
+      - data/
+
 # ── Method 2: Fine-Tuning Ablation Study ─────────────────────
 method2:
   # Model to fine-tune

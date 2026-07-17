@@ -1,0 +1,332 @@
+{
+  "structural_audit": {
+    "graph_stats": {
+      "num_nodes": 77,
+      "num_edges": 544,
+      "num_triples": 0,
+      "is_directed": true,
+      "is_connected": false
+    },
+    "orphan_analysis": {
+      "orphan_count": 0,
+      "orphan_rate": 0.0,
+      "entity_orphans": 0,
+      "chunk_orphans": 0,
+      "health_score": 100.0,
+      "flag": "green",
+      "recommendation": ""
+    },
+    "density_analysis": {
+      "density": 0.09296,
+      "health_score": 100,
+      "flag": "green",
+      "recommendation": ""
+    },
+    "schema_compliance": {
+      "compliance_rate": 1.0,
+      "violations": [],
+      "health_score": 100,
+      "flag": "green"
+    },
+    "entity_duplication": {
+      "duplicate_pairs": [],
+      "duplicate_pair_count": 0,
+      "duplicate_entity_count": 0,
+      "health_score": 100.0,
+      "flag": "green",
+      "recommendation": ""
+    },
+    "multi_hop_connectivity": {
+      "reachable_2hop_pct": 0.3248,
+      "reachable_3hop_pct": 0.4414,
+      "health_score": 76.6,
+      "flag": "green",
+      "recommendation": ""
+    },
+    "overall_health_score": 95.3,
+    "verdict": "\u2705 Healthy \u2014 KG is structurally sound for SFT data generation."
+  },
+  "sft_generation": {
+    "path": "output_eval/method1/sft_sample.jsonl",
+    "method": "llm"
+  },
+  "sft_evaluation": {
+    "pairs_evaluated": 35,
+    "metrics": {
+      "faithfulness": 0.2,
+      "faithfulness_detail": "28/35 responses contain entities not in source triples",
+      "answer_relevancy": 0.55,
+      "relevancy_detail": "Keyword overlap between instruction and response (heuristic proxy)",
+      "factual_correctness": 0.96,
+      "factual_detail": "Presence of triple entities in response (heuristic proxy)",
+      "note": "Heuristic evaluation (deepeval not available). Install deepeval for LLM-as-Judge scoring.",
+      "semantic_diversity": {
+        "score": 0.367,
+        "unique_bigram_ratio": 0.367,
+        "most_common_bigrams": [
+          {
+            "bigram": "associated_with",
+            "count": 16
+          },
+          {
+            "bigram": "the_first",
+            "count": 15
+          },
+          {
+            "bigram": "first_female",
+            "count": 15
+          },
+          {
+            "bigram": "female_professor",
+            "count": 14
+          },
+          {
+            "bigram": "who_was",
+            "count": 14
+          }
+        ],
+        "flag": "red",
+        "detail": "Low diversity \u2014 only 37% unique bigrams. Instructions may be too templated."
+      }
+    },
+    "details": [],
+    "overall_score": 0.519,
+    "verdict": "\ud83d\udd36 Fair \u2014 consider improving the KG before generating SFT data."
+  },
+  "coverage": {
+    "total_facts": 13,
+    "exact_match_count": 0,
+    "exact_match_rate": 0.0,
+    "pair_match_count": 0,
+    "pair_match_rate": 0.0,
+    "mention_match_count": 6,
+    "mention_match_rate": 0.4615,
+    "coverage_score": 0.0923,
+    "health_score": 9.2,
+    "verdict": "\ud83d\udd34 Poor \u2014 KG misses many source facts; extraction/triple generation may need tuning.",
+    "missed_facts": [
+      {
+        "fact": "(He | studied_at | King's College)",
+        "source": "data/debugg_sample/alan_turing.txt",
+        "evidence": "He studied at King's College, Cambridge and later earned his PhD from Princeton University.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": true,
+        "connected": false
+      },
+      {
+        "fact": "(He studied at King's College, Cambridge and later | earned | PhD)",
+        "source": "data/debugg_sample/alan_turing.txt",
+        "evidence": "He studied at King's College, Cambridge and later earned his PhD from Princeton University.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": true,
+        "connected": false
+      },
+      {
+        "fact": "(During World War II, Turing | worked_at | Bletchley Park)",
+        "source": "data/debugg_sample/alan_turing.txt",
+        "evidence": "During World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": true,
+        "connected": false
+      },
+      {
+        "fact": "(He | created | the Bombe)",
+        "source": "data/debugg_sample/alan_turing.txt",
+        "evidence": "He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": true,
+        "connected": false
+      },
+      {
+        "fact": "(After the war, Turing | worked_at | the National Physical Laboratory and later at the University of Manchester)",
+        "source": "data/debugg_sample/alan_turing.txt",
+        "evidence": "After the war, Turing worked at the National Physical Laboratory and later at the University of Manchester.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": false,
+        "connected": false
+      },
+      {
+        "fact": "(He | died_in | 1954 in Wilmslow)",
+        "source": "data/debugg_sample/alan_turing.txt",
+        "evidence": "He died in 1954 in Wilmslow, England.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": false,
+        "connected": false
+      },
+      {
+        "fact": "(In 1903, she | earned | the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity)",
+        "source": "data/debugg_sample/marie_curie.txt",
+        "evidence": "In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": false,
+        "connected": false
+      }
+    ],
+    "per_fact_results": [
+      {
+        "fact": "(Alan Turing | born_in | London)",
+        "source": "data/debugg_sample/alan_turing.txt",
+        "evidence": "Alan Turing was born in London, England in 1912.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": true,
+        "subj_in_kg": true,
+        "obj_in_kg": true,
+        "connected": false
+      },
+      {
+        "fact": "(He | studied_at | King's College)",
+        "source": "data/debugg_sample/alan_turing.txt",
+        "evidence": "He studied at King's College, Cambridge and later earned his PhD from Princeton University.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": true,
+        "connected": false
+      },
+      {
+        "fact": "(He studied at King's College, Cambridge and later | earned | PhD)",
+        "source": "data/debugg_sample/alan_turing.txt",
+        "evidence": "He studied at King's College, Cambridge and later earned his PhD from Princeton University.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": true,
+        "connected": false
+      },
+      {
+        "fact": "(During World War II, Turing | worked_at | Bletchley Park)",
+        "source": "data/debugg_sample/alan_turing.txt",
+        "evidence": "During World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": true,
+        "connected": false
+      },
+      {
+        "fact": "(He | created | the Bombe)",
+        "source": "data/debugg_sample/alan_turing.txt",
+        "evidence": "He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": true,
+        "connected": false
+      },
+      {
+        "fact": "(After the war, Turing | worked_at | the National Physical Laboratory and later at the University of Manchester)",
+        "source": "data/debugg_sample/alan_turing.txt",
+        "evidence": "After the war, Turing worked at the National Physical Laboratory and later at the University of Manchester.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": false,
+        "connected": false
+      },
+      {
+        "fact": "(He | died_in | 1954 in Wilmslow)",
+        "source": "data/debugg_sample/alan_turing.txt",
+        "evidence": "He died in 1954 in Wilmslow, England.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": false,
+        "connected": false
+      },
+      {
+        "fact": "(Marie Curie | born_in | Warsaw)",
+        "source": "data/debugg_sample/marie_curie.txt",
+        "evidence": "Marie Curie was born in Warsaw, Poland in 1867.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": true,
+        "subj_in_kg": true,
+        "obj_in_kg": true,
+        "connected": false
+      },
+      {
+        "fact": "(She | created | the elements polonium and radium)",
+        "source": "data/debugg_sample/marie_curie.txt",
+        "evidence": "She discovered the elements polonium and radium.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": true,
+        "subj_in_kg": true,
+        "obj_in_kg": false,
+        "connected": false
+      },
+      {
+        "fact": "(Curie | worked_at | the University of Paris)",
+        "source": "data/debugg_sample/marie_curie.txt",
+        "evidence": "Curie worked at the University of Paris, where she became the first female professor.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": true,
+        "subj_in_kg": true,
+        "obj_in_kg": true,
+        "connected": false
+      },
+      {
+        "fact": "(In 1903, she | earned | the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity)",
+        "source": "data/debugg_sample/marie_curie.txt",
+        "evidence": "In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": false,
+        "subj_in_kg": false,
+        "obj_in_kg": false,
+        "connected": false
+      },
+      {
+        "fact": "(She | founded | the Curie Institutes in Paris and Warsaw)",
+        "source": "data/debugg_sample/marie_curie.txt",
+        "evidence": "She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": true,
+        "subj_in_kg": true,
+        "obj_in_kg": false,
+        "connected": false
+      },
+      {
+        "fact": "(Marie Curie | died_in | 1934 in Passy)",
+        "source": "data/debugg_sample/marie_curie.txt",
+        "evidence": "Marie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.",
+        "exact_match": false,
+        "pair_match": false,
+        "mention_match": true,
+        "subj_in_kg": true,
+        "obj_in_kg": false,
+        "connected": false
+      }
+    ]
+  }
+}
