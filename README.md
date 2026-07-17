@@ -48,6 +48,10 @@ kg-gen curate -i data/sample/ -m configs/example_source_manifest.yaml
 
 See [the curation guide](docs/dataset_curation.md) for the source-manifest format, outputs, and demo procedure.
 
+## Component Guides
+
+The [package architecture guide](src/kg_generator/README.md) explains how the curation and KG workflows fit together. Each pipeline component also has a short README describing its responsibility, inputs, outputs, and key files.
+
 ## Project Structure
 
 ```
