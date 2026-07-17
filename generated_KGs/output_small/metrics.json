@@ -1,38 +1,26 @@
 {
-  "num_nodes": 88,
-  "num_edges": 621,
-  "num_triples": 691,
-  "completeness": 0.9810606060606061,
+  "num_nodes": 66,
+  "num_edges": 205,
+  "num_triples": 225,
+  "completeness": 0.9747474747474748,
   "completeness_breakdown": {
-<<<<<<< Updated upstream
-    "has_aliases": 0.9431818181818182,
+    "has_aliases": 0.9242424242424242,
     "has_type": 1.0,
     "has_name": 1.0
-=======
-    "has_name": 1.0,
-    "has_type": 1.0,
-    "has_aliases": 0.2857142857142857
->>>>>>> Stashed changes
   },
   "consistency": 1.0,
-  "duplication_level": 0.056333048283120635,
-  "entity_duplication_rate": 0.011363636363636354,
-  "triple_duplication_rate": 0.10130246020260492,
-  "missing_information": 0.056818181818181816,
+  "duplication_level": 0.05202020202020202,
+  "entity_duplication_rate": 0.015151515151515138,
+  "triple_duplication_rate": 0.0888888888888889,
+  "missing_information": 0.07575757575757576,
   "format_errors": 0.0,
-<<<<<<< Updated upstream
-  "labeling_quality": 0.5681818181818182,
-  "reusability": 0.9840909090909091,
-  "overall_score": 0.9171688718902902,
-=======
-  "labeling_quality": 1.0,
-  "reusability": 0.7142857142857144,
-  "overall_score": 0.8231292517006803,
->>>>>>> Stashed changes
+  "labeling_quality": 0.8787878787878788,
+  "reusability": 0.9000000000000001,
+  "overall_score": 0.9465367965367966,
   "extraction": {
-    "method": "baseline",
-    "model": null,
-    "prompt_version": null,
-    "max_gleanings": 0
+    "method": "graphgen",
+    "model": "deepseek-v4-pro",
+    "prompt_version": "graphgen-figure8-figure9-v1",
+    "max_gleanings": 3
   }
 }
