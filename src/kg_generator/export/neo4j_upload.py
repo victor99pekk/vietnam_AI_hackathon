@@ -10,6 +10,86 @@ from kg_generator.config import load_config
 logger = logging.getLogger(__name__)
 
 
+def replace_documents(session, document_ids: list[str]) -> None:
+    """Delete existing KG data owned by incoming document IDs.
+
+    Document IDs are stable across content changes, while chunk IDs include the
+    chunk text. Removing the old chunks before upload prevents changed documents
+    from leaving stale chunks and extracted relationships in Neo4j.
+    """
+    document_ids = sorted({document_id for document_id in document_ids if document_id})
+    if not document_ids:
+        return
+
+    record = session.run(
+        """
+        MATCH (chunk:Chunk)-[:PART_OF]->(document:Document)
+        WHERE document.id IN $document_ids
+        OPTIONAL MATCH (chunk)-[:MENTIONS]->(entity:Entity)
+        RETURN collect(DISTINCT chunk.id) AS chunk_ids,
+               collect(DISTINCT entity.id) AS entity_ids
+        """,
+        document_ids=document_ids,
+    ).single()
+    chunk_ids = list(record["chunk_ids"] or []) if record else []
+    entity_ids = list(record["entity_ids"] or []) if record else []
+
+    if chunk_ids:
+        # Extracted entity-to-entity relationships are not directly connected
+        # to Chunk nodes. Remove replaced chunk IDs from their provenance and
+        # delete a relationship only when no other document still supports it.
+        # Evidence text cannot currently be mapped to individual source chunks,
+        # so clear it rather than retain text from the replaced document.
+        session.run(
+            """
+            MATCH ()-[relationship]->()
+            WHERE NOT type(relationship) IN ['PART_OF', 'NEXT', 'MENTIONS']
+              AND any(chunk_id IN coalesce(relationship.sourceChunkIds, [])
+                      WHERE chunk_id IN $chunk_ids)
+            WITH relationship,
+                 [chunk_id IN coalesce(relationship.sourceChunkIds, [])
+                  WHERE NOT chunk_id IN $chunk_ids] AS remaining_chunk_ids
+            SET relationship.sourceChunkIds = remaining_chunk_ids,
+                relationship.evidenceSentences = [],
+                relationship.description = ''
+            WITH relationship, remaining_chunk_ids
+            WHERE size(remaining_chunk_ids) = 0
+            DELETE relationship
+            """,
+            chunk_ids=chunk_ids,
+        )
+
+    session.run(
+        """
+        MATCH (chunk:Chunk)-[:PART_OF]->(document:Document)
+        WHERE document.id IN $document_ids
+        DETACH DELETE chunk
+        """,
+        document_ids=document_ids,
+    )
+    session.run(
+        """
+        MATCH (document:Document)
+        WHERE document.id IN $document_ids
+        DETACH DELETE document
+        """,
+        document_ids=document_ids,
+    )
+
+    if entity_ids:
+        # Remove entities owned only by replaced documents. Entities still
+        # mentioned by an unrelated document remain in the graph.
+        session.run(
+            """
+            MATCH (entity:Entity)
+            WHERE entity.id IN $entity_ids
+              AND NOT EXISTS { MATCH (:Chunk)-[:MENTIONS]->(entity) }
+            DETACH DELETE entity
+            """,
+            entity_ids=entity_ids,
+        )
+
+
 def _get_connection():
     """Create and return a Neo4j driver using env vars."""
     from neo4j import GraphDatabase
@@ -37,7 +117,7 @@ def clear_database():
 
 
 def upload_graph(json_path: str | Path, clear: bool = False) -> None:
-    """Read a knowledge_graph.json and upload its nodes + edges to Neo4j."""
+    """Upload a graph, replacing documents with matching stable IDs."""
     json_path = Path(json_path)
     if not json_path.exists():
         raise FileNotFoundError(f"Graph file not found: {json_path}")
@@ -55,6 +135,11 @@ def upload_graph(json_path: str | Path, clear: bool = False) -> None:
         if clear:
             logger.info("Clearing existing Neo4j data...")
             session.run("MATCH (n) DETACH DELETE n")
+        else:
+            replace_documents(
+                session,
+                [node.get("id", "") for node in nodes if node.get("type") == "Document"],
+            )
 
         # Create nodes
         logger.info(f"Uploading {len(nodes)} nodes...")
@@ -167,9 +252,18 @@ def upload_graph(json_path: str | Path, clear: bool = False) -> None:
                     f"""
                     MATCH (a {{id: $source}}), (b {{id: $target}})
                     {merge_clause}
-                    SET r.evidenceSentences = $evidence_sentences,
-                        r.sourceChunkIds = $source_chunk_ids,
-                        r.description = $description
+                    SET r.evidenceSentences = reduce(
+                            items = coalesce(r.evidenceSentences, []),
+                            item IN $evidence_sentences |
+                            CASE WHEN item IN items THEN items ELSE items + [item] END
+                        ),
+                        r.sourceChunkIds = reduce(
+                            ids = coalesce(r.sourceChunkIds, []),
+                            chunk_id IN $source_chunk_ids |
+                            CASE WHEN chunk_id IN ids THEN ids ELSE ids + [chunk_id] END
+                        ),
+                        r.description = CASE WHEN $description <> ''
+                            THEN $description ELSE coalesce(r.description, '') END
                     """,
                     source=source,
                     target=target,

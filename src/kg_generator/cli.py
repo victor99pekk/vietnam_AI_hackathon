@@ -228,13 +228,18 @@ def neo4j_upload(
             click.echo("Clearing existing graph (--clear was supplied)...")
             session.run("MATCH (n) DETACH DELETE n")
         else:
-            click.echo("Preserving existing graph (use --clear for a clean replacement)...")
+            click.echo("Replacing matching documents and preserving unrelated graph data...")
 
         # Upload nodes — separate by type (already normalized by exporter)
         nodes = data["graph"]["nodes"]
         chunks = [n for n in nodes if n.get("type") == "Chunk"]
         documents = [n for n in nodes if n.get("type") == "Document"]
         entities = [n for n in nodes if n.get("type") not in ("Chunk", "Document")]
+
+        if not clear:
+            from kg_generator.export.neo4j_upload import replace_documents
+
+            replace_documents(session, [document.get("id", "") for document in documents])
 
         # Upload Document nodes
         click.echo(f"Uploading {len(documents)} Document nodes...")
@@ -329,9 +334,14 @@ def neo4j_upload(
                     "MATCH (b {id: $target}) "
                     f"MERGE (a)-[r:{safe_pred}]->(b) "
                     "SET r.weight = $weight, "
-                    "r.evidenceSentences = $evidence_sentences, "
-                    "r.sourceChunkIds = $source_chunk_ids, "
-                    "r.description = $description",
+                    "r.evidenceSentences = reduce(items = coalesce(r.evidenceSentences, []), "
+                    "item IN $evidence_sentences | "
+                    "CASE WHEN item IN items THEN items ELSE items + [item] END), "
+                    "r.sourceChunkIds = reduce(ids = coalesce(r.sourceChunkIds, []), "
+                    "chunk_id IN $source_chunk_ids | "
+                    "CASE WHEN chunk_id IN ids THEN ids ELSE ids + [chunk_id] END), "
+                    "r.description = CASE WHEN $description <> '' "
+                    "THEN $description ELSE coalesce(r.description, '') END",
                     source=edge["source"],
                     target=edge["target"],
                     weight=edge.get("weight", 1),
