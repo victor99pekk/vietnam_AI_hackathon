@@ -2,9 +2,14 @@
 
 import hashlib
 import logging
-from typing import Callable
+from dataclasses import dataclass
+from typing import Sequence
 
-from datasketch import MinHash, MinHashLSH
+try:
+    from datasketch import MinHash, MinHashLSH
+except ImportError:  # pragma: no cover - used only in minimal environments
+    MinHash = None  # type: ignore[assignment,misc]
+    MinHashLSH = None  # type: ignore[assignment,misc]
 from kg_generator.ingest.loader import Document
 
 logger = logging.getLogger(__name__)
@@ -12,6 +17,91 @@ logger = logging.getLogger(__name__)
 # Number of hash functions for MinHash (higher = more accurate, slower)
 MINHASH_PERMUTATIONS = 128
 LSH_THRESHOLD_DEFAULT = 0.85
+
+
+@dataclass(frozen=True)
+class DuplicateAssignment:
+    """Duplicate decision retained for curation audit records."""
+
+    cluster_id: str | None
+    canonical_id: str | None
+    is_duplicate: bool
+
+
+class GlobalDeduplicator:
+    """Cluster all documents and choose a deterministic canonical member."""
+
+    def __init__(self, threshold: float = LSH_THRESHOLD_DEFAULT, num_perm: int = MINHASH_PERMUTATIONS) -> None:
+        if not 0 <= threshold <= 1:
+            raise ValueError("Deduplication threshold must be between 0 and 1.")
+        self.threshold = threshold
+        self.num_perm = num_perm
+
+    def cluster(self, records: Sequence[dict[str, object]]) -> dict[str, DuplicateAssignment]:
+        parent = list(range(len(records)))
+
+        def find(index: int) -> int:
+            while parent[index] != index:
+                parent[index] = parent[parent[index]]
+                index = parent[index]
+            return index
+
+        def union(first: int, second: int) -> None:
+            first_root, second_root = find(first), find(second)
+            if first_root != second_root:
+                parent[max(first_root, second_root)] = min(first_root, second_root)
+
+        exact: dict[str, int] = {}
+        signatures: list[object] = []
+        for index, record in enumerate(records):
+            content = str(record["content"])
+            content_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
+            if content_hash in exact:
+                union(index, exact[content_hash])
+            else:
+                exact[content_hash] = index
+            signatures.append(self._minhash(content))
+
+        if MinHash is not None and MinHashLSH is not None:
+            lsh = MinHashLSH(threshold=self.threshold, num_perm=self.num_perm)
+            for index, signature in enumerate(signatures):
+                lsh.insert(str(index), signature)
+            for index, signature in enumerate(signatures):
+                for candidate in lsh.query(signature):
+                    if int(candidate) < index:
+                        union(index, int(candidate))
+        else:
+            gram_sets = [self._grams(str(record["content"])) for record in records]
+            for index, grams in enumerate(gram_sets):
+                for candidate_index, candidate_grams in enumerate(gram_sets[:index]):
+                    similarity = len(grams & candidate_grams) / max(len(grams | candidate_grams), 1)
+                    if similarity >= self.threshold:
+                        union(index, candidate_index)
+
+        groups: dict[int, list[int]] = {}
+        for index in range(len(records)):
+            groups.setdefault(find(index), []).append(index)
+        assignments: dict[str, DuplicateAssignment] = {}
+        for members in groups.values():
+            canonical_index = sorted(members, key=lambda i: (-float(records[i]["quality_score"]), str(records[i]["doc_id"])))[0]
+            canonical_id = str(records[canonical_index]["doc_id"])
+            cluster_id = f"dup-{min(str(records[i]['doc_id']) for i in members)}" if len(members) > 1 else None
+            for index in members:
+                record_id = str(records[index]["doc_id"])
+                assignments[record_id] = DuplicateAssignment(cluster_id, canonical_id, len(members) > 1 and index != canonical_index)
+        return assignments
+
+    def _minhash(self, text: str) -> object:
+        if MinHash is None:
+            return self._grams(text)
+        signature = MinHash(num_perm=self.num_perm)
+        for gram in self._grams(text):
+            signature.update(gram.encode("utf-8"))
+        return signature
+
+    @staticmethod
+    def _grams(text: str) -> set[str]:
+        return {text[index:index + 3] for index in range(max(len(text) - 2, 1))}
 
 
 class Deduplicator:
@@ -35,7 +125,7 @@ class Deduplicator:
             return []
 
         if self.method == "minhash":
-            return self._minhash_dedup(documents)
+            return self._global_minhash_dedup(documents)
         elif self.method == "simhash":
             return self._simhash_dedup(documents)
         elif self.method == "ngram":
@@ -44,34 +134,17 @@ class Deduplicator:
             logger.warning(f"Unknown dedup method '{self.method}', falling back to exact match")
             return self._exact_dedup(documents)
 
-    def _minhash_dedup(self, documents: list[Document]) -> list[Document]:
-        """MinHash + LSH for scalable near-duplicate detection."""
-        lsh = MinHashLSH(threshold=self.threshold, num_perm=self.num_perm)
-
-        minhashes: list[tuple[MinHash, Document]] = []
-        for i, doc in enumerate(documents):
-            m = self._make_minhash(doc.content)
-            lsh.insert(f"doc_{i}", m)
-            minhashes.append((m, doc))
-
-        # Group duplicates
-        clusters: dict[int, list[int]] = {}
-        for i, (m, _) in enumerate(minhashes):
-            results = lsh.query(m)
-            # Find the canonical cluster for this set of results
-            rep = min(int(r.split("_")[1]) for r in results)
-            if rep not in clusters:
-                clusters[rep] = []
-            clusters[rep].append(i)
-
-        duplicate_indices: set[int] = set()
-        for cluster_indices in clusters.values():
-            if len(cluster_indices) > 1:
-                # Keep the first, mark rest as duplicates
-                for idx in cluster_indices[1:]:
-                    duplicate_indices.add(idx)
-
-        kept = [doc for i, doc in enumerate(documents) if i not in duplicate_indices]
+    def _global_minhash_dedup(self, documents: list[Document]) -> list[Document]:
+        """Use the audit-capable global MinHash engine used by curation."""
+        records = [
+            {"doc_id": str(index), "content": document.content, "quality_score": 0.0}
+            for index, document in enumerate(documents)
+        ]
+        assignments = GlobalDeduplicator(self.threshold, self.num_perm).cluster(records)
+        kept = [
+            document for index, document in enumerate(documents)
+            if not assignments[str(index)].is_duplicate
+        ]
         removed = len(documents) - len(kept)
         if removed:
             logger.info(f"MinHash dedup: removed {removed} near-duplicate documents")
@@ -135,12 +208,6 @@ class Deduplicator:
         return kept
 
     # --- helpers ---
-
-    def _make_minhash(self, text: str) -> MinHash:
-        m = MinHash(num_perm=self.num_perm)
-        for token in self._tokenize(text):
-            m.update(token.encode("utf-8"))
-        return m
 
     def _tokenize(self, text: str, n: int = 3) -> list[str]:
         """Character n-gram tokenization (language-agnostic)."""

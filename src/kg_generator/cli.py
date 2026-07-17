@@ -6,7 +6,6 @@ from pathlib import Path
 import click
 
 from kg_generator.config import PipelineConfig, load_config
-from kg_generator.pipeline import Pipeline
 
 
 @click.group()
@@ -55,6 +54,8 @@ def run(
     llm: bool,
 ) -> None:
     """Run the full knowledge graph generation pipeline."""
+    from kg_generator.pipeline import Pipeline
+
     config = load_config(Path(config_path) if config_path else None)
 
     if input_paths:
@@ -86,10 +87,64 @@ def run(
 )
 def quick(input_paths: tuple[str, ...], output_dir: str) -> None:
     """Run with sensible defaults — no config file needed."""
+    from kg_generator.pipeline import Pipeline
+
     config = PipelineConfig(input_paths=[Path(p) for p in input_paths])
     pipeline = Pipeline(config, Path(output_dir))
     pipeline.execute()
     click.echo(f"\n Done! Output written to {output_dir}")
+
+
+@main.command()
+@click.option(
+    "-i", "--input",
+    "input_paths",
+    multiple=True,
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+    help="Input files or directories. All sources are deduplicated together.",
+)
+@click.option(
+    "-m", "--source-manifest",
+    "source_manifest_path",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+    help="YAML or JSON dataset provenance manifest (name, version, license, source).",
+)
+@click.option(
+    "-o", "--output",
+    "output_root",
+    default="./output/curated_datasets",
+    type=click.Path(path_type=Path),
+    help="Root directory. Results are written to <root>/<dataset>/<version>.",
+)
+@click.option("--dedup-threshold", default=0.85, show_default=True, type=click.FloatRange(0, 1))
+@click.option("--min-chars", default=50, show_default=True, type=click.IntRange(0, None))
+@click.option("--min-words", default=10, show_default=True, type=click.IntRange(0, None))
+def curate(
+    input_paths: tuple[Path, ...],
+    source_manifest_path: Path,
+    output_root: Path,
+    dedup_threshold: float,
+    min_chars: int,
+    min_words: int,
+) -> None:
+    """Create an auditable, deduplicated text dataset and quality report."""
+    from kg_generator.curate.pipeline import CurationConfig, DatasetCurationPipeline
+
+    config = CurationConfig(
+        input_paths=input_paths,
+        output_root=output_root,
+        source_manifest_path=source_manifest_path,
+        dedup_threshold=dedup_threshold,
+        min_chars=min_chars,
+        min_words=min_words,
+    )
+    try:
+        output_dir = DatasetCurationPipeline(config).execute()
+    except (FileExistsError, ValueError) as error:
+        raise click.ClickException(str(error)) from error
+    click.echo(f"\n Curated dataset written to {output_dir}")
 
 
 @main.command()

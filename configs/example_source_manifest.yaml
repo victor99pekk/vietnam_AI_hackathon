@@ -1,0 +1,8 @@
+# Required provenance information for `kg-gen curate`.
+# Use a real license and source before curating external data.
+dataset_name: english-demo-corpus
+version: v1
+license: CC-BY-4.0
+source: Self-authored demonstration documents in this repository
+language: en
+collection_date: 2026-07-17

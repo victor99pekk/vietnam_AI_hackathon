@@ -38,6 +38,16 @@ kg-gen quick -i data/sample/
 | **Build Graph** | Directed graph construction + ontology validation |
 | **Evaluate & Export** | 7 quality metrics + JSON, GraphML, Neo4j CSV, RDF, Cytoscape.js |
 
+## Dataset Curation Toolkit
+
+`kg-gen curate` builds an auditable text dataset for LLM work. It keeps the KG workflow intact and writes four versioned artifacts: curated JSONL, a per-document audit CSV, a quality/diversity report, and a provenance manifest with hashes.
+
+```bash
+kg-gen curate -i data/sample/ -m configs/example_source_manifest.yaml
+```
+
+See [the curation guide](docs/dataset_curation.md) for the source-manifest format, outputs, and demo procedure.
+
 ## Project Structure
 
 ```
@@ -63,4 +73,3 @@ hackathon/
 ## License
 
 MIT
-

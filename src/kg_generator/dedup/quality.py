@@ -2,6 +2,7 @@
 
 import logging
 import re
+from dataclasses import asdict, dataclass
 
 from kg_generator.ingest.loader import Document
 
@@ -12,6 +13,84 @@ MIN_CHAR_LENGTH = 50
 MIN_WORD_COUNT = 10
 MAX_SYMBOL_RATIO = 0.4
 MAX_REPETITION_RATIO = 0.3
+
+
+@dataclass(frozen=True)
+class QualityThresholds:
+    """Configurable thresholds shared by curation and KG input filtering."""
+
+    min_chars: int = MIN_CHAR_LENGTH
+    min_words: int = MIN_WORD_COUNT
+    max_symbol_ratio: float = MAX_SYMBOL_RATIO
+    max_repeated_line_ratio: float = MAX_REPETITION_RATIO
+    max_short_token_ratio: float = 0.6
+
+
+@dataclass(frozen=True)
+class QualityProfile:
+    """Explainable document-quality result for audits and filtering."""
+
+    score: float
+    char_count: int
+    word_count: int
+    symbol_ratio: float
+    repeated_line_ratio: float
+    short_token_ratio: float
+    reasons: tuple[str, ...]
+
+    @property
+    def accepted(self) -> bool:
+        return not self.reasons
+
+    def to_dict(self) -> dict[str, object]:
+        result = asdict(self)
+        result["reasons"] = list(self.reasons)
+        result["accepted"] = self.accepted
+        return result
+
+
+class QualityProfiler:
+    """Language-agnostic, explainable quality profiling."""
+
+    def __init__(self, thresholds: QualityThresholds | None = None) -> None:
+        self.thresholds = thresholds or QualityThresholds()
+
+    def profile(self, text: str) -> QualityProfile:
+        reasons: list[str] = []
+        char_count = len(text)
+        tokens = re.findall(r"\S+", text, flags=re.UNICODE)
+        word_count = len(tokens)
+        symbols = sum(1 for char in text if not char.isalnum() and not char.isspace())
+        symbol_ratio = symbols / max(char_count, 1)
+        meaningful_lines = [line.strip() for line in text.splitlines() if line.strip()]
+        repeated_line_ratio = (
+            max(meaningful_lines.count(line) for line in set(meaningful_lines)) / len(meaningful_lines)
+            if meaningful_lines else 0.0
+        )
+        alphabetic_tokens = [token for token in tokens if token.isalpha()]
+        short_token_ratio = (
+            sum(1 for token in alphabetic_tokens if len(token) <= 2) / len(alphabetic_tokens)
+            if alphabetic_tokens else 0.0
+        )
+        if not text.strip():
+            reasons.append("empty_content")
+        if char_count < self.thresholds.min_chars:
+            reasons.append("too_short_characters")
+        if word_count < self.thresholds.min_words:
+            reasons.append("too_short_words")
+        if symbol_ratio > self.thresholds.max_symbol_ratio:
+            reasons.append("excessive_symbols")
+        if repeated_line_ratio > self.thresholds.max_repeated_line_ratio and len(meaningful_lines) > 1:
+            reasons.append("repeated_lines")
+        if len(alphabetic_tokens) > 20 and short_token_ratio > self.thresholds.max_short_token_ratio:
+            reasons.append("short_token_gibberish")
+        score = sum((
+            min(char_count / 200, 1.0),
+            min(word_count / 30, 1.0),
+            max(0.0, 1 - symbol_ratio / max(self.thresholds.max_symbol_ratio, 0.001)),
+            max(0.0, 1 - repeated_line_ratio),
+        )) / 4
+        return QualityProfile(score, char_count, word_count, symbol_ratio, repeated_line_ratio, short_token_ratio, tuple(reasons))
 
 
 class QualityFilter:
@@ -28,6 +107,12 @@ class QualityFilter:
         self.min_words = min_words
         self.max_symbol_ratio = max_symbol_ratio
         self.max_rep_ratio = max_rep_ratio
+        self.profiler = QualityProfiler(QualityThresholds(
+            min_chars=min_chars,
+            min_words=min_words,
+            max_symbol_ratio=max_symbol_ratio,
+            max_repeated_line_ratio=max_rep_ratio,
+        ))
 
     def filter(self, documents: list[Document]) -> list[Document]:
         """Filter documents, keeping only those that pass all quality checks."""
@@ -42,56 +127,8 @@ class QualityFilter:
 
     def _is_quality(self, text: str) -> bool:
         """Check if text passes all quality heuristics."""
-        if len(text) < self.min_chars:
-            return False
-
-        words = text.split()
-        if len(words) < self.min_words:
-            return False
-
-        # Ratio of non-alphanumeric characters
-        symbol_count = sum(1 for c in text if not c.isalnum() and not c.isspace())
-        if symbol_count / max(len(text), 1) > self.max_symbol_ratio:
-            return False
-
-        # Repetition check — lines that repeat too many times
-        lines = text.splitlines()
-        if len(lines) > 1:
-            line_counts: dict[str, int] = {}
-            for line in lines:
-                stripped = line.strip()
-                if len(stripped) > 5:
-                    line_counts[stripped] = line_counts.get(stripped, 0) + 1
-            if line_counts:
-                max_rep = max(line_counts.values())
-                if max_rep / len(lines) > self.max_rep_ratio:
-                    return False
-
-        # Gibberish heuristic: too many short "words" of random chars
-        alpha_tokens = [w for w in words if w.isalpha()]
-        if alpha_tokens:
-            short_ratio = sum(1 for w in alpha_tokens if len(w) <= 2) / len(alpha_tokens)
-            if short_ratio > 0.6 and len(alpha_tokens) > 20:
-                return False
-
-        return True
+        return self.profiler.profile(text).accepted
 
     def score(self, text: str) -> float:
         """Return a quality score between 0 and 1 (higher = better quality)."""
-        if not text:
-            return 0.0
-
-        scores: list[float] = []
-
-        # Length score
-        scores.append(min(len(text) / 200, 1.0))
-
-        # Word count score
-        word_count = len(text.split())
-        scores.append(min(word_count / 30, 1.0))
-
-        # Symbol ratio penalty
-        symbol_ratio = sum(1 for c in text if not c.isalnum() and not c.isspace()) / max(len(text), 1)
-        scores.append(max(0, 1 - symbol_ratio / self.max_symbol_ratio))
-
-        return sum(scores) / len(scores)
+        return self.profiler.profile(text).score
