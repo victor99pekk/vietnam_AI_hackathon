@@ -42,6 +42,45 @@ class GraphExporter:
         logger.info(f"Exported to {len(output_paths)} file(s) in {output_dir}")
         return output_paths
 
+    @staticmethod
+    def _normalize_node_props(data: dict[str, Any]) -> dict[str, Any]:
+        """Filter node properties to match what Neo4j stores, per node type.
+
+        This ensures .json and .graphml exports use the same attribute set
+        as the Neo4j upload command.
+        """
+        node_type = data.get("type", "")
+        cleaned: dict[str, Any] = {
+            "id": data.get("id", ""),
+            "type": node_type,  # kept for upload categorization; not stored in Neo4j
+        }
+
+        if node_type == "Chunk":
+            source_list = data.get("source", [])
+            if isinstance(source_list, list) and source_list:
+                cleaned["source"] = source_list[0]
+            else:
+                cleaned["source"] = str(source_list) if source_list else ""
+            cleaned["text"] = data.get("text", "")
+            cleaned["tokenCount"] = data.get("tokenCount", 0)
+            cleaned["index"] = data.get("index", 0)
+        elif node_type == "Document":
+            cleaned["name"] = data.get("name", data.get("id", ""))
+            cleaned["entityType"] = "Document"
+            cleaned["description"] = data.get("description", "")
+            cleaned["source"] = data.get("source", [])
+            cleaned["chunk_count"] = data.get("chunk_count", 0)
+        else:
+            # Entity node
+            cleaned["name"] = data.get("name", data.get("id", ""))
+            cleaned["entityType"] = data.get("type", "Entity")
+            cleaned["description"] = data.get("description", "")
+            cleaned["importanceScore"] = data.get("importanceScore", 0.0)
+            cleaned["confidenceScore"] = data.get("confidenceScore", 1.0)
+            cleaned["embedding"] = data.get("embedding")
+
+        return cleaned
+
     def _to_json(
         self,
         graph: nx.DiGraph,
@@ -49,9 +88,18 @@ class GraphExporter:
         triples: list[tuple[str, str, str, str]],
         output_dir: Path,
     ) -> Path:
-        """Export as a single JSON file (node-link + entity/triple lists)."""
+        """Export as a single JSON file (node-link + entity/triple lists).
+
+        Node properties are normalized to match the Neo4j attribute schema.
+        """
         path = output_dir / "knowledge_graph.json"
         graph_data = nx.node_link_data(graph)
+
+        # Normalize node properties to match Neo4j schema
+        for node in graph_data.get("nodes", []):
+            normalized = self._normalize_node_props(node)
+            node.clear()
+            node.update(normalized)
 
         # Convert triples to serializable format
         triple_dicts = [
@@ -82,17 +130,26 @@ class GraphExporter:
         return path
 
     def _to_graphml(self, graph: nx.DiGraph, output_dir: Path) -> Path:
-        """Export as GraphML (for tools like Gephi, Cytoscape)."""
+        """Export as GraphML (for tools like Gephi, Cytoscape).
+
+        Node properties are normalized to match the Neo4j attribute schema.
+        """
         path = output_dir / "knowledge_graph.graphml"
 
-        # Copy graph to avoid mutating with string conversions
+        # Copy graph to avoid mutating the original
         g = graph.copy()
-        for _, data in g.nodes(data=True):
+
+        # Normalize node properties to match Neo4j schema, then serialize
+        for node, data in g.nodes(data=True):
+            normalized = self._normalize_node_props({**data, "id": node})
+            data.clear()
+            data.update(normalized)
             for k, v in list(data.items()):
                 if isinstance(v, (list, dict)):
                     data[k] = json.dumps(v, ensure_ascii=False)
                 elif v is None:
                     data[k] = ""
+
         for _, _, data in g.edges(data=True):
             for k, v in list(data.items()):
                 if isinstance(v, (list, dict)):

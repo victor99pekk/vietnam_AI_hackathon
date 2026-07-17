@@ -153,7 +153,7 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
         click.echo("Clearing existing graph...")
         session.run("MATCH (n) DETACH DELETE n")
 
-        # Upload nodes — separate by type: Chunk, Document, Entity
+        # Upload nodes — separate by type (already normalized by exporter)
         nodes = data["graph"]["nodes"]
         chunks = [n for n in nodes if n.get("type") == "Chunk"]
         documents = [n for n in nodes if n.get("type") == "Document"]
@@ -165,12 +165,13 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
             session.run(
                 "MERGE (d:Document {name: $name}) "
                 "SET d.id = $id, "
-                "d.entityType = 'Document', "
+                "d.entityType = $entityType, "
                 "d.description = $description, "
                 "d.source = $source, "
                 "d.chunk_count = $chunk_count",
-                name=doc.get("name", doc.get("id", "")),
-                id=doc.get("id", ""),
+                name=doc["name"],
+                id=doc["id"],
+                entityType=doc.get("entityType", "Document"),
                 description=doc.get("description", ""),
                 source=doc.get("source", []),
                 chunk_count=doc.get("chunk_count", 0),
@@ -179,7 +180,6 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
         # Upload Entity nodes with clean GraphRAG properties
         click.echo(f"Uploading {len(entities)} Entity nodes...")
         for node in entities:
-            node_type = node.get("type", "Entity")
             session.run(
                 "MERGE (n:Entity {name: $name}) "
                 "SET n.id = $id, "
@@ -188,34 +188,32 @@ def neo4j_upload(output_dir: str, uri: str | None, user: str | None, password: s
                 "n.importanceScore = $importanceScore, "
                 "n.confidenceScore = $confidenceScore, "
                 "n.embedding = $embedding",
-                name=node.get("name", node.get("id", "")),
-                id=node.get("id", ""),
-                entityType=node_type,
+                name=node["name"],
+                id=node["id"],
+                entityType=node.get("entityType", "Entity"),
                 description=node.get("description", ""),
                 importanceScore=node.get("importanceScore", 0.0),
                 confidenceScore=node.get("confidenceScore", 1.0),
-                embedding=node.get("embedding") if isinstance(node.get("embedding"), list) else None,
+                embedding=node.get("embedding"),
             )
 
-        # Upload Chunk nodes with random hash id, source as attribute, no name
+        # Upload Chunk nodes with random hash id
         click.echo(f"Uploading {len(chunks)} Chunk nodes...")
         for chunk in chunks:
             raw = secrets.token_bytes(32)
             chunk_id = hashlib.sha256(raw).hexdigest()[:16]
-            source_list = chunk.get("source", [])
-            source_str = source_list[0] if source_list else ""
 
             session.run(
                 "CREATE (c:Chunk {id: $id}) "
-                "SET c.text = $text, "
+                "SET c.source = $source, "
+                "c.text = $text, "
                 "c.tokenCount = $tokenCount, "
-                "c.index = $index, "
-                "c.source = $source",
+                "c.index = $index",
                 id=chunk_id,
+                source=chunk.get("source", ""),
                 text=chunk.get("text", ""),
                 tokenCount=chunk.get("tokenCount", 0),
                 index=chunk.get("index", 0),
-                source=source_str,
             )
 
         # Upload edges — match on any label using name property

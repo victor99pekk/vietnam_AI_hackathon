@@ -6,1789 +6,875 @@
     "nodes": [
       {
         "id": "alan_turing:chunk0",
-        "name": "alan_turing:chunk0",
         "type": "Chunk",
-        "aliases": [
-          "alan_turing:chunk0"
-        ],
-        "description": "Alan Turing was born in London, England in 1912. He studied at King's College, Cambridge and later earned his PhD from Princeton University.\n\nDuring World War II, Turing worked at Bletchley Park, wher",
-        "importanceScore": 0.00176,
-        "confidenceScore": 1.0,
-        "source": [
-          "data/debugg_sample/alan_turing.txt"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:48.184063+00:00",
+        "source": "data/debugg_sample/alan_turing.txt",
         "text": "Alan Turing was born in London, England in 1912. He studied at King's College, Cambridge and later earned his PhD from Princeton University.\n\nDuring World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.",
         "tokenCount": 56,
-        "index": 0,
-        "chunk_count": 0
+        "index": 0
       },
       {
         "id": "alan_turing:chunk1",
-        "name": "alan_turing:chunk1",
         "type": "Chunk",
-        "aliases": [
-          "alan_turing:chunk1"
-        ],
-        "description": "ode. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.\n\nAfter the war, Turing worked at the National Physical Laboratory and later at the University of Ma",
-        "importanceScore": 0.001831,
-        "confidenceScore": 1.0,
-        "source": [
-          "data/debugg_sample/alan_turing.txt"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:48.184081+00:00",
+        "source": "data/debugg_sample/alan_turing.txt",
         "text": "ode. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.\n\nAfter the war, Turing worked at the National Physical Laboratory and later at the University of Manchester. He is widely considered the father of theoretical computer science and artificial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.",
         "tokenCount": 54,
-        "index": 1,
-        "chunk_count": 0
+        "index": 1
       },
       {
         "id": "alan_turing:chunk2",
-        "name": "alan_turing:chunk2",
         "type": "Chunk",
-        "aliases": [
-          "alan_turing:chunk2"
-        ],
-        "description": "cial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.\n\nTuring also made significant contributions to mathematical biology, publishing work on morphogenes",
-        "importanceScore": 0.001834,
-        "confidenceScore": 1.0,
-        "source": [
-          "data/debugg_sample/alan_turing.txt"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:48.184089+00:00",
+        "source": "data/debugg_sample/alan_turing.txt",
         "text": "cial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.\n\nTuring also made significant contributions to mathematical biology, publishing work on morphogenesis. He died in 1954 in Wilmslow, England.",
         "tokenCount": 32,
-        "index": 2,
-        "chunk_count": 0
+        "index": 2
       },
       {
         "id": "marie_curie:chunk0",
-        "name": "marie_curie:chunk0",
         "type": "Chunk",
-        "aliases": [
-          "marie_curie:chunk0"
-        ],
-        "description": "Marie Curie was born in Warsaw, Poland in 1867. She is best known for her pioneering research on radioactivity. She discovered the elements polonium and radium.\n\nCurie worked at the University of Pari",
-        "importanceScore": 0.00176,
-        "confidenceScore": 1.0,
-        "source": [
-          "data/debugg_sample/marie_curie.txt"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:48.184096+00:00",
+        "source": "data/debugg_sample/marie_curie.txt",
         "text": "Marie Curie was born in Warsaw, Poland in 1867. She is best known for her pioneering research on radioactivity. She discovered the elements polonium and radium.\n\nCurie worked at the University of Paris, where she became the first female professor. In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.",
         "tokenCount": 61,
-        "index": 0,
-        "chunk_count": 0
+        "index": 0
       },
       {
         "id": "marie_curie:chunk1",
-        "name": "marie_curie:chunk1",
         "type": "Chunk",
-        "aliases": [
-          "marie_curie:chunk1"
-        ],
-        "description": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.\n\nIn 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polo",
-        "importanceScore": 0.00182,
-        "confidenceScore": 1.0,
-        "source": [
-          "data/debugg_sample/marie_curie.txt"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:48.184104+00:00",
+        "source": "data/debugg_sample/marie_curie.txt",
         "text": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.\n\nIn 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium. She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today.\n\nMarie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.",
         "tokenCount": 70,
-        "index": 1,
-        "chunk_count": 0
+        "index": 1
       },
       {
         "id": "alan_turing.txt",
-        "name": "alan_turing.txt",
         "type": "Document",
-        "aliases": [
-          "alan_turing.txt"
-        ],
+        "name": "alan_turing.txt",
+        "entityType": "Document",
         "description": "Source document: data/debugg_sample/alan_turing.txt",
-        "importanceScore": 0.002017,
-        "confidenceScore": 1.0,
         "source": [
           "data/debugg_sample/alan_turing.txt"
         ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:48.184118+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
         "chunk_count": 3
       },
       {
         "id": "marie_curie.txt",
-        "name": "marie_curie.txt",
         "type": "Document",
-        "aliases": [
-          "marie_curie.txt"
-        ],
+        "name": "marie_curie.txt",
+        "entityType": "Document",
         "description": "Source document: data/debugg_sample/marie_curie.txt",
-        "importanceScore": 0.001871,
-        "confidenceScore": 1.0,
         "source": [
           "data/debugg_sample/marie_curie.txt"
         ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:48.184130+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
         "chunk_count": 2
       },
       {
         "id": "Alan Turing",
-        "name": "Alan Turing",
         "type": "PERSON",
-        "aliases": [
-          "alan turing"
-        ],
+        "name": "Alan Turing",
+        "entityType": "PERSON",
         "description": "Alan Turing was born in London, England in 1912. He studied at King's C",
         "importanceScore": 0.012019,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664435+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "London",
-        "name": "London",
         "type": "GPE",
-        "aliases": [
-          "london"
-        ],
+        "name": "London",
+        "entityType": "GPE",
         "description": "Alan Turing was born in London, England in 1912. He studied at King's College, Cambridge a",
         "importanceScore": 0.012019,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664444+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "England",
-        "name": "England",
         "type": "GPE",
-        "aliases": [
-          "England",
-          "england"
-        ],
+        "name": "England",
+        "entityType": "GPE",
         "description": "Alan Turing was born in London, England in 1912. He studied at King's College, Cambridge and later",
         "importanceScore": 0.020043,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk0",
-          "alan_turing:chunk2"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664447+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "1912",
-        "name": "1912",
         "type": "DATE",
-        "aliases": [
-          "1912"
-        ],
+        "name": "1912",
+        "entityType": "DATE",
         "description": "Alan Turing was born in London, England in 1912. He studied at King's College, Cambridge and later earned h",
         "importanceScore": 0.012019,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664449+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "King's College",
-        "name": "King's College",
         "type": "ORG",
-        "aliases": [
-          "king's college"
-        ],
+        "name": "King's College",
+        "entityType": "ORG",
         "description": "n Turing was born in London, England in 1912. He studied at King's College, Cambridge and later earned his PhD from Princeton Universi",
         "importanceScore": 0.012207,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664452+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Cambridge",
-        "name": "Cambridge",
         "type": "GPE",
-        "aliases": [
-          "cambridge"
-        ],
+        "name": "Cambridge",
+        "entityType": "GPE",
         "description": "n in London, England in 1912. He studied at King's College, Cambridge and later earned his PhD from Princeton University.\n\nDuring",
         "importanceScore": 0.012207,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664454+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "PhD",
-        "name": "PhD",
         "type": "WORK_OF_ART",
-        "aliases": [
-          "phd"
-        ],
+        "name": "PhD",
+        "entityType": "WORK_OF_ART",
         "description": "e studied at King's College, Cambridge and later earned his PhD from Princeton University.\n\nDuring World War II, Turing wor",
         "importanceScore": 0.012207,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664456+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Princeton University",
-        "name": "Princeton University",
         "type": "ORG",
-        "aliases": [
-          "princeton university"
-        ],
+        "name": "Princeton University",
+        "entityType": "ORG",
         "description": "at King's College, Cambridge and later earned his PhD from Princeton University.\n\nDuring World War II, Turing worked at Bletchley Park, whe",
         "importanceScore": 0.012207,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664458+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "World War II",
-        "name": "World War II",
         "type": "EVENT",
-        "aliases": [
-          "world war ii"
-        ],
+        "name": "World War II",
+        "entityType": "EVENT",
         "description": "and later earned his PhD from Princeton University.\n\nDuring World War II, Turing worked at Bletchley Park, where he played a crucial",
         "importanceScore": 0.011901,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664460+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Bletchley Park",
-        "name": "Bletchley Park",
         "type": "FAC",
-        "aliases": [
-          "bletchley park"
-        ],
+        "name": "Bletchley Park",
+        "entityType": "FAC",
         "description": "rinceton University.\n\nDuring World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enig",
         "importanceScore": 0.011901,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664462+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "German",
-        "name": "German",
         "type": "NORP",
-        "aliases": [
-          "german"
-        ],
+        "name": "German",
+        "entityType": "NORP",
         "description": "tchley Park, where he played a crucial role in breaking the German Enigma code. He developed the Bombe, an electromechanical d",
         "importanceScore": 0.011901,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664464+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Enigma",
-        "name": "Enigma",
         "type": "PRODUCT",
-        "aliases": [
-          "Enigma",
-          "enigma"
-        ],
+        "name": "Enigma",
+        "entityType": "PRODUCT",
         "description": "Park, where he played a crucial role in breaking the German Enigma code. He developed the Bombe, an electromechanical device u",
         "importanceScore": 0.021321,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk0",
-          "alan_turing:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664466+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Bombe",
-        "name": "Bombe",
         "type": "GPE",
-        "aliases": [
-          "Bombe",
-          "bombe"
-        ],
+        "name": "Bombe",
+        "entityType": "GPE",
         "description": "l role in breaking the German Enigma code. He developed the Bombe, an electromechanical device used to decipher Enigma-encryp",
         "importanceScore": 0.010928,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk0",
-          "alan_turing:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664468+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "his PhD",
-        "name": "his PhD",
         "type": "CONCEPT",
-        "aliases": [
-          "his phd"
-        ],
+        "name": "his PhD",
+        "entityType": "CONCEPT",
         "description": "2. He studied at King's College, Cambridge and later earned his PhD from Princeton University.\n\nDuring World War II, Turing wor",
         "importanceScore": 0.012207,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664469+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "a crucial role",
-        "name": "a crucial role",
         "type": "CONCEPT",
-        "aliases": [
-          "a crucial role"
-        ],
+        "name": "a crucial role",
+        "entityType": "CONCEPT",
         "description": "ld War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code. He developed the Bombe,",
         "importanceScore": 0.011901,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664471+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the German Enigma code",
-        "name": "the German Enigma code",
         "type": "CONCEPT",
-        "aliases": [
-          "the german enigma code"
-        ],
+        "name": "the German Enigma code",
+        "entityType": "CONCEPT",
         "description": "Bletchley Park, where he played a crucial role in breaking the German Enigma code. He developed the Bombe, an electromechanical device used t",
         "importanceScore": 0.011901,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664473+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the Bombe",
-        "name": "the Bombe",
         "type": "CONCEPT",
-        "aliases": [
-          "the Bombe",
-          "the bombe"
-        ],
+        "name": "the Bombe",
+        "entityType": "CONCEPT",
         "description": "ucial role in breaking the German Enigma code. He developed the Bombe, an electromechanical device used to decipher Enigma-encryp",
         "importanceScore": 0.010928,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk0",
-          "alan_turing:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664475+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "an electromechanical device",
-        "name": "an electromechanical device",
         "type": "CONCEPT",
-        "aliases": [
-          "an electromechanical device"
-        ],
+        "name": "an electromechanical device",
+        "entityType": "CONCEPT",
         "description": "in breaking the German Enigma code. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.",
         "importanceScore": 0.010928,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk0",
-          "alan_turing:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664476+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Enigma-encrypted messages",
-        "name": "Enigma-encrypted messages",
         "type": "CONCEPT",
-        "aliases": [
-          "Enigma-encrypted messages",
-          "enigma-encrypted messages"
-        ],
+        "name": "Enigma-encrypted messages",
+        "entityType": "CONCEPT",
         "description": "ped the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.\n\nAfter the war, Turing worked at the National Physical Lab",
         "importanceScore": 0.010928,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk0",
-          "alan_turing:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.664478+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the National Physical Laboratory",
-        "name": "the National Physical Laboratory",
         "type": "ORG",
-        "aliases": [
-          "the national physical laboratory"
-        ],
+        "name": "the National Physical Laboratory",
+        "entityType": "ORG",
         "description": "Enigma-encrypted messages.\n\nAfter the war, Turing worked at the National Physical Laboratory and later at the University of Manchester. He is widely con",
         "importanceScore": 0.009576,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674776+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the University of Manchester",
-        "name": "the University of Manchester",
         "type": "ORG",
-        "aliases": [
-          "the university of manchester"
-        ],
+        "name": "the University of Manchester",
+        "entityType": "ORG",
         "description": "ing worked at the National Physical Laboratory and later at the University of Manchester. He is widely considered the father of theoretical computer",
         "importanceScore": 0.009576,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674778+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "1950",
-        "name": "1950",
         "type": "DATE",
-        "aliases": [
-          "1950"
-        ],
+        "name": "1950",
+        "entityType": "DATE",
         "description": "eoretical computer science and artificial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the",
         "importanceScore": 0.01288,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk1",
-          "alan_turing:chunk2"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674779+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Computing Machinery",
-        "name": "Computing Machinery",
         "type": "WORK_OF_ART",
-        "aliases": [
-          "Computing Machinery",
-          "computing machinery"
-        ],
+        "name": "Computing Machinery",
+        "entityType": "WORK_OF_ART",
         "description": "mputer science and artificial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.",
         "importanceScore": 0.01288,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk1",
-          "alan_turing:chunk2"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674781+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Intelligence",
-        "name": "Intelligence",
         "type": "ORG",
-        "aliases": [
-          "Intelligence",
-          "intelligence"
-        ],
+        "name": "Intelligence",
+        "entityType": "ORG",
         "description": "d the father of theoretical computer science and artificial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" intr",
         "importanceScore": 0.026031,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk1",
-          "alan_turing:chunk2"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674783+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the Turing Test",
-        "name": "the Turing Test",
         "type": "WORK_OF_ART",
-        "aliases": [
-          "the Turing Test",
-          "the turing test"
-        ],
+        "name": "the Turing Test",
+        "entityType": "WORK_OF_ART",
         "description": "950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.\n\nTuring also made significant contributions to mathematica",
         "importanceScore": 0.01288,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk1",
-          "alan_turing:chunk2"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674785+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "ode",
-        "name": "ode",
         "type": "CONCEPT",
-        "aliases": [
-          "ode"
-        ],
+        "name": "ode",
+        "entityType": "CONCEPT",
         "description": "ode. He developed the Bombe, an electromechanical device used t",
         "importanceScore": 0.001834,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674787+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the war",
-        "name": "the war",
         "type": "CONCEPT",
-        "aliases": [
-          "the war"
-        ],
+        "name": "the war",
+        "entityType": "CONCEPT",
         "description": "l device used to decipher Enigma-encrypted messages.\n\nAfter the war, Turing worked at the National Physical Laboratory and late",
         "importanceScore": 0.009576,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674794+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the University",
-        "name": "the University",
         "type": "CONCEPT",
-        "aliases": [
-          "the University",
-          "the university"
-        ],
+        "name": "the University",
+        "entityType": "CONCEPT",
         "description": "ing worked at the National Physical Laboratory and later at the University of Manchester. He is widely considered the father of theore",
         "importanceScore": 0.017753,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk1",
-          "marie_curie:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674795+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Manchester",
-        "name": "Manchester",
         "type": "CONCEPT",
-        "aliases": [
-          "manchester"
-        ],
+        "name": "Manchester",
+        "entityType": "CONCEPT",
         "description": "National Physical Laboratory and later at the University of Manchester. He is widely considered the father of theoretical computer",
         "importanceScore": 0.009576,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674797+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the father",
-        "name": "the father",
         "type": "CONCEPT",
-        "aliases": [
-          "the father"
-        ],
+        "name": "the father",
+        "entityType": "CONCEPT",
         "description": "er at the University of Manchester. He is widely considered the father of theoretical computer science and artificial intelligence",
         "importanceScore": 0.01062,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674799+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "theoretical computer science",
-        "name": "theoretical computer science",
         "type": "CONCEPT",
-        "aliases": [
-          "theoretical computer science"
-        ],
+        "name": "theoretical computer science",
+        "entityType": "CONCEPT",
         "description": "ersity of Manchester. He is widely considered the father of theoretical computer science and artificial intelligence. His 1950 paper \"Computing Mach",
         "importanceScore": 0.01062,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674800+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "artificial intelligence",
-        "name": "artificial intelligence",
         "type": "CONCEPT",
-        "aliases": [
-          "artificial intelligence"
-        ],
+        "name": "artificial intelligence",
+        "entityType": "CONCEPT",
         "description": "y considered the father of theoretical computer science and artificial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" intr",
         "importanceScore": 0.01062,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674802+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "His 1950 paper",
-        "name": "His 1950 paper",
         "type": "CONCEPT",
-        "aliases": [
-          "His 1950 paper",
-          "his 1950 paper"
-        ],
+        "name": "His 1950 paper",
+        "entityType": "CONCEPT",
         "description": "f theoretical computer science and artificial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turin",
         "importanceScore": 0.01288,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk1",
-          "alan_turing:chunk2"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.674804+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "1954",
-        "name": "1954",
         "type": "DATE",
-        "aliases": [
-          "1954"
-        ],
+        "name": "1954",
+        "entityType": "DATE",
         "description": "tical biology, publishing work on morphogenesis. He died in 1954 in Wilmslow, England.",
         "importanceScore": 0.00921,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk2"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.681726+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Wilmslow",
-        "name": "Wilmslow",
         "type": "GPE",
-        "aliases": [
-          "wilmslow"
-        ],
+        "name": "Wilmslow",
+        "entityType": "GPE",
         "description": "ology, publishing work on morphogenesis. He died in 1954 in Wilmslow, England.",
         "importanceScore": 0.00921,
         "confidenceScore": 0.9,
-        "source": [
-          "alan_turing:chunk2"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.681728+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "cial intelligence",
-        "name": "cial intelligence",
         "type": "CONCEPT",
-        "aliases": [
-          "cial intelligence"
-        ],
+        "name": "cial intelligence",
+        "entityType": "CONCEPT",
         "description": "cial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" intr",
         "importanceScore": 0.004585,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk2"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.681731+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "significant contributions",
-        "name": "significant contributions",
         "type": "CONCEPT",
-        "aliases": [
-          "significant contributions"
-        ],
+        "name": "significant contributions",
+        "entityType": "CONCEPT",
         "description": "Intelligence\" introduced the Turing Test.\n\nTuring also made significant contributions to mathematical biology, publishing work on morphogenesis.",
         "importanceScore": 0.012474,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk2"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.681735+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "mathematical biology",
-        "name": "mathematical biology",
         "type": "CONCEPT",
-        "aliases": [
-          "mathematical biology"
-        ],
+        "name": "mathematical biology",
+        "entityType": "CONCEPT",
         "description": "Turing Test.\n\nTuring also made significant contributions to mathematical biology, publishing work on morphogenesis. He died in 1954 in Wilms",
         "importanceScore": 0.012474,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk2"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.681737+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "work",
-        "name": "work",
         "type": "CONCEPT",
-        "aliases": [
-          "work"
-        ],
+        "name": "work",
+        "entityType": "CONCEPT",
         "description": "gnificant contributions to mathematical biology, publishing work on morphogenesis. He died in 1954 in Wilmslow, England.",
         "importanceScore": 0.012474,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk2"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.681739+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "morphogenesis",
-        "name": "morphogenesis",
         "type": "CONCEPT",
-        "aliases": [
-          "morphogenesis"
-        ],
+        "name": "morphogenesis",
+        "entityType": "CONCEPT",
         "description": "t contributions to mathematical biology, publishing work on morphogenesis. He died in 1954 in Wilmslow, England.",
         "importanceScore": 0.012474,
         "confidenceScore": 0.7,
-        "source": [
-          "alan_turing:chunk2"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.681741+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Marie Curie",
-        "name": "Marie Curie",
         "type": "PERSON",
-        "aliases": [
-          "Marie Curie",
-          "marie curie"
-        ],
+        "name": "Marie Curie",
+        "entityType": "PERSON",
         "description": "Warsaw, which remain major medical research centers today.\n\nMarie Curie died in 1934 in Passy, France from aplastic anemia, likely",
         "importanceScore": 0.017104,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk0",
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692409+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Warsaw",
-        "name": "Warsaw",
         "type": "GPE",
-        "aliases": [
-          "Warsaw",
-          "warsaw"
-        ],
+        "name": "Warsaw",
+        "entityType": "GPE",
         "description": "and polonium. She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today.\n\nMarie",
         "importanceScore": 0.015354,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk0",
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692412+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Poland",
-        "name": "Poland",
         "type": "GPE",
-        "aliases": [
-          "poland"
-        ],
+        "name": "Poland",
+        "entityType": "GPE",
         "description": "Marie Curie was born in Warsaw, Poland in 1867. She is best known for her pioneering research on r",
         "importanceScore": 0.007284,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692414+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "1867",
-        "name": "1867",
         "type": "DATE",
-        "aliases": [
-          "1867"
-        ],
+        "name": "1867",
+        "entityType": "DATE",
         "description": "Marie Curie was born in Warsaw, Poland in 1867. She is best known for her pioneering research on radioacti",
         "importanceScore": 0.007284,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692416+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Curie",
-        "name": "Curie",
         "type": "PERSON",
-        "aliases": [
-          "curie"
-        ],
+        "name": "Curie",
+        "entityType": "PERSON",
         "description": "Marie Curie was born in Warsaw, Poland in 1867. She is best known for h",
         "importanceScore": 0.024232,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692418+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the University of Paris",
-        "name": "the University of Paris",
         "type": "ORG",
-        "aliases": [
-          "the university of paris"
-        ],
+        "name": "the University of Paris",
+        "entityType": "ORG",
         "description": "scovered the elements polonium and radium.\n\nCurie worked at the University of Paris, where she became the first female professor. In 1903, she",
         "importanceScore": 0.009559,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692420+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "first",
-        "name": "first",
         "type": "ORDINAL",
-        "aliases": [
-          "first"
-        ],
+        "name": "first",
+        "entityType": "ORDINAL",
         "description": "rie worked at the University of Paris, where she became the first female professor. In 1903, she received the Nobel Prize in",
         "importanceScore": 0.009559,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692422+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "1903",
-        "name": "1903",
         "type": "DATE",
-        "aliases": [
-          "1903"
-        ],
+        "name": "1903",
+        "entityType": "DATE",
         "description": "y of Paris, where she became the first female professor. In 1903, she received the Nobel Prize in Physics along with Pierre",
         "importanceScore": 0.011571,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692423+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the Nobel Prize in Physics",
-        "name": "the Nobel Prize in Physics",
         "type": "WORK_OF_ART",
-        "aliases": [
-          "the nobel prize in physics"
-        ],
+        "name": "the Nobel Prize in Physics",
+        "entityType": "WORK_OF_ART",
         "description": "he became the first female professor. In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work",
         "importanceScore": 0.011571,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692425+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Pierre Curie",
-        "name": "Pierre Curie",
         "type": "PERSON",
-        "aliases": [
-          "Pierre Curie",
-          "pierre curie"
-        ],
+        "name": "Pierre Curie",
+        "entityType": "PERSON",
         "description": "In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.",
         "importanceScore": 0.013814,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk0",
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692427+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Henri Becquerel",
-        "name": "Henri Becquerel",
         "type": "PERSON",
-        "aliases": [
-          "Henri Becquerel",
-          "henri becquerel"
-        ],
+        "name": "Henri Becquerel",
+        "entityType": "PERSON",
         "description": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.\n\nIn 1911, she won a second",
         "importanceScore": 0.013814,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk0",
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692429+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "She",
-        "name": "She",
         "type": "CONCEPT",
-        "aliases": [
-          "she"
-        ],
+        "name": "She",
+        "entityType": "CONCEPT",
         "description": "Henri Becquerel for their work on radioactivity.\n\nIn 1911, she won a second Nobel Prize, this time in Chemistry, for her d",
         "importanceScore": 0.023725,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk0",
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692431+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "her pioneering research",
-        "name": "her pioneering research",
         "type": "CONCEPT",
-        "aliases": [
-          "her pioneering research"
-        ],
+        "name": "her pioneering research",
+        "entityType": "CONCEPT",
         "description": "e was born in Warsaw, Poland in 1867. She is best known for her pioneering research on radioactivity. She discovered the elements polonium and",
         "importanceScore": 0.004019,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692433+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "radioactivity",
-        "name": "radioactivity",
         "type": "CONCEPT",
-        "aliases": [
-          "radioactivity"
-        ],
+        "name": "radioactivity",
+        "entityType": "CONCEPT",
         "description": "d in 1867. She is best known for her pioneering research on radioactivity. She discovered the elements polonium and radium.\n\nCurie wo",
         "importanceScore": 0.015501,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk0",
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692435+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the elements",
-        "name": "the elements",
         "type": "CONCEPT",
-        "aliases": [
-          "the elements"
-        ],
+        "name": "the elements",
+        "entityType": "CONCEPT",
         "description": "or her pioneering research on radioactivity. She discovered the elements polonium and radium.\n\nCurie worked at the University of Par",
         "importanceScore": 0.00511,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692436+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "polonium",
-        "name": "polonium",
         "type": "CONCEPT",
-        "aliases": [
-          "polonium"
-        ],
+        "name": "polonium",
+        "entityType": "CONCEPT",
         "description": "ring research on radioactivity. She discovered the elements polonium and radium.\n\nCurie worked at the University of Paris, where",
         "importanceScore": 0.014157,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk0",
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692438+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "radium",
-        "name": "radium",
         "type": "CONCEPT",
-        "aliases": [
-          "radium"
-        ],
+        "name": "radium",
+        "entityType": "CONCEPT",
         "description": "d Nobel Prize, this time in Chemistry, for her discovery of radium and polonium. She founded the Curie Institutes in Paris and",
         "importanceScore": 0.014157,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk0",
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692440+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Paris",
-        "name": "Paris",
         "type": "CONCEPT",
-        "aliases": [
-          "Paris",
-          "paris"
-        ],
+        "name": "Paris",
+        "entityType": "CONCEPT",
         "description": "of radium and polonium. She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers tod",
         "importanceScore": 0.017556,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk0",
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692443+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the first female professor",
-        "name": "the first female professor",
         "type": "CONCEPT",
-        "aliases": [
-          "the first female professor"
-        ],
+        "name": "the first female professor",
+        "entityType": "CONCEPT",
         "description": "Curie worked at the University of Paris, where she became the first female professor. In 1903, she received the Nobel Prize in Physics along wit",
         "importanceScore": 0.009559,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692445+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the Nobel Prize",
-        "name": "the Nobel Prize",
         "type": "CONCEPT",
-        "aliases": [
-          "the nobel prize"
-        ],
+        "name": "the Nobel Prize",
+        "entityType": "CONCEPT",
         "description": "he became the first female professor. In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for",
         "importanceScore": 0.011571,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk0"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692447+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Physics",
-        "name": "Physics",
         "type": "CONCEPT",
-        "aliases": [
-          "Physics",
-          "physics"
-        ],
+        "name": "Physics",
+        "entityType": "CONCEPT",
         "description": "female professor. In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work",
         "importanceScore": 0.013814,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk0",
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692449+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "their work",
-        "name": "their work",
         "type": "CONCEPT",
-        "aliases": [
-          "their work"
-        ],
+        "name": "their work",
+        "entityType": "CONCEPT",
         "description": "in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.\n\nIn 1911, she won a second Nobel Prize, t",
         "importanceScore": 0.013814,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk0",
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.692450+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Nobel Prize in Physics",
-        "name": "Nobel Prize in Physics",
         "type": "WORK_OF_ART",
-        "aliases": [
-          "nobel prize in physics"
-        ],
+        "name": "Nobel Prize in Physics",
+        "entityType": "WORK_OF_ART",
         "description": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work",
         "importanceScore": 0.008154,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705393+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "1911",
-        "name": "1911",
         "type": "DATE",
-        "aliases": [
-          "1911"
-        ],
+        "name": "1911",
+        "entityType": "DATE",
         "description": "ie and Henri Becquerel for their work on radioactivity.\n\nIn 1911, she won a second Nobel Prize, this time in Chemistry, for",
         "importanceScore": 0.011538,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705402+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "second",
-        "name": "second",
         "type": "ORDINAL",
-        "aliases": [
-          "second"
-        ],
+        "name": "second",
+        "entityType": "ORDINAL",
         "description": "querel for their work on radioactivity.\n\nIn 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of r",
         "importanceScore": 0.011538,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705404+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Nobel Prize",
-        "name": "Nobel Prize",
         "type": "WORK_OF_ART",
-        "aliases": [
-          "nobel prize"
-        ],
+        "name": "Nobel Prize",
+        "entityType": "WORK_OF_ART",
         "description": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for",
         "importanceScore": 0.018076,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705406+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Chemistry",
-        "name": "Chemistry",
         "type": "ORG",
-        "aliases": [
-          "chemistry"
-        ],
+        "name": "Chemistry",
+        "entityType": "ORG",
         "description": "ivity.\n\nIn 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium. She founded the",
         "importanceScore": 0.011538,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705408+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "the Curie Institutes",
-        "name": "the Curie Institutes",
         "type": "ORG",
-        "aliases": [
-          "the curie institutes"
-        ],
+        "name": "the Curie Institutes",
+        "entityType": "ORG",
         "description": "stry, for her discovery of radium and polonium. She founded the Curie Institutes in Paris and Warsaw, which remain major medical research ce",
         "importanceScore": 0.009538,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705410+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "today",
-        "name": "today",
         "type": "DATE",
-        "aliases": [
-          "today"
-        ],
+        "name": "today",
+        "entityType": "DATE",
         "description": "ris and Warsaw, which remain major medical research centers today.\n\nMarie Curie died in 1934 in Passy, France from aplastic a",
         "importanceScore": 0.009538,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705415+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "1934",
-        "name": "1934",
         "type": "DATE",
-        "aliases": [
-          "1934"
-        ],
+        "name": "1934",
+        "entityType": "DATE",
         "description": "major medical research centers today.\n\nMarie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her",
         "importanceScore": 0.011333,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705418+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "Passy",
-        "name": "Passy",
         "type": "GPE",
-        "aliases": [
-          "passy"
-        ],
+        "name": "Passy",
+        "entityType": "GPE",
         "description": "edical research centers today.\n\nMarie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-ter",
         "importanceScore": 0.011333,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705420+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "France",
-        "name": "France",
         "type": "GPE",
-        "aliases": [
-          "france"
-        ],
+        "name": "France",
+        "entityType": "GPE",
         "description": "research centers today.\n\nMarie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposu",
         "importanceScore": 0.011333,
         "confidenceScore": 0.9,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705421+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "a second Nobel Prize",
-        "name": "a second Nobel Prize",
         "type": "CONCEPT",
-        "aliases": [
-          "a second nobel prize"
-        ],
+        "name": "a second Nobel Prize",
+        "entityType": "CONCEPT",
         "description": "ecquerel for their work on radioactivity.\n\nIn 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and po",
         "importanceScore": 0.011538,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705430+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "this time",
-        "name": "this time",
         "type": "CONCEPT",
-        "aliases": [
-          "this time"
-        ],
+        "name": "this time",
+        "entityType": "CONCEPT",
         "description": "k on radioactivity.\n\nIn 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium. She",
         "importanceScore": 0.011538,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705432+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "her discovery",
-        "name": "her discovery",
         "type": "CONCEPT",
-        "aliases": [
-          "her discovery"
-        ],
+        "name": "her discovery",
+        "entityType": "CONCEPT",
         "description": ", she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium. She founded the Curie Institutes in",
         "importanceScore": 0.011538,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705434+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "which",
-        "name": "which",
         "type": "CONCEPT",
-        "aliases": [
-          "which"
-        ],
+        "name": "which",
+        "entityType": "CONCEPT",
         "description": "nium. She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today.\n\nMarie Curie d",
         "importanceScore": 0.009538,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705439+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "major medical research centers",
-        "name": "major medical research centers",
         "type": "CONCEPT",
-        "aliases": [
-          "major medical research centers"
-        ],
+        "name": "major medical research centers",
+        "entityType": "CONCEPT",
         "description": "nded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today.\n\nMarie Curie died in 1934 in Passy, France from apla",
         "importanceScore": 0.009538,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705442+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "aplastic anemia",
-        "name": "aplastic anemia",
         "type": "CONCEPT",
-        "aliases": [
-          "aplastic anemia"
-        ],
+        "name": "aplastic anemia",
+        "entityType": "CONCEPT",
         "description": "ters today.\n\nMarie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.",
         "importanceScore": 0.011333,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705444+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "her long-term exposure",
-        "name": "her long-term exposure",
         "type": "CONCEPT",
-        "aliases": [
-          "her long-term exposure"
-        ],
+        "name": "her long-term exposure",
+        "entityType": "CONCEPT",
         "description": "934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.",
         "importanceScore": 0.011333,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705446+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
         "id": "radiation",
-        "name": "radiation",
         "type": "CONCEPT",
-        "aliases": [
-          "radiation"
-        ],
+        "name": "radiation",
+        "entityType": "CONCEPT",
         "description": "aplastic anemia, likely caused by her long-term exposure to radiation.",
         "importanceScore": 0.011333,
         "confidenceScore": 0.7,
-        "source": [
-          "marie_curie:chunk1"
-        ],
-        "embedding": null,
-        "updatedAt": "2026-07-17T11:04:49.705448+00:00",
-        "text": "",
-        "tokenCount": 0,
-        "index": 0,
-        "chunk_count": 0
+        "embedding": null
       },
       {
-        "label": "ENTITY",
+        "id": "she",
         "type": "ENTITY",
         "name": "she",
+        "entityType": "ENTITY",
+        "description": "",
         "importanceScore": 0.019497,
-        "id": "she"
+        "confidenceScore": 1.0,
+        "embedding": null
       }
     ],
     "edges": [
@@ -8694,7 +7780,7 @@
         "data/debugg_sample/alan_turing.txt"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:48.184063+00:00",
+      "updatedAt": "2026-07-17T11:12:51.650041+00:00",
       "text": "Alan Turing was born in London, England in 1912. He studied at King's College, Cambridge and later earned his PhD from Princeton University.\n\nDuring World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.",
       "tokenCount": 56,
       "index": 0
@@ -8713,7 +7799,7 @@
         "data/debugg_sample/alan_turing.txt"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:48.184081+00:00",
+      "updatedAt": "2026-07-17T11:12:51.650059+00:00",
       "text": "ode. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.\n\nAfter the war, Turing worked at the National Physical Laboratory and later at the University of Manchester. He is widely considered the father of theoretical computer science and artificial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.",
       "tokenCount": 54,
       "index": 1
@@ -8732,7 +7818,7 @@
         "data/debugg_sample/alan_turing.txt"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:48.184089+00:00",
+      "updatedAt": "2026-07-17T11:12:51.650067+00:00",
       "text": "cial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.\n\nTuring also made significant contributions to mathematical biology, publishing work on morphogenesis. He died in 1954 in Wilmslow, England.",
       "tokenCount": 32,
       "index": 2
@@ -8751,7 +7837,7 @@
         "data/debugg_sample/marie_curie.txt"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:48.184096+00:00",
+      "updatedAt": "2026-07-17T11:12:51.650073+00:00",
       "text": "Marie Curie was born in Warsaw, Poland in 1867. She is best known for her pioneering research on radioactivity. She discovered the elements polonium and radium.\n\nCurie worked at the University of Paris, where she became the first female professor. In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.",
       "tokenCount": 61,
       "index": 0
@@ -8770,7 +7856,7 @@
         "data/debugg_sample/marie_curie.txt"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:48.184104+00:00",
+      "updatedAt": "2026-07-17T11:12:51.650080+00:00",
       "text": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.\n\nIn 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium. She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today.\n\nMarie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.",
       "tokenCount": 70,
       "index": 1
@@ -8789,7 +7875,7 @@
         "data/debugg_sample/alan_turing.txt"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:48.184118+00:00",
+      "updatedAt": "2026-07-17T11:12:51.650094+00:00",
       "chunk_count": 3
     },
     {
@@ -8806,7 +7892,7 @@
         "data/debugg_sample/marie_curie.txt"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:48.184130+00:00",
+      "updatedAt": "2026-07-17T11:12:51.650105+00:00",
       "chunk_count": 2
     },
     {
@@ -8823,7 +7909,7 @@
         "alan_turing:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664435+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153352+00:00"
     },
     {
       "id": "gpe:london",
@@ -8839,7 +7925,7 @@
         "alan_turing:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664444+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153360+00:00"
     },
     {
       "id": "gpe:england",
@@ -8857,7 +7943,7 @@
         "alan_turing:chunk2"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664447+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153363+00:00"
     },
     {
       "id": "date:1912",
@@ -8873,7 +7959,7 @@
         "alan_turing:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664449+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153365+00:00"
     },
     {
       "id": "org:kings_college",
@@ -8889,7 +7975,7 @@
         "alan_turing:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664452+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153368+00:00"
     },
     {
       "id": "gpe:cambridge",
@@ -8905,7 +7991,7 @@
         "alan_turing:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664454+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153370+00:00"
     },
     {
       "id": "work_of_art:phd",
@@ -8921,7 +8007,7 @@
         "alan_turing:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664456+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153371+00:00"
     },
     {
       "id": "org:princeton_university",
@@ -8937,7 +8023,7 @@
         "alan_turing:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664458+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153373+00:00"
     },
     {
       "id": "event:world_war_ii",
@@ -8953,7 +8039,7 @@
         "alan_turing:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664460+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153375+00:00"
     },
     {
       "id": "fac:bletchley_park",
@@ -8969,7 +8055,7 @@
         "alan_turing:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664462+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153377+00:00"
     },
     {
       "id": "norp:german",
@@ -8985,7 +8071,7 @@
         "alan_turing:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664464+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153379+00:00"
     },
     {
       "id": "product:enigma",
@@ -9003,7 +8089,7 @@
         "alan_turing:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664466+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153381+00:00"
     },
     {
       "id": "gpe:bombe",
@@ -9021,7 +8107,7 @@
         "alan_turing:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664468+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153383+00:00"
     },
     {
       "id": "concept:his_phd",
@@ -9037,7 +8123,7 @@
         "alan_turing:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664469+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153385+00:00"
     },
     {
       "id": "concept:a_crucial_role",
@@ -9053,7 +8139,7 @@
         "alan_turing:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664471+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153386+00:00"
     },
     {
       "id": "concept:the_german_enigma_code",
@@ -9069,7 +8155,7 @@
         "alan_turing:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664473+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153388+00:00"
     },
     {
       "id": "concept:the_bombe",
@@ -9087,7 +8173,7 @@
         "alan_turing:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664475+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153390+00:00"
     },
     {
       "id": "concept:an_electromechanical_device",
@@ -9104,7 +8190,7 @@
         "alan_turing:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664476+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153392+00:00"
     },
     {
       "id": "concept:enigma-encrypted_messages",
@@ -9122,7 +8208,7 @@
         "alan_turing:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.664478+00:00"
+      "updatedAt": "2026-07-17T11:12:53.153394+00:00"
     },
     {
       "id": "org:the_national_physical_laboratory",
@@ -9138,7 +8224,7 @@
         "alan_turing:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674776+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164399+00:00"
     },
     {
       "id": "org:the_university_of_manchester",
@@ -9154,7 +8240,7 @@
         "alan_turing:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674778+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164401+00:00"
     },
     {
       "id": "date:1950",
@@ -9171,7 +8257,7 @@
         "alan_turing:chunk2"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674779+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164403+00:00"
     },
     {
       "id": "work_of_art:computing_machinery",
@@ -9189,7 +8275,7 @@
         "alan_turing:chunk2"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674781+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164405+00:00"
     },
     {
       "id": "org:intelligence",
@@ -9207,7 +8293,7 @@
         "alan_turing:chunk2"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674783+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164406+00:00"
     },
     {
       "id": "work_of_art:the_turing_test",
@@ -9225,7 +8311,7 @@
         "alan_turing:chunk2"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674785+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164408+00:00"
     },
     {
       "id": "concept:ode",
@@ -9241,7 +8327,7 @@
         "alan_turing:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674787+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164410+00:00"
     },
     {
       "id": "concept:the_war",
@@ -9257,7 +8343,7 @@
         "alan_turing:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674794+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164417+00:00"
     },
     {
       "id": "concept:the_university",
@@ -9275,7 +8361,7 @@
         "marie_curie:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674795+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164419+00:00"
     },
     {
       "id": "concept:manchester",
@@ -9291,7 +8377,7 @@
         "alan_turing:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674797+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164421+00:00"
     },
     {
       "id": "concept:the_father",
@@ -9307,7 +8393,7 @@
         "alan_turing:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674799+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164422+00:00"
     },
     {
       "id": "concept:theoretical_computer_science",
@@ -9323,7 +8409,7 @@
         "alan_turing:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674800+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164424+00:00"
     },
     {
       "id": "concept:artificial_intelligence",
@@ -9339,7 +8425,7 @@
         "alan_turing:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674802+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164426+00:00"
     },
     {
       "id": "concept:his_1950_paper",
@@ -9357,7 +8443,7 @@
         "alan_turing:chunk2"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.674804+00:00"
+      "updatedAt": "2026-07-17T11:12:53.164428+00:00"
     },
     {
       "id": "date:1954",
@@ -9373,7 +8459,7 @@
         "alan_turing:chunk2"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.681726+00:00"
+      "updatedAt": "2026-07-17T11:12:53.171569+00:00"
     },
     {
       "id": "gpe:wilmslow",
@@ -9389,7 +8475,7 @@
         "alan_turing:chunk2"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.681728+00:00"
+      "updatedAt": "2026-07-17T11:12:53.171570+00:00"
     },
     {
       "id": "concept:cial_intelligence",
@@ -9405,7 +8491,7 @@
         "alan_turing:chunk2"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.681731+00:00"
+      "updatedAt": "2026-07-17T11:12:53.171574+00:00"
     },
     {
       "id": "concept:significant_contributions",
@@ -9421,7 +8507,7 @@
         "alan_turing:chunk2"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.681735+00:00"
+      "updatedAt": "2026-07-17T11:12:53.171578+00:00"
     },
     {
       "id": "concept:mathematical_biology",
@@ -9437,7 +8523,7 @@
         "alan_turing:chunk2"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.681737+00:00"
+      "updatedAt": "2026-07-17T11:12:53.171580+00:00"
     },
     {
       "id": "concept:work",
@@ -9453,7 +8539,7 @@
         "alan_turing:chunk2"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.681739+00:00"
+      "updatedAt": "2026-07-17T11:12:53.171582+00:00"
     },
     {
       "id": "concept:morphogenesis",
@@ -9469,7 +8555,7 @@
         "alan_turing:chunk2"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.681741+00:00"
+      "updatedAt": "2026-07-17T11:12:53.171584+00:00"
     },
     {
       "id": "person:marie_curie",
@@ -9487,7 +8573,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692409+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182398+00:00"
     },
     {
       "id": "gpe:warsaw",
@@ -9505,7 +8591,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692412+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182402+00:00"
     },
     {
       "id": "gpe:poland",
@@ -9521,7 +8607,7 @@
         "marie_curie:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692414+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182404+00:00"
     },
     {
       "id": "date:1867",
@@ -9537,7 +8623,7 @@
         "marie_curie:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692416+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182406+00:00"
     },
     {
       "id": "person:curie",
@@ -9553,7 +8639,7 @@
         "marie_curie:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692418+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182407+00:00"
     },
     {
       "id": "org:the_university_of_paris",
@@ -9569,7 +8655,7 @@
         "marie_curie:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692420+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182409+00:00"
     },
     {
       "id": "ordinal:first",
@@ -9585,7 +8671,7 @@
         "marie_curie:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692422+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182411+00:00"
     },
     {
       "id": "date:1903",
@@ -9601,7 +8687,7 @@
         "marie_curie:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692423+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182413+00:00"
     },
     {
       "id": "work_of_art:the_nobel_prize_in_physics",
@@ -9617,7 +8703,7 @@
         "marie_curie:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692425+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182415+00:00"
     },
     {
       "id": "person:pierre_curie",
@@ -9635,7 +8721,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692427+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182417+00:00"
     },
     {
       "id": "person:henri_becquerel",
@@ -9653,7 +8739,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692429+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182418+00:00"
     },
     {
       "id": "concept:she",
@@ -9670,7 +8756,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692431+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182420+00:00"
     },
     {
       "id": "concept:her_pioneering_research",
@@ -9686,7 +8772,7 @@
         "marie_curie:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692433+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182422+00:00"
     },
     {
       "id": "concept:radioactivity",
@@ -9703,7 +8789,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692435+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182424+00:00"
     },
     {
       "id": "concept:the_elements",
@@ -9719,7 +8805,7 @@
         "marie_curie:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692436+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182426+00:00"
     },
     {
       "id": "concept:polonium",
@@ -9736,7 +8822,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692438+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182427+00:00"
     },
     {
       "id": "concept:radium",
@@ -9753,7 +8839,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692440+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182429+00:00"
     },
     {
       "id": "concept:paris",
@@ -9771,7 +8857,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692443+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182432+00:00"
     },
     {
       "id": "concept:the_first_female_professor",
@@ -9787,7 +8873,7 @@
         "marie_curie:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692445+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182434+00:00"
     },
     {
       "id": "concept:the_nobel_prize",
@@ -9803,7 +8889,7 @@
         "marie_curie:chunk0"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692447+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182436+00:00"
     },
     {
       "id": "concept:physics",
@@ -9821,7 +8907,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692449+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182437+00:00"
     },
     {
       "id": "concept:their_work",
@@ -9838,7 +8924,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.692450+00:00"
+      "updatedAt": "2026-07-17T11:12:53.182439+00:00"
     },
     {
       "id": "work_of_art:nobel_prize_in_physics",
@@ -9854,7 +8940,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705393+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194502+00:00"
     },
     {
       "id": "date:1911",
@@ -9870,7 +8956,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705402+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194510+00:00"
     },
     {
       "id": "ordinal:second",
@@ -9886,7 +8972,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705404+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194512+00:00"
     },
     {
       "id": "work_of_art:nobel_prize",
@@ -9902,7 +8988,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705406+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194514+00:00"
     },
     {
       "id": "org:chemistry",
@@ -9918,7 +9004,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705408+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194515+00:00"
     },
     {
       "id": "org:the_curie_institutes",
@@ -9934,7 +9020,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705410+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194517+00:00"
     },
     {
       "id": "date:today",
@@ -9950,7 +9036,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705415+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194523+00:00"
     },
     {
       "id": "date:1934",
@@ -9966,7 +9052,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705418+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194526+00:00"
     },
     {
       "id": "gpe:passy",
@@ -9982,7 +9068,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705420+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194528+00:00"
     },
     {
       "id": "gpe:france",
@@ -9998,7 +9084,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705421+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194530+00:00"
     },
     {
       "id": "concept:a_second_nobel_prize",
@@ -10014,7 +9100,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705430+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194539+00:00"
     },
     {
       "id": "concept:this_time",
@@ -10030,7 +9116,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705432+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194540+00:00"
     },
     {
       "id": "concept:her_discovery",
@@ -10046,7 +9132,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705434+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194542+00:00"
     },
     {
       "id": "concept:which",
@@ -10062,7 +9148,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705439+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194549+00:00"
     },
     {
       "id": "concept:major_medical_research_centers",
@@ -10078,7 +9164,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705442+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194551+00:00"
     },
     {
       "id": "concept:aplastic_anemia",
@@ -10094,7 +9180,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705444+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194552+00:00"
     },
     {
       "id": "concept:her_long-term_exposure",
@@ -10110,7 +9196,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705446+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194554+00:00"
     },
     {
       "id": "concept:radiation",
@@ -10126,7 +9212,7 @@
         "marie_curie:chunk1"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-17T11:04:49.705448+00:00"
+      "updatedAt": "2026-07-17T11:12:53.194556+00:00"
     }
   ],
   "triples": [
