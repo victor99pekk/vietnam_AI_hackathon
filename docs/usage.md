@@ -38,6 +38,17 @@ Run with sensible defaults, no config needed.
 kg-gen quick -i my_data.txt -o ./results
 ```
 
+### `kg-gen curate`
+
+Build an immutable, audited corpus before LLM training or evaluation.
+
+```bash
+uv pip install -e ".[curation]"
+kg-gen curate -i raw_data/ -m manifest.yaml -o output/curated_datasets --device cuda
+```
+
+The manifest declares `en` or `vi`. Curate applies exact and MinHash deletion, BGE-M3 semantic review, sentence-safe 2,048-token records, and deterministic training shards. See [dataset curation](dataset_curation.md) for options and review procedure.
+
 ### `kg-gen evaluate`
 
 Run quality evaluation on an existing KG.

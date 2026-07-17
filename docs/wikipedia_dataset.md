@@ -30,7 +30,7 @@ The script streams only the requested number of articles from `20231101.en` or `
 kg-gen curate \
   -i data/external/wikipedia_en_1000.jsonl \
   -m data/external/wikipedia_en_1000_manifest.yaml \
-  --experiment-id wikipedia-en-minhash-085
+  --surface-threshold 0.90 --no-semantic-review
 ```
 
 Use a new manifest version for every experiment. Do not commit downloaded dataset files; they may be large and are reproducible from this script.

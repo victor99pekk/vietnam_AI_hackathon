@@ -2,6 +2,7 @@
 
 import logging
 import re
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 
 from kg_generator.ingest.loader import Document
@@ -70,12 +71,22 @@ class QualityProfiler:
     def __init__(self, thresholds: QualityThresholds | None = None) -> None:
         self.thresholds = thresholds or QualityThresholds()
 
-    def profile(self, text: str, language: str = "en") -> QualityProfile:
+    def profile(
+        self,
+        text: str,
+        language: str = "en",
+        tokens: Sequence[str] | None = None,
+    ) -> QualityProfile:
+        """Profile text, optionally using language-aware word tokens.
+
+        Curation supplies Vietnamese word segmentation here. Existing KG
+        callers keep the dependency-free whitespace-token fallback.
+        """
         rejection_reasons: list[str] = []
         review_flags: list[str] = []
         char_count = len(text)
-        tokens = re.findall(r"\S+", text, flags=re.UNICODE)
-        word_count = len(tokens)
+        words = list(tokens) if tokens is not None else re.findall(r"\S+", text, flags=re.UNICODE)
+        word_count = len(words)
         symbols = sum(1 for char in text if not char.isalnum() and not char.isspace())
         symbol_ratio = symbols / max(char_count, 1)
         meaningful_lines = [line.strip() for line in text.splitlines() if line.strip()]
@@ -83,13 +94,15 @@ class QualityProfiler:
             max(meaningful_lines.count(line) for line in set(meaningful_lines)) / len(meaningful_lines)
             if len(meaningful_lines) > 1 else 0.0
         )
-        alphabetic_tokens = [token for token in tokens if token.isalpha()]
+        alphabetic_tokens = [token for token in words if token.isalpha()]
         short_token_ratio = (
             sum(1 for token in alphabetic_tokens if len(token) <= 2) / len(alphabetic_tokens)
             if alphabetic_tokens else 0.0
         )
         if not text.strip():
             rejection_reasons.append("empty_content")
+        if "\ufffd" in text:
+            rejection_reasons.append("invalid_unicode_replacement")
         if char_count < self.thresholds.min_chars:
             rejection_reasons.append("too_short_characters")
         if word_count < self.thresholds.min_words:
@@ -98,6 +111,8 @@ class QualityProfiler:
             review_flags.append("excessive_symbols")
         if repeated_line_ratio > self.thresholds.max_repeated_line_ratio and len(meaningful_lines) > 1:
             review_flags.append("repeated_lines")
+        if re.search(r"(.)\1{9,}", text, flags=re.DOTALL):
+            review_flags.append("repeated_characters")
         # Vietnamese uses short syllables as normal words (e.g. "và", "của", "là"),
         # so this English-oriented heuristic must not be used as a quality signal for vi.
         if language != "vi" and len(alphabetic_tokens) > 20 and short_token_ratio > self.thresholds.max_short_token_ratio:

@@ -1,32 +1,31 @@
 # Deduplication Experiments
 
-The toolkit supports two document-level duplicate methods. Each run writes an immutable dataset version, a provenance manifest, `audit.csv`, and `duplicate_matches.csv` so experiments can be compared.
+Every curate run uses layered duplicate handling. Exact hashes and strong surface duplicates are automatic; semantic duplicates are review candidates only. Each run writes an immutable dataset version, provenance manifest, source/record audits, and match evidence.
 
-## 1. Surface-text baseline: MinHash
+## Surface-text decision: MinHash
 
 ```bash
 kg-gen curate -i raw_data/ -m manifest.yaml \
-  --dedup-method minhash --dedup-threshold 0.85 \
-  --experiment-id minhash-085
+  --surface-threshold 0.90 --no-semantic-review
 ```
 
-This combines exact SHA-256 hashes with MinHash candidates over character 3-grams. Candidates are checked with measured Jaccard overlap before they are marked as near duplicates. Use it for copied or lightly edited documents.
+This combines exact SHA-256 hashes with MinHash candidates over language-aware word 5-grams. Candidates are checked with measured Jaccard overlap before automatic deletion. Use it for copied or lightly edited documents.
 
-## 2. Semantic experiment: multilingual embeddings
+## Semantic review: multilingual BGE-M3
 
 ```bash
-uv pip install -e ".[embeddings]"
+uv pip install -e ".[curation]"
 kg-gen curate -i raw_data/ -m manifest.yaml \
-  --dedup-method semantic --dedup-threshold 0.92 \
-  --experiment-id semantic-mpnet-092
+  --semantic-model BAAI/bge-m3 \
+  --semantic-review-threshold 0.92 --device cuda
 ```
 
-This uses `sentence-transformers/paraphrase-multilingual-mpnet-base-v2` and cosine similarity. It can find paraphrases, including cross-lingual matches, but it is more expensive and may remove useful related text. It compares every pair and is capped at 5,000 documents per run; it is an experiment-sized semantic baseline, not a web-scale ANN implementation of SemDeDup.
+This embeds token-limited records with BGE-M3 and searches the 20 nearest neighbors through FAISS. It finds likely paraphrases, but never removes them: matched records gain `semantic_duplicate_candidate` in `record_audit.csv`, and match rows have `decision=review_only`.
 
 ## Required review
 
-For each run, review `duplicate_matches.csv` before accepting deletions. Record the method, threshold, model, dataset version, and manual judgement of a sample of matches. Use a new dataset version for every run.
+For each run, review every automatic deletion and semantic candidate. Record the thresholds, model revision, dataset version, and manual judgement. Use a new manifest version for every published run.
 
 ## Current scope
 
-Duplicate decisions are at the **document level**. Line and paragraph duplicate detection are not yet implemented; they should be logged separately before any workflow rewrites document content.
+Surface decisions occur at the document level. Exact record duplicates are also removed after sentence-safe splitting; semantic record matches remain review-only. PII, toxicity, and mixed-language detection are not included.

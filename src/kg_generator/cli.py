@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from kg_generator.config import Language, PipelineConfig, load_config
-from kg_generator.pipeline import Pipeline
+from kg_generator.curate.pipeline import CurationConfig, DatasetCurationPipeline
 
 
 @click.group()
@@ -59,6 +59,8 @@ def run(
     llm: bool | None,
 ) -> None:
     """Run the full knowledge graph generation pipeline."""
+    from kg_generator.pipeline import Pipeline
+
     config = load_config(Path(config_path) if config_path else None)
 
     if input_paths:
@@ -91,10 +93,73 @@ def run(
 )
 def quick(input_paths: tuple[str, ...], output_dir: str) -> None:
     """Run with sensible defaults — no config file needed."""
+    from kg_generator.pipeline import Pipeline
+
     config = PipelineConfig(input_paths=[Path(p) for p in input_paths])
     pipeline = Pipeline(config, Path(output_dir))
     pipeline.execute()
     click.echo(f"\n Done! Output written to {output_dir}")
+
+
+@main.command("curate")
+@click.option(
+    "-i", "--input", "input_paths", multiple=True, required=True,
+    type=click.Path(exists=True), help="Input file or directory paths (repeatable).",
+)
+@click.option(
+    "-m", "--manifest", "manifest_path", required=True,
+    type=click.Path(exists=True), help="YAML or JSON source-provenance manifest.",
+)
+@click.option(
+    "-o", "--output", "output_root", default="./output/curated_datasets",
+    type=click.Path(), show_default=True, help="Root for immutable curated dataset versions.",
+)
+@click.option("--surface-threshold", default=0.90, show_default=True, type=click.FloatRange(0, 1))
+@click.option("--semantic-review-threshold", default=0.92, show_default=True, type=click.FloatRange(0, 1))
+@click.option("--semantic-model", default="BAAI/bge-m3", show_default=True)
+@click.option("--semantic-model-revision", default=None, help="Pinned Hugging Face model revision.")
+@click.option("--semantic-review/--no-semantic-review", default=True, show_default=True)
+@click.option("--device", default="cuda", show_default=True, help="Embedding device, normally cuda or cpu.")
+@click.option("--max-record-tokens", default=2048, show_default=True, type=click.IntRange(3, None))
+@click.option("--embedding-batch-tokens", default=8192, show_default=True, type=click.IntRange(3, None))
+@click.option("--shard-tokens", default=1_000_000, show_default=True, type=click.IntRange(3, None))
+@click.option("--resume", is_flag=True, help="Resume a matching incomplete staging version.")
+def curate(
+    input_paths: tuple[str, ...],
+    manifest_path: str,
+    output_root: str,
+    surface_threshold: float,
+    semantic_review_threshold: float,
+    semantic_model: str,
+    semantic_model_revision: str | None,
+    semantic_review: bool,
+    device: str,
+    max_record_tokens: int,
+    embedding_batch_tokens: int,
+    shard_tokens: int,
+    resume: bool,
+) -> None:
+    """Create an immutable, audited LLM-ready text dataset."""
+    config = CurationConfig(
+        input_paths=tuple(Path(path) for path in input_paths),
+        output_root=Path(output_root),
+        source_manifest_path=Path(manifest_path),
+        surface_dedup_threshold=surface_threshold,
+        semantic_review_threshold=semantic_review_threshold,
+        semantic_model=semantic_model,
+        semantic_model_revision=semantic_model_revision,
+        semantic_review_enabled=semantic_review,
+        device=device,
+        max_record_tokens=max_record_tokens,
+        embedding_batch_token_budget=embedding_batch_tokens,
+        shard_token_budget=shard_tokens,
+        resume=resume,
+    )
+    try:
+        output_dir = DatasetCurationPipeline(config).execute()
+    except (FileExistsError, RuntimeError, ValueError) as error:
+        raise click.ClickException(str(error)) from error
+    click.echo(f"Curated dataset written to {output_dir}")
 
 
 @main.command()

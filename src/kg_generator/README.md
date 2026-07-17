@@ -9,7 +9,7 @@ Curated documents → extract → resolve → graph → evaluate/export
 
 ## Curation workflow
 
-`ingest/` loads and normalizes files. `dedup/` profiles document quality and finds repeated documents. `curate/` saves accepted documents, audit decisions, quality reports, and source metadata.
+`ingest/` loads files. `dedup/` profiles quality and finds repeated content. `curate/` performs language-aware normalization, layered duplicate decisions, sentence-safe token records, semantic review, deterministic shards, and provenance audits.
 
 ## Knowledge Graph workflow
 

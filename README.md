@@ -40,10 +40,11 @@ kg-gen quick -i data/sample/
 
 ## Dataset Curation Toolkit
 
-`kg-gen curate` builds an auditable text dataset for LLM work. It keeps the KG workflow intact and writes four versioned artifacts: curated JSONL, a per-document audit CSV, a quality/diversity report, and a provenance manifest with hashes.
+`kg-gen curate` builds an auditable English or Vietnamese text dataset for LLM work. It keeps the KG workflow intact and writes canonical curated JSONL, token-budget training shards, source/record audits, duplicate evidence, reports, and a provenance manifest with hashes.
 
 ```bash
-kg-gen curate -i data/sample/ -m configs/example_source_manifest.yaml
+uv pip install -e ".[curation]"
+kg-gen curate -i data/sample/ -m configs/example_source_manifest.yaml --device cuda
 ```
 
 See [the curation guide](docs/dataset_curation.md) for the source-manifest format, outputs, and demo procedure.

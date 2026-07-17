@@ -43,13 +43,24 @@ class DuplicateMatch:
 
 
 class GlobalDeduplicator:
-    """Cluster exact and surface-level near duplicates with MinHash candidates."""
+    """Cluster exact and surface-level near duplicates with MinHash candidates.
 
-    def __init__(self, threshold: float = LSH_THRESHOLD_DEFAULT, num_perm: int = MINHASH_PERMUTATIONS) -> None:
+    ``shingle_fn`` keeps the historic character-trigram behaviour by default,
+    while allowing curation to supply language-aware word shingles without
+    changing the KG pipeline.
+    """
+
+    def __init__(
+        self,
+        threshold: float = LSH_THRESHOLD_DEFAULT,
+        num_perm: int = MINHASH_PERMUTATIONS,
+        shingle_fn: Callable[[str], set[str]] | None = None,
+    ) -> None:
         if not 0 <= threshold <= 1:
             raise ValueError("Deduplication threshold must be between 0 and 1.")
         self.threshold = threshold
         self.num_perm = num_perm
+        self.shingle_fn = shingle_fn or self._grams
         self.last_matches: list[DuplicateMatch] = []
 
     def cluster(self, records: Sequence[dict[str, object]]) -> dict[str, DuplicateAssignment]:
@@ -73,7 +84,7 @@ class GlobalDeduplicator:
         for index, record in enumerate(records):
             content = str(record["content"])
             content_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
-            grams = self._grams(content)
+            grams = self.shingle_fn(content)
             gram_sets.append(grams)
             if content_hash in exact:
                 existing = exact[content_hash]
@@ -81,7 +92,7 @@ class GlobalDeduplicator:
                 self._record_match(matches, records, index, existing, "exact_hash", 1.0)
             else:
                 exact[content_hash] = index
-            signatures.append(self._minhash(content))
+            signatures.append(self._minhash(grams))
 
         if MinHash is not None and MinHashLSH is not None:
             lsh = MinHashLSH(threshold=self.threshold, num_perm=self.num_perm)
@@ -109,11 +120,11 @@ class GlobalDeduplicator:
         self.last_matches = sorted(matches.values(), key=lambda match: (match.record_id, match.matched_record_id, match.method))
         return self._assignments(records, groups, self.last_matches)
 
-    def _minhash(self, text: str) -> object:
+    def _minhash(self, shingles: set[str]) -> object:
         if MinHash is None:
-            return self._grams(text)
+            return shingles
         signature = MinHash(num_perm=self.num_perm)
-        for gram in self._grams(text):
+        for gram in shingles:
             signature.update(gram.encode("utf-8"))
         return signature
 

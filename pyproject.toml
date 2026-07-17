@@ -26,6 +26,18 @@ dependencies = [
 embeddings = [
     "sentence-transformers>=2.2",
 ]
+# Auditable, multilingual LLM corpus curation. faiss-cpu works everywhere;
+# cloud CUDA images may replace it with their matching FAISS GPU build.
+curation = [
+    "underthesea>=1.4",
+    "sentence-transformers>=2.2",
+    "transformers>=4.45",
+    "ftfy>=6.2",
+    "faiss-cpu>=1.8",
+]
+dev = [
+    "pytest>=8.0",
+]
 # Vietnamese NLP support (install when switching to vi)
 vi = [
     "underthesea>=1.4",
@@ -45,7 +57,7 @@ llm = [
 ]
 # All extras
 all = [
-    "kg-generator[embeddings,vi,data,neo4j,llm,dev,eval-data,eval-model]",
+    "kg-generator[embeddings,curation,vi,data,neo4j,llm,dev,eval-data,eval-model]",
 ]
 # Evaluation — data_eval: SFT data quality (lightweight, works everywhere)
 eval-data = [
@@ -76,3 +88,6 @@ where = ["src"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = ["-v", "--tb=short"]
+markers = [
+    "integration: requires externally installed models or CUDA resources",
+]

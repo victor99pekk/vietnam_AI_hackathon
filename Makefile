@@ -91,7 +91,7 @@ plots:
 ## install: Set up the project and install dependencies
 install:
 	uv venv; \
-	$(VENV) && uv pip install -e ".[embeddings,dev,neo4j]" && \
+	$(VENV) && uv pip install -e ".[curation,dev,neo4j]" && \
 	python -m spacy download en_core_web_sm
 
 ## clean: Remove generated output folders

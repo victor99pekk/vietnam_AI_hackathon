@@ -6,12 +6,13 @@ Create a traceable, reusable text dataset from raw documents.
 
 ## Input → output
 
-Raw documents plus a source manifest → `curated.jsonl`, `audit.csv`, `quality_report.json`, and `dataset_manifest.json`.
+Raw documents plus a source manifest → canonical `curated.jsonl`, token-budget training shards, source and record audits, duplicate evidence, reports, and a provenance manifest.
 
 ## Key files
 
 - `manifest.py` validates source, license, language, and version metadata; it also creates hashes.
-- `pipeline.py` coordinates ingest, shared quality/deduplication, and artifact writing.
+- `pipeline.py` coordinates normalization, quality, layered deduplication, record splitting, batching, and immutable artifact writing.
+- `processing.py` owns language-aware segmentation, BGE-M3 token counting, and batched semantic review.
 
 ## Place in pipeline
 

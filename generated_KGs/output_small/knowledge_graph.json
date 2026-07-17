@@ -65,6 +65,7 @@
         "chunk_count": 3
       },
       {
+<<<<<<< Updated upstream
         "id": "entity:360a2e1386408097d3d5",
         "type": "PERSON",
         "name": "Marie Curie",
@@ -792,6 +793,16 @@
         "importanceScore": 0.012474,
         "confidenceScore": 0.7,
         "embedding": null
+=======
+        "id": "document:e5c28ab9a7af34c2d3b1",
+        "type": "Document",
+        "name": "marie_curie.txt",
+        "description": "Source document: data/debugg_sample/marie_curie.txt",
+        "source": [
+          "data/debugg_sample/marie_curie.txt"
+        ],
+        "chunk_count": 2
+>>>>>>> Stashed changes
       }
     ],
     "edges": [
@@ -802,6 +813,109 @@
         "weight": 1,
         "source_texts": [],
         "source_chunk_ids": [
+<<<<<<< Updated upstream
+=======
+          "chunk:3b463fb4f43575c5995e"
+        ],
+        "relations": [
+          {
+            "predicate": "NEXT",
+            "evidence_sentence": "",
+            "source_chunk_id": "chunk:3b463fb4f43575c5995e"
+          }
+        ],
+        "description": "",
+        "source": "chunk:3b463fb4f43575c5995e",
+        "target": "chunk:62c434903c478b7df0d8"
+      },
+      {
+        "predicates": [
+          "PART_OF"
+        ],
+        "weight": 1,
+        "source_texts": [],
+        "source_chunk_ids": [
+          "chunk:3b463fb4f43575c5995e"
+        ],
+        "relations": [
+          {
+            "predicate": "PART_OF",
+            "evidence_sentence": "",
+            "source_chunk_id": "chunk:3b463fb4f43575c5995e"
+          }
+        ],
+        "description": "",
+        "source": "chunk:3b463fb4f43575c5995e",
+        "target": "document:885bd4414d90ae05ddde"
+      },
+      {
+        "predicates": [
+          "NEXT"
+        ],
+        "weight": 1,
+        "source_texts": [],
+        "source_chunk_ids": [
+          "chunk:62c434903c478b7df0d8"
+        ],
+        "relations": [
+          {
+            "predicate": "NEXT",
+            "evidence_sentence": "",
+            "source_chunk_id": "chunk:62c434903c478b7df0d8"
+          }
+        ],
+        "description": "",
+        "source": "chunk:62c434903c478b7df0d8",
+        "target": "chunk:b78da64bbb3bef1dc9cf"
+      },
+      {
+        "predicates": [
+          "PART_OF"
+        ],
+        "weight": 1,
+        "source_texts": [],
+        "source_chunk_ids": [
+          "chunk:62c434903c478b7df0d8"
+        ],
+        "relations": [
+          {
+            "predicate": "PART_OF",
+            "evidence_sentence": "",
+            "source_chunk_id": "chunk:62c434903c478b7df0d8"
+          }
+        ],
+        "description": "",
+        "source": "chunk:62c434903c478b7df0d8",
+        "target": "document:885bd4414d90ae05ddde"
+      },
+      {
+        "predicates": [
+          "PART_OF"
+        ],
+        "weight": 1,
+        "source_texts": [],
+        "source_chunk_ids": [
+          "chunk:b78da64bbb3bef1dc9cf"
+        ],
+        "relations": [
+          {
+            "predicate": "PART_OF",
+            "evidence_sentence": "",
+            "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf"
+          }
+        ],
+        "description": "",
+        "source": "chunk:b78da64bbb3bef1dc9cf",
+        "target": "document:885bd4414d90ae05ddde"
+      },
+      {
+        "predicates": [
+          "NEXT"
+        ],
+        "weight": 1,
+        "source_texts": [],
+        "source_chunk_ids": [
+>>>>>>> Stashed changes
           "chunk:65841b8a1c7b64044f47"
         ],
         "relations": [
@@ -14891,6 +15005,60 @@
   },
   "entities": [
     {
+<<<<<<< Updated upstream
+=======
+      "id": "chunk:3b463fb4f43575c5995e",
+      "name": "alan_turing.txt chunk 0",
+      "type": "Chunk",
+      "aliases": [],
+      "description": "Alan Turing was born in London, England in 1912. He studied at King's College, Cambridge and later earned his PhD from Princeton University.\n\nDuring World War II, Turing worked at Bletchley Park, wher",
+      "confidenceScore": 1.0,
+      "importanceScore": 0.0,
+      "source": [
+        "data/debugg_sample/alan_turing.txt"
+      ],
+      "embedding": null,
+      "updatedAt": "2026-07-17T18:02:02.583494+00:00",
+      "text": "Alan Turing was born in London, England in 1912. He studied at King's College, Cambridge and later earned his PhD from Princeton University.\n\nDuring World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.",
+      "tokenCount": 56,
+      "index": 0
+    },
+    {
+      "id": "chunk:62c434903c478b7df0d8",
+      "name": "alan_turing.txt chunk 1",
+      "type": "Chunk",
+      "aliases": [],
+      "description": "ode. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.\n\nAfter the war, Turing worked at the National Physical Laboratory and later at the University of Ma",
+      "confidenceScore": 1.0,
+      "importanceScore": 0.0,
+      "source": [
+        "data/debugg_sample/alan_turing.txt"
+      ],
+      "embedding": null,
+      "updatedAt": "2026-07-17T18:02:02.583532+00:00",
+      "text": "ode. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.\n\nAfter the war, Turing worked at the National Physical Laboratory and later at the University of Manchester. He is widely considered the father of theoretical computer science and artificial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.",
+      "tokenCount": 54,
+      "index": 1
+    },
+    {
+      "id": "chunk:b78da64bbb3bef1dc9cf",
+      "name": "alan_turing.txt chunk 2",
+      "type": "Chunk",
+      "aliases": [],
+      "description": "cial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.\n\nTuring also made significant contributions to mathematical biology, publishing work on morphogenes",
+      "confidenceScore": 1.0,
+      "importanceScore": 0.0,
+      "source": [
+        "data/debugg_sample/alan_turing.txt"
+      ],
+      "embedding": null,
+      "updatedAt": "2026-07-17T18:02:02.583554+00:00",
+      "text": "cial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.\n\nTuring also made significant contributions to mathematical biology, publishing work on morphogenesis. He died in 1954 in Wilmslow, England.",
+      "tokenCount": 32,
+      "index": 2
+    },
+    {
+>>>>>>> Stashed changes
       "id": "chunk:65841b8a1c7b64044f47",
       "name": "marie_curie.txt chunk 0",
       "type": "Chunk",
@@ -14902,7 +15070,11 @@
         "data/debugg_sample/marie_curie.txt"
       ],
       "embedding": null,
+<<<<<<< Updated upstream
       "updatedAt": "2026-07-17T17:36:24.186018+00:00",
+=======
+      "updatedAt": "2026-07-17T18:02:02.583575+00:00",
+>>>>>>> Stashed changes
       "text": "Marie Curie was born in Warsaw, Poland in 1867. She is best known for her pioneering research on radioactivity. She discovered the elements polonium and radium.\n\nCurie worked at the University of Paris, where she became the first female professor. In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.",
       "tokenCount": 61,
       "index": 0
@@ -14919,7 +15091,11 @@
         "data/debugg_sample/marie_curie.txt"
       ],
       "embedding": null,
+<<<<<<< Updated upstream
       "updatedAt": "2026-07-17T17:36:24.186088+00:00",
+=======
+      "updatedAt": "2026-07-17T18:02:02.583597+00:00",
+>>>>>>> Stashed changes
       "text": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.\n\nIn 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium. She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today.\n\nMarie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.",
       "tokenCount": 70,
       "index": 1
@@ -14936,6 +15112,7 @@
         "data/debugg_sample/alan_turing.txt"
       ],
       "embedding": null,
+<<<<<<< Updated upstream
       "updatedAt": "2026-07-17T17:36:24.186137+00:00",
       "text": "Alan Turing was born in London, England in 1912. He studied at King's College, Cambridge and later earned his PhD from Princeton University.\n\nDuring World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.",
       "tokenCount": 56,
@@ -14974,6 +15151,10 @@
       "text": "cial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.\n\nTuring also made significant contributions to mathematical biology, publishing work on morphogenesis. He died in 1954 in Wilmslow, England.",
       "tokenCount": 32,
       "index": 2
+=======
+      "updatedAt": "2026-07-17T18:02:02.583625+00:00",
+      "chunk_count": 3
+>>>>>>> Stashed changes
     },
     {
       "id": "document:e5c28ab9a7af34c2d3b1",
@@ -14989,7 +15170,11 @@
         "data/debugg_sample/marie_curie.txt"
       ],
       "embedding": null,
+<<<<<<< Updated upstream
       "updatedAt": "2026-07-17T17:36:24.186249+00:00",
+=======
+      "updatedAt": "2026-07-17T18:02:02.583663+00:00",
+>>>>>>> Stashed changes
       "chunk_count": 2
     },
     {
@@ -16367,6 +16552,41 @@
       "evidence_sentence": "",
       "source_chunk_id": "chunk:62c434903c478b7df0d8",
       "description": ""
+<<<<<<< Updated upstream
+=======
+    },
+    {
+      "subject": "chunk:65841b8a1c7b64044f47",
+      "predicate": "NEXT",
+      "object": "chunk:5f496075cac1bc777856",
+      "evidence_sentence": "",
+      "source_chunk_id": "chunk:65841b8a1c7b64044f47",
+      "description": ""
+    },
+    {
+      "subject": "chunk:3b463fb4f43575c5995e",
+      "predicate": "PART_OF",
+      "object": "document:885bd4414d90ae05ddde",
+      "evidence_sentence": "",
+      "source_chunk_id": "chunk:3b463fb4f43575c5995e",
+      "description": ""
+    },
+    {
+      "subject": "chunk:62c434903c478b7df0d8",
+      "predicate": "PART_OF",
+      "object": "document:885bd4414d90ae05ddde",
+      "evidence_sentence": "",
+      "source_chunk_id": "chunk:62c434903c478b7df0d8",
+      "description": ""
+    },
+    {
+      "subject": "chunk:b78da64bbb3bef1dc9cf",
+      "predicate": "PART_OF",
+      "object": "document:885bd4414d90ae05ddde",
+      "evidence_sentence": "",
+      "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf",
+      "description": ""
+>>>>>>> Stashed changes
     },
     {
       "subject": "chunk:65841b8a1c7b64044f47",
@@ -16383,6 +16603,7 @@
       "evidence_sentence": "",
       "source_chunk_id": "chunk:5f496075cac1bc777856",
       "description": ""
+<<<<<<< Updated upstream
     },
     {
       "subject": "chunk:3b463fb4f43575c5995e",
@@ -21871,6 +22092,8 @@
       "evidence_sentence": "Turing also made significant contributions to mathematical biology, publishing work on morphogenesis.",
       "source_chunk_id": "chunk:b78da64bbb3bef1dc9cf",
       "description": ""
+=======
+>>>>>>> Stashed changes
     }
   ],
   "stats": {
