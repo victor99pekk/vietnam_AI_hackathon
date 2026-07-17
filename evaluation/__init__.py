@@ -22,15 +22,6 @@ from evaluation.data_eval import (
     TemplateSFTGenerator,
     SFTEvaluator,
 )
-from evaluation.model_eval import (
-    QADatasetGenerator,
-    load_kg,
-    load_raw_documents,
-    FineTuner,
-    FineTuneConfig,
-)
-from evaluation.model_eval.metrics import AblationBenchmark
-
 __all__ = [
     # data_eval
     "QualityEvaluator",
@@ -39,7 +30,6 @@ __all__ = [
     "SFTGenerator",
     "TemplateSFTGenerator",
     "SFTEvaluator",
-    # model_eval
     "QADatasetGenerator",
     "load_kg",
     "load_raw_documents",
@@ -47,3 +37,22 @@ __all__ = [
     "FineTuneConfig",
     "AblationBenchmark",
 ]
+
+# Model-evaluation dependencies (notably PyTorch) are optional and intentionally
+# not imported at package initialization. Import them from evaluation.model_eval
+# when running Method 2.
+
+
+def __getattr__(name):
+    if name in {
+        "QADatasetGenerator",
+        "load_kg",
+        "load_raw_documents",
+        "FineTuner",
+        "FineTuneConfig",
+        "AblationBenchmark",
+    }:
+        import evaluation.model_eval as model_eval
+
+        return getattr(model_eval, name)
+    raise AttributeError(name)

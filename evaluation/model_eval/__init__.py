@@ -10,8 +10,6 @@ from evaluation.model_eval.dataset_gen import (
     load_kg,
     load_raw_documents,
 )
-from evaluation.model_eval.finetune import FineTuner, FineTuneConfig
-from evaluation.model_eval.metrics import AblationBenchmark
 
 __all__ = [
     "QADatasetGenerator",
@@ -21,3 +19,19 @@ __all__ = [
     "FineTuneConfig",
     "AblationBenchmark",
 ]
+
+# Fine-tuning and benchmarking are imported by run_method2 only. Keeping those
+# optional dependencies lazy lets dataset generation and GraphGen sampling run
+# in the lightweight local environment.
+
+
+def __getattr__(name):
+    if name in {"FineTuner", "FineTuneConfig"}:
+        from evaluation.model_eval.finetune import FineTuner, FineTuneConfig
+
+        return {"FineTuner": FineTuner, "FineTuneConfig": FineTuneConfig}[name]
+    if name == "AblationBenchmark":
+        from evaluation.model_eval.metrics import AblationBenchmark
+
+        return AblationBenchmark
+    raise AttributeError(name)

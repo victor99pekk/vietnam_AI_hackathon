@@ -95,3 +95,22 @@ method2:
       - hallucination_rate
       - consistency
       - perplexity
+
+# ── GraphGen-style experiment ────────────────────────────────
+# Invoked explicitly with --method graphgen. It is not included in `all`, so
+# existing evaluation behaviour and API cost remain unchanged.
+graphgen:
+  subgraphs:
+    max_depth: 2
+    max_premise_tokens: 256
+    max_extra_edges: 5
+    edge_sampling: max_loss
+    bidirectional: true
+    max_subgraphs: 50
+  qa_generation:
+    model: deepseek-v4-pro
+    provider: deepseek
+    language: English
+    temperature: 0.2
+    max_tokens: 512
+    max_questions: 20

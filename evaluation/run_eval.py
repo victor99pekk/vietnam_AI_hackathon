@@ -12,6 +12,7 @@ Runs both evaluation methods:
     2.1 — Dataset generation (KG-structured QA vs. raw-text QA)
     2.2 — LoRA fine-tuning (Unsloth or transformers+PEFT)
     2.3 — Ablation benchmark (A/B/C model comparison)
+  GraphGen: Paper-inspired subgraph organization and multi-hop QA synthesis
 
 Usage:
     # Method 1 only (fast check)
@@ -49,8 +50,11 @@ from evaluation.model_eval.dataset_gen import (
     load_kg,
     load_raw_documents,
 )
-from evaluation.model_eval.finetune import FineTuner, FineTuneConfig
-from evaluation.model_eval.metrics import AblationBenchmark
+from evaluation.graphgen import (
+    GraphGenQAGenerator,
+    GraphGenSubgraphSampler,
+    load_graphgen_kg,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -231,6 +235,9 @@ def run_method2(
     model_override: str | None = None,
 ) -> dict[str, Any]:
     """Run Method 2: Fine-Tuning Ablation Study."""
+    from evaluation.model_eval.finetune import FineTuner, FineTuneConfig
+    from evaluation.model_eval.metrics import AblationBenchmark
+
     m2_config = config.get("method2", {})
     common_config = config.get("common", {})
     output_dir = output_base / "method2"
@@ -423,6 +430,112 @@ def run_method2(
 
 
 # ═══════════════════════════════════════════════════════════════
+# GraphGen-style subgraph organization and QA generation
+# ═══════════════════════════════════════════════════════════════
+
+def run_graphgen(
+    kg_path: Path,
+    config: dict[str, Any],
+    output_base: Path,
+    *,
+    sample_only: bool = False,
+) -> dict[str, Any]:
+    """Run the isolated GraphGen-style experiment.
+
+    This does not replace Method 1 or Method 2. It produces stable intermediate
+    artifacts so subgraph selection can be inspected before any QA is used for
+    training.
+    """
+
+    graphgen_config = config.get("graphgen", {})
+    output_dir = output_base / "graphgen"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    nodes, edges = load_graphgen_kg(kg_path)
+    logger.info("Loaded GraphGen KG: %d entity nodes, %d knowledge edges", len(nodes), len(edges))
+    if not edges:
+        raise ValueError(
+            "No descriptive knowledge edges found. Expected dictionary triples "
+            "with subject, object, and description fields."
+        )
+
+    sampler_config = graphgen_config.get("subgraphs", {})
+    sampler = GraphGenSubgraphSampler(
+        max_depth=sampler_config.get("max_depth", 2),
+        max_premise_tokens=sampler_config.get("max_premise_tokens", 256),
+        max_extra_edges=sampler_config.get("max_extra_edges", 5),
+        edge_sampling=sampler_config.get("edge_sampling", "max_loss"),
+        bidirectional=sampler_config.get("bidirectional", True),
+        seed=config.get("common", {}).get("seed", 42),
+    )
+    sampling = sampler.sample(
+        nodes,
+        edges,
+        max_subgraphs=sampler_config.get("max_subgraphs", 50),
+    )
+    subgraphs_path, sampling_audit_path = sampling.write(output_dir)
+    results: dict[str, Any] = {
+        "method": "graphgen_style",
+        "paper_faithfulness": {
+            "implemented": [
+                "edge-seeded k-hop expansion",
+                "bidirectional traversal",
+                "premise token budget",
+                "max/min loss or deterministic fallback selection",
+                "multi-hop QA generation",
+            ],
+            "not_implemented": ["trainee-model comprehension assessment"],
+        },
+        "subgraphs": {
+            "path": str(subgraphs_path),
+            "count": len(sampling.subgraphs),
+            "sampling_audit": str(sampling_audit_path),
+            "selection_basis_counts": _count_values(
+                sampling.subgraphs, "selection_basis"
+            ),
+        },
+    }
+
+    qa_config = graphgen_config.get("qa_generation", {})
+    if not sample_only:
+        generator = GraphGenQAGenerator(
+            model=qa_config.get("model", "deepseek-v4-pro"),
+            provider=qa_config.get("provider", "deepseek"),
+            language=qa_config.get("language", "English"),
+            temperature=qa_config.get("temperature", 0.2),
+            max_tokens=qa_config.get("max_tokens", 512),
+        )
+        qa_path, qa_audit_path = generator.generate(
+            sampling.subgraphs,
+            output_dir,
+            max_questions=qa_config.get("max_questions", 20),
+        )
+        with open(qa_path, encoding="utf-8") as handle:
+            qa_count = sum(1 for line in handle if line.strip())
+        results["qa"] = {
+            "path": str(qa_path),
+            "count": qa_count,
+            "audit": str(qa_audit_path),
+        }
+    else:
+        results["qa"] = {"skipped": True, "reason": "sample_only"}
+
+    results_path = output_dir / "results.json"
+    with open(results_path, "w", encoding="utf-8") as handle:
+        json.dump(results, handle, indent=2, ensure_ascii=False)
+    logger.info("GraphGen-style experiment complete → %s", results_path)
+    return results
+
+
+def _count_values(items: list[dict[str, Any]], key: str) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for item in items:
+        value = str(item.get(key, "unknown"))
+        counts[value] = counts.get(value, 0) + 1
+    return counts
+
+
+# ═══════════════════════════════════════════════════════════════
 # Main
 # ═══════════════════════════════════════════════════════════════
 
@@ -435,12 +548,13 @@ Examples:
   python scripts/run_eval.py --method 1 --kg output/knowledge_graph.json
   python scripts/run_eval.py --method 2 --kg output/knowledge_graph.json
   python scripts/run_eval.py --method all --kg output/knowledge_graph.json
+  python scripts/run_eval.py --method graphgen --kg output/knowledge_graph.json --sample-only
   python scripts/run_eval.py --method 1 --kg output/knowledge_graph.json -c my_config.yaml
         """,
     )
     parser.add_argument(
         "--method", "-m",
-        choices=["1", "2", "all"],
+        choices=["1", "2", "graphgen", "all"],
         default="all",
         help="Which evaluation method to run (default: all)",
     )
@@ -479,6 +593,11 @@ Examples:
         action="store_true",
         help="Skip fine-tuning entirely in Method 2 (use existing adapters if available)",
     )
+    parser.add_argument(
+        "--sample-only",
+        action="store_true",
+        help="For --method graphgen, write subgraphs/audit without calling the QA LLM",
+    )
     args = parser.parse_args()
 
     # Validate KG path
@@ -514,6 +633,14 @@ Examples:
             )
         except Exception as e:
             logger.error("Method 2 failed: %s", e, exc_info=True)
+
+    if args.method == "graphgen":
+        try:
+            run_graphgen(
+                args.kg, config, output_base, sample_only=args.sample_only
+            )
+        except Exception as e:
+            logger.error("GraphGen method failed: %s", e, exc_info=True)
 
     logger.info("\n✅ Evaluation pipeline complete. Results in: %s", output_base)
 

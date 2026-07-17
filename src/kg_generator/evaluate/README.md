@@ -11,6 +11,8 @@ Graph, entities, and triples → a metrics dictionary.
 ## Key files
 
 - `metrics.py` calculates completeness, consistency, duplication, missing information, format errors, labeling quality, and reusability.
+- `evaluation/graphgen/` is the separate GraphGen-style experiment for audited
+  k-hop subgraphs and multi-hop SFT QA generation.
 
 ## Place in pipeline
 

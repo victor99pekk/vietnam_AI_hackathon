@@ -16,7 +16,7 @@ MODEL   ?= Qwen/Qwen2.5-1.5B-Instruct
 model   ?= all
 
 .PHONY: help test ingest upload download plots install clean \
-        eval-install eval-install-model eval-method1 eval-method2 eval-all
+        eval-install eval-install-model eval-method1 eval-method2 eval-graphgen eval-all
 
 help:
 	@echo "Usage: make <target> [dataset=<name>] [MODEL=<model>]"
@@ -45,6 +45,7 @@ help:
 	@echo "   eval-install-model     Install model_eval deps (Colab only: transformers, peft, bitsandbytes)"
 	@echo "   eval-method1           Run data_eval only"
 	@echo "   eval-method2           Run model_eval [model=a|b|c|all]  (GPU required)"
+	@echo "   eval-graphgen          Build audited k-hop subgraphs and multi-hop QA"
 	@echo "   eval-all               Run data_eval + model_eval end-to-end"
 	@echo ""
 	@echo "── Variables ───────────────────────────────────────────"
@@ -116,6 +117,10 @@ eval-method2:
 		*) target="-t both" ;; \
 	esac; \
 	$(VENV) && python evaluation/run_eval.py --method 2 --kg $(dataset_kg.$(dataset)) $$target --model $(MODEL)
+
+## eval-graphgen: Run GraphGen-style subgraph + QA generation [dataset=small|wikipedia]
+eval-graphgen:
+	$(VENV) && python evaluation/run_eval.py --method graphgen --kg $(dataset_kg.$(dataset))
 
 ## eval-all: Run both evaluation methods end-to-end  [dataset=small|wikipedia] [MODEL=...]
 eval-all:

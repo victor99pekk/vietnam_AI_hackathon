@@ -24,10 +24,7 @@ from evaluation.model_eval import (                           # noqa: E402
     QADatasetGenerator,
     load_kg,
     load_raw_documents,
-    FineTuner,
-    FineTuneConfig,
 )
-from evaluation.model_eval.metrics import AblationBenchmark  # noqa: E402
 
 __all__ = [
     "QualityEvaluator",
@@ -43,3 +40,12 @@ __all__ = [
     "FineTuneConfig",
     "AblationBenchmark",
 ]
+
+
+def __getattr__(name):
+    """Load optional model-training dependencies only when requested."""
+    if name in {"FineTuner", "FineTuneConfig", "AblationBenchmark"}:
+        import evaluation.model_eval as model_eval
+
+        return getattr(model_eval, name)
+    raise AttributeError(name)
