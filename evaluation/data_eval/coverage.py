@@ -293,12 +293,12 @@ class CoverageEvaluator:
 
         kg_triple_keys: set[tuple[str, str, str]] = {
             (self._normalize_name(s), p.lower().strip(), self._normalize_name(o))
-            for s, p, o, _ in kg_triples
+            for s, p, o, *_ in kg_triples
         }
 
         # Adjacency: (norm_subj, norm_obj) → True if any edge exists
         kg_adjacency: set[tuple[str, str]] = set()
-        for s, _p, o, _src in kg_triples:
+        for s, _p, o, *_ in kg_triples:
             kg_adjacency.add((
                 self._normalize_name(s),
                 self._normalize_name(o),

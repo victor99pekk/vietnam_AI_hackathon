@@ -1,0 +1,1 @@
+uv run --extra eval-model python evaluation/run_eval.py --method 2 --kg generated_KGs/output_wikipedia/knowledge_graph.json --config configs/evaluation_overnight_vi.yaml --output output_eval/overnight/20260718_205637/qwen2.5-1.5b --fine-tune-target both --model Qwen/Qwen2.5-1.5B-Instruct --device auto 

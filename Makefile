@@ -8,9 +8,9 @@ dataset_conf.small     := configs/debug.yaml
 dataset_input.small    := -i data/debugg_sample/alan_turing.jsonl -i data/debugg_sample/marie_curie.jsonl
 dataset_kg.small       := generated_KGs/output_debug/knowledge_graph.json
 
-dataset_conf.wikipedia     := configs/pipeline.yaml
+dataset_conf.wikipedia     := configs/vietnamese_quality.yaml
 dataset_input.wikipedia    := -i data/wikipedia/
-dataset_kg.wikipedia       := generated_KGs/output/knowledge_graph.json
+dataset_kg.wikipedia       := generated_KGs/output_wikipedia/knowledge_graph.json
 
 # ── Eval overrides ──
 MODEL   ?= Qwen/Qwen2.5-0.5B-Instruct

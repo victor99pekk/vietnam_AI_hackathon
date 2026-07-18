@@ -47,51 +47,12 @@
     "verdict": "\u2705 Healthy \u2014 KG is structurally sound for SFT data generation."
   },
   "sft_generation": {
-    "path": "output_eval/method1/sft_sample.jsonl",
+    "path": "output_eval/2026-07-18_19-37-50/method1/sft_sample.jsonl",
     "method": "llm"
   },
   "sft_evaluation": {
-    "pairs_evaluated": 35,
-    "metrics": {
-      "faithfulness": 0.114,
-      "faithfulness_detail": "31/35 responses contain entities not in source triples",
-      "answer_relevancy": 0.602,
-      "relevancy_detail": "Keyword overlap between instruction and response (heuristic proxy)",
-      "factual_correctness": 0.969,
-      "factual_detail": "Presence of triple entities in response (heuristic proxy)",
-      "note": "Heuristic evaluation (deepeval not available). Install deepeval for LLM-as-Judge scoring.",
-      "semantic_diversity": {
-        "score": 0.367,
-        "unique_bigram_ratio": 0.367,
-        "most_common_bigrams": [
-          {
-            "bigram": "associated_with",
-            "count": 21
-          },
-          {
-            "bigram": "the_first",
-            "count": 15
-          },
-          {
-            "bigram": "first_female",
-            "count": 15
-          },
-          {
-            "bigram": "who_was",
-            "count": 13
-          },
-          {
-            "bigram": "henri_becquerel",
-            "count": 12
-          }
-        ],
-        "flag": "red",
-        "detail": "Low diversity \u2014 only 37% unique bigrams. Instructions may be too templated."
-      }
-    },
-    "details": [],
-    "overall_score": 0.513,
-    "verdict": "\ud83d\udd36 Fair \u2014 consider improving the KG before generating SFT data."
+    "error": "No SFT pairs found",
+    "pairs_evaluated": 0
   },
   "coverage": {
     "total_facts": 18,

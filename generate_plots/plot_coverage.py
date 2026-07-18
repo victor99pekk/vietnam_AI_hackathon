@@ -44,7 +44,7 @@ def _score_color(rate: float) -> str:
 
 def plot_coverage(
     coverage_path: str | Path,
-    output_dir: str | Path = "output_eval/method1",
+    output_dir: str | Path = "output_eval/latest/method1",
     show: bool = False,
 ) -> list[Path]:
     """Generate all coverage plots and return saved file paths.

@@ -2,7 +2,7 @@
 
 Method 1 (SFT Data Quality Assessment) evaluates the quality of a knowledge graph (KG) and the SFT (Supervised Fine-Tuning) data generated from it. It produces **7 plots** across two evaluation stages: **structural audit** and **SFT quality evaluation**.
 
-All plots are saved in `output_eval/method1/`.
+All plots are saved in `output_eval/latest/method1/`.
 
 ---
 

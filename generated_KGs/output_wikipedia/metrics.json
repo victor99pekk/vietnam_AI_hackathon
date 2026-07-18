@@ -1,68 +1,216 @@
 {
-  "num_nodes": 669,
-  "num_edges": 1188,
-  "num_triples": 1188,
-  "completeness": 0.6915794718485301,
+  "num_nodes": 427,
+  "num_edges": 885,
+  "num_triples": 921,
+  "completeness": 0.9742990654205608,
   "completeness_breakdown": {
-    "has_name": 1.0,
-    "has_aliases": 0.07473841554559044,
-    "has_type": 1.0
+    "has_type": 1.0,
+    "has_aliases": 0.9228971962616822,
+    "has_name": 1.0
   },
   "consistency": 1.0,
-  "duplication_level": 0.3968609865470852,
-  "entity_duplication_rate": 0.7937219730941704,
-  "triple_duplication_rate": 0.0,
-  "missing_information": 0.9252615844544095,
+  "duplication_level": 0.03823556272641482,
+  "entity_duplication_rate": 0.03738317757009346,
+  "triple_duplication_rate": 0.039087947882736174,
+  "missing_information": 0.07710280373831775,
   "format_errors": 0.0,
-  "labeling_quality": 1.0,
-  "reusability": 0.6266068759342303,
-  "overall_score": 0.713723396683038,
+  "labeling_quality": 0.6915887850467289,
+  "reusability": 0.9836448598130842,
+  "overall_score": 0.9334563348308059,
+  "structural_audit": {
+    "graph_stats": {
+      "num_nodes": 427,
+      "num_edges": 885,
+      "num_triples": 921,
+      "is_directed": true,
+      "is_connected": true
+    },
+    "orphan_analysis": {
+      "orphan_count": 0,
+      "orphan_rate": 0.0,
+      "entity_orphans": 0,
+      "chunk_orphans": 0,
+      "health_score": 100.0,
+      "flag": "green",
+      "recommendation": ""
+    },
+    "density_analysis": {
+      "density": 0.004865,
+      "health_score": 9.7,
+      "flag": "red",
+      "recommendation": "Graph is very sparse — relations may not capture enough context for multi-hop reasoning."
+    },
+    "schema_compliance": {
+      "compliance_rate": 1.0,
+      "violations": [],
+      "health_score": 100,
+      "flag": "green"
+    },
+    "entity_duplication": {
+      "duplicate_pairs": [
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 1",
+          "similarity": 0.9259
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 0",
+          "similarity": 1.0
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 1",
+          "similarity": 0.9259
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 2",
+          "similarity": 0.9259
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 3",
+          "similarity": 0.9259
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 4",
+          "similarity": 0.9259
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 5",
+          "similarity": 0.9259
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 6",
+          "similarity": 0.9259
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 7",
+          "similarity": 0.9259
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 8",
+          "similarity": 0.9259
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 9",
+          "similarity": 0.9259
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 10",
+          "similarity": 0.8929
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 11",
+          "similarity": 0.8929
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 12",
+          "similarity": 0.8929
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 13",
+          "similarity": 0.8929
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 14",
+          "similarity": 0.8929
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 15",
+          "similarity": 0.8929
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 16",
+          "similarity": 0.8929
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 17",
+          "similarity": 0.8929
+        },
+        {
+          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_2.jsonl chunk 18",
+          "similarity": 0.8929
+        }
+      ],
+      "duplicate_pair_count": 423,
+      "duplicate_entity_count": 49,
+      "health_score": 0,
+      "flag": "red",
+      "recommendation": "423 potential duplicate pairs — consider entity resolution."
+    },
+    "multi_hop_connectivity": {
+      "reachable_2hop_pct": 0.0701,
+      "reachable_3hop_pct": 0.1127,
+      "health_score": 18.3,
+      "flag": "red",
+      "recommendation": "Low multi-hop connectivity — the KG may not support chain reasoning questions."
+    },
+    "overall_health_score": 45.6,
+    "verdict": "🔶 Concerning — multiple structural issues; SFT data quality may suffer."
+  },
   "extraction": {
-    "language": "en",
-    "method": "baseline",
-    "backend": "spacy",
-    "model": null,
-    "backend_version": "3.8.14",
-    "prompt_version": null,
-    "max_gleanings": 0
+    "language": "vi",
+    "method": "graphgen",
+    "backend": "deepseek",
+    "model": "deepseek-v4-flash",
+    "backend_version": null,
+    "prompt_version": "graphgen-figure8-figure9-v2",
+    "max_gleanings": 1
   },
   "pipeline": {
     "chunking": {
-      "method": "sentence",
+      "method": "semantic",
       "size_chars": null,
       "overlap_chars": null,
       "target_tokens": 450,
       "overlap_tokens": 60,
-      "semantic_threshold": null,
-      "embedding_model": null
+      "semantic_threshold": 0.55,
+      "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2"
     },
     "quality": {
       "method": "heuristic"
     },
     "deduplication": {
-      "document_method": "minhash",
+      "document_method": "layered",
       "document_threshold": 0.85,
-      "chunk_method": "minhash",
+      "chunk_method": "semantic",
       "chunk_threshold": 0.85,
       "semantic_threshold": 0.92,
       "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2"
     },
     "extraction": {
-      "method": "offline"
+      "method": "graphgen"
     },
     "resolution": {
-      "method": "string",
-      "threshold": 0.85,
-      "embedding_model": null
+      "method": "embedding",
+      "threshold": 0.88,
+      "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2"
     }
   },
   "processing": {
-    "loaded_documents": 50,
-    "cleaned_documents": 50,
-    "documents_after_quality": 50,
-    "documents_after_dedup": 50,
-    "chunks_created": 619,
-    "chunks_after_quality": 619,
-    "chunks_after_dedup": 619
+    "loaded_documents": 2,
+    "cleaned_documents": 2,
+    "documents_after_quality": 2,
+    "documents_after_dedup": 2,
+    "chunks_created": 33,
+    "chunks_after_quality": 33,
+    "chunks_after_dedup": 33
   }
 }

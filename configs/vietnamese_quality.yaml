@@ -24,8 +24,8 @@ pipeline:
     max_records: 5000
   extraction:
     method: graphgen
-    model: deepseek-v4-pro
-    max_gleanings: 3
+    model: deepseek-v4-flash
+    max_gleanings: 1
   resolution:
     method: embedding
     threshold: 0.88

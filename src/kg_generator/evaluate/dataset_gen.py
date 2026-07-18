@@ -552,7 +552,7 @@ def load_kg(path: Path) -> tuple[nx.DiGraph, list[dict[str, Any]], list[tuple[st
 
     entities = data.get("entities", [])
     triples_raw = data.get("triples", [])
-    graph = nx.node_link_graph(data.get("graph", {}), link="edges")
+    graph = nx.node_link_graph(data.get("graph", {}), edges="edges")
 
     # Normalize triples to (subj, pred, obj, source_text) format
     triples: list[tuple[str, str, str, str]] = []

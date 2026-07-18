@@ -802,9 +802,17 @@ Examples:
     # Load config
     config = load_config(args.config)
 
-    # Override output directory
-    output_base = args.output
+    # Timestamped output directory — never overwrite previous runs
+    from datetime import datetime
+    run_id = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    output_base = args.output / run_id
     output_base.mkdir(parents=True, exist_ok=True)
+
+    # Symlink 'latest' → current run for convenience
+    latest_link = args.output / "latest"
+    if latest_link.is_symlink() or latest_link.exists():
+        latest_link.unlink()
+    latest_link.symlink_to(run_id)
 
     logger.info("KG Evaluation Pipeline")
     logger.info("  KG:       %s", args.kg)

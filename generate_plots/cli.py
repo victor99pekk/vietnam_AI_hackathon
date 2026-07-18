@@ -10,8 +10,8 @@ Usage:
     python -m generate_plots --method 2
 
     # Specify custom paths
-    python -m generate_plots --audit output_eval/method1/structural_audit.json
-    python -m generate_plots --quality output_eval/method1/sft_quality_report.json
+    python -m generate_plots --audit output_eval/latest/method1/structural_audit.json
+    python -m generate_plots --quality output_eval/latest/method1/sft_quality_report.json
     python -m generate_plots --ablation output_eval/method2/benchmark_results.json
 """
 

@@ -39,7 +39,7 @@ def _flag_color(flag: str) -> str:
 
 def plot_structural_audit(
     audit_path: str | Path,
-    output_dir: str | Path = "output_eval/method1",
+    output_dir: str | Path = "output_eval/latest/method1",
     show: bool = False,
 ) -> list[Path]:
     """Generate all structural-audit plots and return saved file paths.
