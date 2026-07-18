@@ -166,6 +166,13 @@ def upload_graph(json_path: str | Path, clear: bool = False) -> None:
 
     driver = _get_connection()
 
+    # Build a node-type lookup so relationship MATCH can use label-specific indexes
+    id_to_type: dict[str, str] = {
+        node["id"]: node.get("type", "Entity")
+        for node in nodes
+        if "id" in node
+    }
+
     with driver.session() as session:
         if clear:
             logger.info("Clearing existing Neo4j data...")
@@ -176,11 +183,14 @@ def upload_graph(json_path: str | Path, clear: bool = False) -> None:
                 [node.get("id", "") for node in nodes if node.get("type") == "Document"],
             )
 
-        # Create nodes
-        logger.info(f"Uploading {len(nodes)} nodes...")
+        # ── Batched node uploads (UNWIND — one network round-trip per BATCH_SIZE) ──
+        logger.info(f"Categorizing {len(nodes)} nodes for batched upload...")
+        chunk_rows: list[dict] = []
+        doc_rows: list[dict] = []
+        entity_rows: list[dict] = []
+
         for node in nodes:
             node_type = node.get("type", "Entity")
-            node_id = node.get("id", "")
             provenance = {
                 key: node[key]
                 for key in (
@@ -190,138 +200,188 @@ def upload_graph(json_path: str | Path, clear: bool = False) -> None:
                 if node.get(key) not in (None, "")
             }
 
-            is_chunk = node_type == "Chunk"
-            is_document = node_type == "Document"
-
-            if is_chunk:
+            if node_type == "Chunk":
                 source_list = node.get("source", [])
                 source_str = source_list[0] if isinstance(source_list, list) and source_list else source_list
-
-                session.run(
-                    """
-                    MERGE (n:Chunk {id: $id})
-                    SET n.source = $source,
-                        n.text = $text,
-                        n.tokenCount = $tokenCount,
-                        n.index = $index,
-                        n.type = $type
-                    SET n += $provenance
-                    REMOVE n.entityType
-                    """,
-                    id=node_id,
-                    source=source_str,
-                    text=node.get("text", ""),
-                    tokenCount=node.get("tokenCount", 0),
-                    index=node.get("index", 0),
-                    type=node_type,
-                    provenance=provenance,
-                )
-            elif is_document:
-                session.run(
-                    """
-                    MERGE (n:Document {id: $id})
-                    SET n.name = $name,
-                        n.type = $type,
-                        n.description = $description,
-                        n.source = $source,
-                        n.chunk_count = $chunk_count
-                    SET n += $provenance
-                    REMOVE n.entityType
-                    """,
-                    id=node_id,
-                    name=node.get("name", ""),
-                    type=node_type,
-                    description=node.get("description", ""),
-                    source=node.get("source", []),
-                    chunk_count=node.get("chunk_count", 0),
-                    provenance=provenance,
-                )
+                chunk_rows.append({
+                    "id": node.get("id", ""),
+                    "source": source_str,
+                    "text": node.get("text", ""),
+                    "tokenCount": node.get("tokenCount", 0),
+                    "index": node.get("index", 0),
+                    "type": node_type,
+                    "provenance": provenance,
+                })
+            elif node_type == "Document":
+                doc_rows.append({
+                    "id": node.get("id", ""),
+                    "name": node.get("name", ""),
+                    "type": node_type,
+                    "description": node.get("description", ""),
+                    "source": node.get("source", []),
+                    "chunk_count": node.get("chunk_count", 0),
+                    "provenance": provenance,
+                })
             else:
-                session.run(
-                    """
-                    MERGE (n:Entity {id: $id})
-                    SET n.name = $name,
-                        n.type = $type,
-                        n.description = $description,
-                        n.importanceScore = $importance_score,
-                        n.confidenceScore = $confidence_score,
-                        n.embedding = $embedding
-                    REMOVE n.entityType
-                    """,
-                    id=node_id,
-                    name=node.get("name", ""),
-                    type=node_type,
-                    description=node.get("description", ""),
-                    importance_score=node.get("importanceScore", 0.0),
-                    confidence_score=node.get("confidenceScore", 1.0),
-                    embedding=node.get("embedding"),
-                )
+                entity_rows.append({
+                    "id": node.get("id", ""),
+                    "name": node.get("name", ""),
+                    "type": node_type,
+                    "description": node.get("description", ""),
+                    "importance_score": node.get("importanceScore", 0.0),
+                    "confidence_score": node.get("confidenceScore", 1.0),
+                    "embedding": node.get("embedding"),
+                })
 
-        # Create relationships
+        _upload_nodes_batched(session, "Chunk", chunk_rows)
+        _upload_nodes_batched(session, "Document", doc_rows)
+        _upload_nodes_batched(session, "Entity", entity_rows)
+
+        # Create relationships (pre-aggregated in Python, batched with UNWIND)
         logger.info(f"Uploading {len(edges)} relationships...")
-        for edge in edges:
-            source = edge.get("source", "")
-            target = edge.get("target", "")
-            predicates = edge.get("predicates", ["related_to"])
-
-            for pred in predicates:
-                relation_records = [
-                    relation for relation in edge.get("relations", [])
-                    if relation.get("predicate") == pred
-                ]
-                descriptions = list(dict.fromkeys(
-                    relation.get("description", "")
-                    for relation in relation_records
-                    if relation.get("description")
-                ))
-                evidence_sentences = list(dict.fromkeys(
-                    relation.get("evidence_sentence", "")
-                    for relation in relation_records
-                    if relation.get("evidence_sentence")
-                ))
-                source_chunk_ids = list(dict.fromkeys(
-                    relation.get("source_chunk_id", "")
-                    for relation in relation_records
-                    if relation.get("source_chunk_id")
-                ))
-
-                if pred in {"NEXT", "PART_OF", "MENTIONS"}:
-                    merge_clause = f"MERGE (a)-[r:{pred}]->(b)"
-                    predicate_value = None
-                elif pred == "RELATION":
-                    merge_clause = "MERGE (a)-[r:RELATION]->(b)"
-                    predicate_value = None
-                else:
-                    merge_clause = "MERGE (a)-[r:RELATION {predicate: $pred}]->(b)"
-                    predicate_value = pred
-
-                session.run(
-                    f"""
-                    MATCH (a {{id: $source}}), (b {{id: $target}})
-                    {merge_clause}
-                    SET r.evidenceSentences = reduce(
-                            items = coalesce(r.evidenceSentences, []),
-                            item IN $evidence_sentences |
-                            CASE WHEN item IN items THEN items ELSE items + [item] END
-                        ),
-                        r.sourceChunkIds = reduce(
-                            ids = coalesce(r.sourceChunkIds, []),
-                            chunk_id IN $source_chunk_ids |
-                            CASE WHEN chunk_id IN ids THEN ids ELSE ids + [chunk_id] END
-                        ),
-                        r.description = CASE WHEN $description <> ''
-                            THEN $description ELSE coalesce(r.description, '') END
-                    """,
-                    source=source,
-                    target=target,
-                    pred=predicate_value,
-                    evidence_sentences=evidence_sentences,
-                    source_chunk_ids=source_chunk_ids,
-                    description=descriptions[0] if descriptions else "",
-                )
+        _upload_relationships_batched(session, edges, id_to_type)
 
     driver.close()
     logger.info(f"Successfully uploaded {len(nodes)} nodes and {len(edges)} edges to Neo4j")
+
+
+BATCH_SIZE = 5000
+BATCH_SIZE_REL = 200000
+
+
+def _upload_nodes_batched(session, label: str, rows: list[dict]) -> None:
+    """Upload nodes of a single label in UNWIND batches."""
+    if not rows:
+        return
+    logger.info(f"  Uploading {len(rows)} {label} nodes...")
+    for offset in range(0, len(rows), BATCH_SIZE):
+        batch = rows[offset : offset + BATCH_SIZE]
+        if label == "Chunk":
+            session.run(
+                """
+                UNWIND $batch AS item
+                MERGE (n:Chunk {id: item.id})
+                SET n.source = item.source, n.text = item.text,
+                    n.tokenCount = item.tokenCount, n.index = item.index,
+                    n.type = item.type
+                SET n += item.provenance
+                REMOVE n.entityType
+                """, batch=batch,
+            )
+        elif label == "Document":
+            session.run(
+                """
+                UNWIND $batch AS item
+                MERGE (n:Document {id: item.id})
+                SET n.name = item.name, n.type = item.type,
+                    n.description = item.description, n.source = item.source,
+                    n.chunk_count = item.chunk_count
+                SET n += item.provenance
+                REMOVE n.entityType
+                """, batch=batch,
+            )
+        elif label == "Entity":
+            session.run(
+                """
+                UNWIND $batch AS item
+                MERGE (n:Entity {id: item.id})
+                SET n.name = item.name, n.type = item.type,
+                    n.description = item.description,
+                    n.importanceScore = item.importance_score,
+                    n.confidenceScore = item.confidence_score,
+                    n.embedding = item.embedding
+                REMOVE n.entityType
+                """, batch=batch,
+            )
+
+# Label-filtered relationship patterns — one Cypher query per (src_label, tgt_label) combo
+# so that Neo4j can use label-specific indexes on :Chunk(id), :Document(id), :Entity(id).
+_LABEL_QUERIES: dict[tuple[str, str], str] = {
+    ("Chunk", "Chunk"):     "MATCH (a:Chunk {id: row.source}), (b:Chunk {id: row.target})",
+    ("Chunk", "Document"):  "MATCH (a:Chunk {id: row.source}), (b:Document {id: row.target})",
+    ("Chunk", "Entity"):    "MATCH (a:Chunk {id: row.source}), (b:Entity {id: row.target})",
+    ("Document", "Chunk"):  "MATCH (a:Document {id: row.source}), (b:Chunk {id: row.target})",
+    ("Document", "Document"): "MATCH (a:Document {id: row.source}), (b:Document {id: row.target})",
+    ("Document", "Entity"): "MATCH (a:Document {id: row.source}), (b:Entity {id: row.target})",
+    ("Entity", "Chunk"):    "MATCH (a:Entity {id: row.source}), (b:Chunk {id: row.target})",
+    ("Entity", "Document"): "MATCH (a:Entity {id: row.source}), (b:Document {id: row.target})",
+    ("Entity", "Entity"):   "MATCH (a:Entity {id: row.source}), (b:Entity {id: row.target})",
+}
+
+
+def _upload_relationships_batched(
+    session, edges: list[dict], id_to_type: dict[str, str]
+) -> None:
+    """Pre-aggregate duplicate relationships in Python, then upload in batches.
+
+    Merges (source, target, predicate) keys in Python so Neo4j only sees each
+    unique edge once per batch — no Cypher ``reduce`` loops, no duplicates.
+    """
+    from collections import defaultdict
+
+    # Aggregate: (source, target, predicate, src_label, tgt_label) → metadata
+    agg: dict[tuple[str, str, str, str, str], dict] = defaultdict(
+        lambda: {"descriptions": set(), "evidence_sentences": set(), "source_chunk_ids": set()}
+    )
+
+    for edge in edges:
+        source = edge.get("source", "")
+        target = edge.get("target", "")
+        predicates = edge.get("predicates", ["related_to"])
+        source_label = id_to_type.get(source, "Entity")
+        target_label = id_to_type.get(target, "Entity")
+
+        for pred in predicates:
+            relation_records = [
+                r for r in edge.get("relations", [])
+                if r.get("predicate") == pred
+            ]
+            key = (source, target, pred, source_label, target_label)
+            for r in relation_records:
+                if r.get("description"):
+                    agg[key]["descriptions"].add(r["description"])
+                if r.get("evidence_sentence"):
+                    agg[key]["evidence_sentences"].add(r["evidence_sentence"])
+                if r.get("source_chunk_id"):
+                    agg[key]["source_chunk_ids"].add(r["source_chunk_id"])
+
+    # Bucket by (src_label, tgt_label) for static MATCH
+    buckets: dict[tuple[str, str], list[dict]] = defaultdict(list)
+    for (source, target, pred, src_label, tgt_label), meta in agg.items():
+        buckets[(src_label, tgt_label)].append({
+            "source": source,
+            "target": target,
+            "predicate": pred,
+            "evidence_sentences": list(meta["evidence_sentences"]),
+            "source_chunk_ids": list(meta["source_chunk_ids"]),
+            "description": list(meta["descriptions"])[0] if meta["descriptions"] else "",
+        })
+
+    total = sum(len(v) for v in buckets.values())
+    uploaded = 0
+    for (src_label, tgt_label), bucket_rows in buckets.items():
+        match_clause = _LABEL_QUERIES.get(
+            (src_label, tgt_label),
+            f"MATCH (a:{src_label} {{id: row.source}}), (b:{tgt_label} {{id: row.target}})",
+        )
+        for offset in range(0, len(bucket_rows), BATCH_SIZE_REL):
+            batch = bucket_rows[offset : offset + BATCH_SIZE_REL]
+            uploaded += len(batch)
+            logger.info(f"  [{src_label}→{tgt_label}] {uploaded - len(batch) + 1}–{uploaded} of {total}")
+
+            # No Cypher reduce() loops — properties are already final lists
+            query = f"""
+            UNWIND $rows AS row
+            {match_clause}
+            CALL apoc.merge.relationship(a, row.predicate, {{}}, {{}}, b, {{}})
+            YIELD rel
+            SET rel.evidenceSentences = row.evidence_sentences,
+                rel.sourceChunkIds = row.source_chunk_ids,
+                rel.description = CASE WHEN row.description <> ''
+                    THEN row.description ELSE coalesce(rel.description, '') END
+            RETURN count(rel)
+            """
+            session.run(query, rows=batch)
 
 
 def upload_from_output(output_dir: str | Path, clear: bool = False) -> None:

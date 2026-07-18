@@ -26,6 +26,10 @@ pipeline:
   resolve_method: string_similarity
   resolve_threshold: 0.85
 
+  # MongoDB document archive
+  mongo_uri: "mongodb://localhost:27017"
+  mongo_database: "kg_documents"
+
   # Export
   export_formats:
     - json

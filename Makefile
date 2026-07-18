@@ -120,7 +120,9 @@ test:
 
 ## ingest: Run the pipeline  [dataset=small|wikipedia]
 ingest:
-	$(VENV) && kg-gen run -c $(dataset_conf.$(dataset)) $(dataset_input.$(dataset)) -o ./generated_KGs/output_$(dataset)
+	$(VENV) && uv pip install -e ".[curation,neo4j,data,mongo,embeddings]" && \
+	python -m spacy download en_core_web_lg && \
+	kg-gen run -v -c $(dataset_conf.$(dataset)) $(dataset_input.$(dataset)) -o ./generated_KGs/output_$(dataset)
 
 ## upload: Clear Neo4j, then upload the generated graph  [dataset=small|wikipedia]
 upload:
@@ -176,9 +178,12 @@ scrape-full: scrape scrape-llm-discover
 
 ## download-wikipedia: Download Wikipedia articles as JSONL  [wiki_count=100] [wiki_lang=en]
 download-wikipedia:
-	$(VENV) && python data/download_data/wikipedia.py \
+	@vietnam_flag=""; \
+	if [ "$(wiki_lang)" = "vi" ]; then vietnam_flag="--vietnam-only"; fi; \
+	$(VENV) && uv pip install -e ".[data]" && python data/download_data/wikipedia.py \
 		--language $(wiki_lang) \
 		--count $(wiki_count) \
+		$$vietnam_flag \
 		--output data/wikipedia/wikipedia_$(wiki_lang)_$(wiki_count).jsonl
 
 ## new-graph: Build KG from data and upload to Neo4j (clears existing graph)  [dataset=small|wikipedia]
@@ -194,7 +199,7 @@ add:
 	echo "Adding files:"; \
 	echo "$$files" | sed 's/^/  /'; \
 	input_args=$$(echo "$$files" | sed 's/^/-i /' | tr '\n' ' '); \
-	$(VENV) && kg-gen run \
+	$(VENV) && kg-gen run -v \
 		-c $(dataset_conf.$(dataset)) \
 		$$input_args \
 		-o ./generated_KGs/output_$(dataset)_add; \
@@ -207,7 +212,7 @@ add:
 
 ## neo4j-new-graph: Build KG directly in Neo4j (clears existing graph first)  [dataset=small|wikipedia]
 neo4j-new-graph:
-	$(VENV) && kg-gen run \
+	$(VENV) && kg-gen run -v \
 		-c $(dataset_conf.$(dataset)) \
 		$(dataset_input.$(dataset)) \
 		-o ./generated_KGs/output_$(dataset) \
@@ -224,7 +229,7 @@ neo4j-add:
 	echo "Adding files:"; \
 	echo "$$files" | sed 's/^/  /'; \
 	input_args=$$(echo "$$files" | sed 's/^/-i /' | tr '\n' ' '); \
-	$(VENV) && kg-gen add-doc \
+	$(VENV) && kg-gen add-doc -v \
 		-c $(dataset_conf.$(dataset)) \
 		$$input_args \
 		-o ./generated_KGs/output_$(dataset)
@@ -232,7 +237,7 @@ neo4j-add:
 ## neo4j-add-file: Add a single file to Neo4j (usage: make neo4j-add-file FILE=data/new_article.jsonl)
 neo4j-add-file:
 	@test -f "$(FILE)" || { echo "ERROR: $(FILE) not found"; exit 1; }
-	$(VENV) && kg-gen add-doc -c $(dataset_conf.$(dataset)) -i "$(FILE)" -o ./generated_KGs/output_$(dataset)
+	$(VENV) && kg-gen add-doc -v -c $(dataset_conf.$(dataset)) -i "$(FILE)" -o ./generated_KGs/output_$(dataset)
 
 ## neo4j-clear: Delete everything in Neo4j
 neo4j-clear:
@@ -253,8 +258,9 @@ LLM_plots:
 ## install: Set up the project and install dependencies
 install:
 	uv venv; \
-	$(VENV) && uv pip install -e ".[curation,dev,neo4j]" && \
-	python -m spacy download en_core_web_sm
+	$(VENV) && uv pip install -e ".[curation,dev,neo4j,data,mongo,embeddings]" && \
+	python -m spacy download en_core_web_sm && \
+	python -m spacy download en_core_web_lg
 
 ## clean: Remove generated output folders
 clean:

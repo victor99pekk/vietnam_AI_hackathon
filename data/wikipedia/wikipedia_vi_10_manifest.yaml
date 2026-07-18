@@ -1,5 +1,9 @@
 dataset_name: wikimedia-wikipedia-vi-sample
+<<<<<<<< HEAD:data/wikipedia/wikipedia_vi_50_manifest.yaml
 version: 20231101-vi-50
+========
+version: 20231101-vi-10
+>>>>>>>> ffb72af (last night):data/wikipedia/wikipedia_vi_10_manifest.yaml
 license: CC-BY-SA-3.0 AND GFDL
 source: https://huggingface.co/datasets/wikimedia/wikipedia
 language: vi

@@ -59,7 +59,7 @@ pipeline:
   # Neo4j connection — configured via NEO4J_URI / NEO4J_USER / NEO4J_PASSWORD in .env only
 
   # MongoDB document archive (leave empty to disable)
-  mongo_uri: ""                    # e.g. "mongodb://localhost:27017"
+  mongo_uri: "mongodb://localhost:27017"
   mongo_database: "kg_documents"
 
   # Export

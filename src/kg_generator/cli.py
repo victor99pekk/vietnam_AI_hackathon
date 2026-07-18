@@ -93,6 +93,11 @@ def main() -> None:
     is_flag=True,
     help="(neo4j backend only) Delete all existing nodes/relationships before building.",
 )
+@click.option(
+    "-v", "--verbose",
+    is_flag=True,
+    help="Show progress bars and detailed output during pipeline execution.",
+)
 def run(
     input_paths: tuple[str, ...],
     config_path: str | None,
@@ -106,11 +111,20 @@ def run(
     resolve_method: str | None,
     backend: str | None,
     clear: bool,
+    verbose: bool,
 ) -> None:
     """Run the full knowledge graph generation pipeline."""
+    import logging
     import os
 
     from kg_generator.pipeline import Pipeline
+
+    if verbose:
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s  %(message)s",
+            datefmt="%H:%M:%S",
+        )
 
     config = load_config(Path(config_path) if config_path else None)
 
