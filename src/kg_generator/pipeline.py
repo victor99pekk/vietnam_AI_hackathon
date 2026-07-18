@@ -2,6 +2,7 @@
 
 import json
 import logging
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any
 
@@ -49,7 +50,11 @@ class Pipeline:
         self.quality_filter = QualityFilter(language=config.language.value)
 
         # --- Stage 2: Extract ---
-        self.entity_extractor = self._build_entity_extractor()
+        # GraphGen performs joint extraction and must not require an offline
+        # Vietnamese NLP installation.
+        self.entity_extractor = (
+            None if config.use_llm else self._build_entity_extractor()
+        )
         self.graphgen_extractor = (
             GraphGenExtractor(
                 language=config.language,
@@ -216,6 +221,8 @@ class Pipeline:
                     doc.content, source_chunk_id=chunk_id
                 )
             else:
+                if self.entity_extractor is None:
+                    raise RuntimeError("Baseline entity extractor is not configured")
                 entities = self.entity_extractor.extract(doc.content)
                 triples = self.relation_extractor.extract(
                     doc.content, entities, source_chunk_id=chunk_id
@@ -269,18 +276,15 @@ class Pipeline:
         logger.info("[5/5] Building graph...")
         graph = self.graph_builder.build(resolved_entities, all_triples)
         graph = self.enricher.enrich(graph)
+        extraction_metadata = self._extraction_metadata()
+        graph.graph["language"] = self.config.language.value
+        graph.graph["extraction_method"] = extraction_metadata["method"]
 
         # ── Evaluate ──
         logger.info("Evaluating quality...")
         metrics = self.evaluator.evaluate_graph(graph, resolved_entities, all_triples)
         metrics["extraction"] = {
-            "method": "graphgen" if self.graphgen_extractor is not None else "baseline",
-            "model": self.config.llm_model if self.graphgen_extractor is not None else None,
-            "prompt_version": (
-                self.graphgen_extractor.prompt_version
-                if self.graphgen_extractor is not None
-                else None
-            ),
+            **extraction_metadata,
             "max_gleanings": (
                 self.config.graphgen_max_gleanings
                 if self.graphgen_extractor is not None
@@ -297,13 +301,218 @@ class Pipeline:
             triples=all_triples,
             output_dir=self.output_dir,
             formats=self.config.export_formats,
+            metadata={
+                "language": self.config.language.value,
+                "extraction": extraction_metadata,
+            },
         )
 
         # Save metrics
+        with open(self.output_dir / "metrics.json", "w", encoding="utf-8") as f:
+            json.dump(metrics, f, indent=2, ensure_ascii=False)
+
+        logger.info("Pipeline complete!")
+
+    def _extraction_metadata(self) -> dict[str, Any]:
+        if self.graphgen_extractor is not None:
+            return {
+                "language": self.config.language.value,
+                "method": "graphgen",
+                "backend": "deepseek",
+                "model": self.config.llm_model,
+                "backend_version": None,
+                "prompt_version": self.graphgen_extractor.prompt_version,
+            }
+
+        backend = "underthesea" if self.config.language == Language.VIETNAMESE else "spacy"
+        try:
+            backend_version = version(backend)
+        except PackageNotFoundError:
+            backend_version = None
+        return {
+            "language": self.config.language.value,
+            "method": "baseline",
+            "backend": backend,
+            "model": None,
+            "backend_version": backend_version,
+            "prompt_version": None,
+        }
+    def execute_neo4j(self, session: Any, *, clear: bool = False) -> dict[str, Any]:
+        """Run all stages, writing directly to Neo4j per-chunk.
+
+        Unlike ``execute()``, this method never builds a full in-memory graph.
+        Entities are resolved against the existing Neo4j database, and every
+        node / edge is written via ``MERGE`` as each chunk is processed.
+
+        Parameters
+        ----------
+        session:
+            An active Neo4j ``Session`` (from ``neo4j.Driver.session()``).
+        clear:
+            If ``True``, delete all existing nodes and relationships first.
+
+        Returns
+        -------
+        dict
+            Graph statistics queried from Neo4j after completion.
+        """
+        from kg_generator.graph.neo4j_builder import Neo4jGraphBuilder
+        from kg_generator.resolve.neo4j_resolver import Neo4jEntityResolver
+        from kg_generator.export.neo4j_upload import replace_documents
+
+        builder = Neo4jGraphBuilder(session, ontology=self.config.ontology)
+        resolver = Neo4jEntityResolver(session, threshold=self.config.resolve_threshold)
+
+        if clear:
+            builder.clear_database()
+
+        # ── Stage 1: Ingest & Clean ──
+        logger.info("[1/4] Ingesting & cleaning data...")
+        documents = self.loader.load(self.config.input_paths)
+        documents = self.cleaner.clean_batch(documents)
+        logger.info(f"  Loaded & cleaned {len(documents)} documents")
+
+        if self.config.chunk_size > 0:
+            documents = self.chunker.chunk(documents)
+            logger.info(f"  Chunked into {len(documents)} pieces")
+
+        # ── Dedup ──
+        logger.info("[2/4] Deduplication & quality filtering...")
+        documents = self.quality_filter.filter(documents)
+        documents = self.deduplicator.deduplicate(documents)
+        logger.info(f"  {len(documents)} documents after dedup")
+
+        # ── Build chunk contexts (same logic as execute()) ──
+        chunk_contexts: list[tuple[Any, str, str]] = []
+        for doc in documents:
+            parent_source = doc.metadata.get("parent_source", doc.source)
+            source_document_id = doc.metadata.get("parent_doc_id", doc.doc_id)
+            parent_id = stable_document_id(parent_source, source_document_id)
+            index = doc.metadata.get("chunk_index", 0)
+            chunk_id = stable_chunk_id(parent_id, index, doc.content)
+            chunk_contexts.append((doc, parent_id, chunk_id))
+
+        # ── Replace any documents being re-uploaded ──
+        all_doc_ids = sorted({pid for _, pid, _ in chunk_contexts})
+        if all_doc_ids and not clear:
+            replace_documents(session, all_doc_ids)
+
+        # ── Stage 3: Extract & write per-chunk ──
+        logger.info("[3/4] Extracting entities & relations → Neo4j...")
+        seen_docs: set[str] = set()
+        chunk_count_by_doc: dict[str, int] = {}
+
+        # First pass: count chunks per document
+        for _, parent_id, _ in chunk_contexts:
+            chunk_count_by_doc[parent_id] = chunk_count_by_doc.get(parent_id, 0) + 1
+
+        # Write structural nodes & edges
+        for doc, parent_id, chunk_id in chunk_contexts:
+            # MERGE Chunk node
+            builder.merge_chunk(
+                chunk_id,
+                source=doc.source,
+                text=doc.content,
+                token_count=doc.metadata.get("token_count", len(doc.content.split())),
+                index=doc.metadata.get("chunk_index", 0),
+            )
+
+            # MERGE Document node (once per document)
+            if parent_id not in seen_docs:
+                seen_docs.add(parent_id)
+                parent_source = doc.metadata.get("parent_source", doc.source)
+                parent_name = Path(parent_source).name if parent_source else "unknown"
+                builder.merge_document(
+                    parent_id,
+                    name=parent_name,
+                    description=f"Source document: {parent_source}",
+                    source=parent_source,
+                    chunk_count=chunk_count_by_doc.get(parent_id, 0),
+                )
+
+            # MERGE PART_OF edge
+            builder.merge_structural_edge(chunk_id, parent_id, "PART_OF")
+
+        # Write NEXT edges
+        for i in range(len(chunk_contexts) - 1):
+            _, p1, c1 = chunk_contexts[i]
+            _, p2, c2 = chunk_contexts[i + 1]
+            if p1 == p2:
+                builder.merge_structural_edge(c1, c2, "NEXT")
+
+        # Second pass: extract entities & relations per chunk
+        total_extracted = 0
+        total_triples = 0
+        for doc, _, chunk_id in chunk_contexts:
+            if self.graphgen_extractor is not None:
+                entities, triples = self.graphgen_extractor.extract(
+                    doc.content, source_chunk_id=chunk_id
+                )
+            else:
+                entities = self.entity_extractor.extract(doc.content)
+                triples = self.relation_extractor.extract(
+                    doc.content, entities, source_chunk_id=chunk_id
+                )
+
+            # Enrich entities
+            for e in entities:
+                e.source = chunk_id
+                if not e.description:
+                    e.description = self._snip_description(doc.content, e.name)
+
+            # Resolve entities against Neo4j
+            entity_dicts = [e.to_dict() for e in entities]
+            resolved_dicts, id_map = resolver.resolve_with_mapping(entity_dicts)
+
+            # Write MENTIONS edges (chunk → resolved entity)
+            for entity_dict in resolved_dicts:
+                eid = entity_dict.get("id", "")
+                evidence = self.relation_extractor._find_evidence(
+                    doc.content, entity_dict.get("name", ""), entity_dict.get("name", "")
+                )
+                builder.merge_structural_edge(chunk_id, eid, "MENTIONS")
+
+            # Write extracted relation edges (entity → entity)
+            for triple in triples:
+                subj = id_map.get(triple[0], triple[0])
+                pred = triple[1]
+                obj = id_map.get(triple[2], triple[2])
+                evidence = triple[3] if len(triple) > 3 else ""
+                desc = triple[5] if len(triple) > 5 else ""
+                builder.merge_edge(
+                    subj, obj, pred,
+                    evidence_sentence=evidence,
+                    source_chunk_id=chunk_id,
+                    description=desc,
+                )
+
+            total_extracted += len(resolved_dicts)
+            total_triples += len(triples)
+
+        logger.info(
+            f"  Processed {len(chunk_contexts)} chunks: "
+            f"{total_extracted} entities, {total_triples} triples"
+        )
+
+        # ── Stage 4: Post-processing ──
+        logger.info("[4/4] Post-processing...")
+        builder.compute_pagerank()
+        stats = builder.compute_stats()
+
+        # Save metrics
+        metrics: dict[str, Any] = {
+            **stats,
+            "extraction": {
+                "method": "graphgen" if self.graphgen_extractor is not None else "baseline",
+                "model": self.config.llm_model if self.graphgen_extractor is not None else None,
+            },
+        }
+        self.output_dir.mkdir(parents=True, exist_ok=True)
         with open(self.output_dir / "metrics.json", "w") as f:
             json.dump(metrics, f, indent=2)
 
-        logger.info("Pipeline complete!")
+        logger.info("Neo4j pipeline complete!  Stats: %s", stats)
+        return metrics
 
     def _log_metrics(self, metrics: dict[str, Any]) -> None:
         logger.info("  Quality Metrics:")

@@ -21,6 +21,7 @@ class GraphExporter:
         triples: list[tuple[str, ...]],
         output_dir: Path,
         formats: list[str] | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> list[Path]:
         """Export to all requested formats, returning paths of written files."""
         formats = formats or ["json"]
@@ -28,7 +29,15 @@ class GraphExporter:
 
         for fmt in formats:
             if fmt == "json":
-                output_paths.append(self._to_json(graph, entities, triples, output_dir))
+                output_paths.append(
+                    self._to_json(
+                        graph,
+                        entities,
+                        triples,
+                        output_dir,
+                        metadata=metadata,
+                    )
+                )
             elif fmt == "graphml":
                 output_paths.append(self._to_graphml(graph, output_dir))
             elif fmt == "neo4j_csv":
@@ -86,6 +95,7 @@ class GraphExporter:
         entities: list[dict[str, Any]],
         triples: list[tuple[str, ...]],
         output_dir: Path,
+        metadata: dict[str, Any] | None = None,
     ) -> Path:
         """Export as a single JSON file (node-link + entity/triple lists).
 
@@ -114,6 +124,7 @@ class GraphExporter:
         ]
 
         output = {
+            "metadata": metadata or {},
             "graph": graph_data,
             "entities": entities,
             "triples": triple_dicts,

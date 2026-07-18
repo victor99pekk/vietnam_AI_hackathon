@@ -1,0 +1,7 @@
+dataset_name: vietnamese-web-corpus
+version: v1
+license: Public / Legally Published Exception (Article 37a/Decree 134)
+source: Web scrape from 3 seed(s) via auto discovery
+language: vi
+collection_date: '2026-07-18'
+# record_count: 0

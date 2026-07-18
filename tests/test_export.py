@@ -4,11 +4,66 @@ import json
 import sys
 from types import SimpleNamespace
 
+import networkx as nx
+
 from click.testing import CliRunner
 
 from kg_generator import cli
 from kg_generator.export.exporter import GraphExporter
 from kg_generator.export.neo4j_upload import replace_documents
+
+
+def test_json_export_preserves_vietnamese_and_includes_metadata(tmp_path):
+    graph = nx.DiGraph()
+    graph.add_node(
+        "entity:giap",
+        id="entity:giap",
+        name="Võ Nguyên Giáp",
+        type="PERSON",
+        description="Một nhân vật lịch sử Việt Nam.",
+    )
+    metadata = {
+        "language": "vi",
+        "extraction": {"method": "baseline", "backend": "underthesea"},
+    }
+
+    [path] = GraphExporter().export(
+        graph,
+        [{"id": "entity:giap", "name": "Võ Nguyên Giáp", "type": "PERSON"}],
+        [],
+        tmp_path,
+        ["json"],
+        metadata=metadata,
+    )
+
+    raw = path.read_text(encoding="utf-8")
+    payload = json.loads(raw)
+    assert "Võ Nguyên Giáp" in raw
+    assert payload["metadata"] == metadata
+
+
+def test_graphml_and_neo4j_csv_preserve_vietnamese(tmp_path):
+    graph = nx.DiGraph()
+    graph.add_node(
+        "entity:giap",
+        id="entity:giap",
+        name="Võ Nguyên Giáp",
+        type="PERSON",
+        description="Một nhân vật lịch sử Việt Nam.",
+    )
+
+    paths = GraphExporter().export(
+        graph,
+        [{"id": "entity:giap", "name": "Võ Nguyên Giáp", "type": "PERSON"}],
+        [],
+        tmp_path,
+        ["graphml", "neo4j_csv"],
+    )
+
+    graphml = next(path for path in paths if path.suffix == ".graphml")
+    nodes_csv = next(path for path in paths if path.name == "nodes.csv")
+    assert "Võ Nguyên Giáp" in graphml.read_text(encoding="utf-8")
+    assert "Võ Nguyên Giáp" in nodes_csv.read_text(encoding="utf-8")
 
 
 def test_entity_export_has_exact_attribute_allowlist():

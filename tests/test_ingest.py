@@ -4,6 +4,7 @@ import tempfile
 from pathlib import Path
 
 from kg_generator.ingest.loader import DataLoader, Document
+from kg_generator.config import Language
 
 
 def test_load_txt():
@@ -39,3 +40,13 @@ def test_cleaner_normalizes_whitespace():
     result = cleaner.clean(doc)
     assert "  " not in result.content
     assert result.content == "Hello world!\n\nExtra spaces."
+
+
+def test_vietnamese_cleaner_normalizes_nfc_and_preserves_diacritics():
+    from kg_generator.ingest.cleaner import TextCleaner
+
+    doc = Document(content="  Dữ\u0303 liệu tiếng Việt…\r\n\r\nGiữ nguyên dấu.  ")
+    result = TextCleaner(Language.VIETNAMESE).clean(doc)
+
+    assert result.content == "Dữ liệu tiếng Việt...\n\nGiữ nguyên dấu."
+    assert "_" not in result.content

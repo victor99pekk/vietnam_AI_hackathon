@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 # Load .env file before anything else
 load_dotenv()
 
-from kg_generator.config import Language, PipelineConfig, load_config
+from kg_generator.config import GraphBackend, Language, PipelineConfig, load_config
 from kg_generator.curate.pipeline import CurationConfig, DatasetCurationPipeline
 
 
@@ -42,37 +42,75 @@ def main() -> None:
 )
 @click.option(
     "-l", "--language",
-    default="en",
+    default=None,
     type=click.Choice(["en", "vi"]),
-    help="Language of the input data.",
+    help="Language of the input data; overrides the config file when supplied.",
 )
 @click.option(
     "--llm/--no-llm",
     default=None,
     help="Enable GraphGen-style joint entity/relation extraction with DeepSeek.",
 )
+@click.option(
+    "--backend",
+    "backend",
+    default="networkx",
+    type=click.Choice(["networkx", "neo4j"]),
+    help="Graph backend: networkx (in-memory) or neo4j (on-disk, incremental-capable).",
+)
+@click.option(
+    "--clear",
+    is_flag=True,
+    help="(neo4j backend only) Delete all existing nodes/relationships before building.",
+)
 def run(
     input_paths: tuple[str, ...],
     config_path: str | None,
     output_dir: str,
-    language: str,
+    language: str | None,
     llm: bool | None,
+    backend: str,
+    clear: bool,
 ) -> None:
     """Run the full knowledge graph generation pipeline."""
+    import os
+
     from kg_generator.pipeline import Pipeline
 
     config = load_config(Path(config_path) if config_path else None)
 
     if input_paths:
         config.input_paths = [Path(p) for p in input_paths]
-    config.language = Language(language)
+    if language is not None:
+        config.language = Language(language)
+    config.graph_backend = GraphBackend(backend)
     if llm is not None:
         config.use_llm = llm
 
     pipeline = Pipeline(config, Path(output_dir))
-    pipeline.execute()
 
-    click.echo(f"\n Done! Output written to {output_dir}")
+    if config.graph_backend == GraphBackend.NEO4J:
+        # ── Neo4j-backed path: direct-to-database ──
+        try:
+            from neo4j import GraphDatabase
+        except ImportError:
+            click.echo("Neo4j driver not installed. Run: uv pip install -e \".[neo4j]\"")
+            raise click.Abort()
+
+        uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+        user = os.getenv("NEO4J_USER", "neo4j")
+        password = os.getenv("NEO4J_PASSWORD", "")
+
+        driver = GraphDatabase.driver(uri, auth=(user, password))
+        with driver.session() as session:
+            metrics = pipeline.execute_neo4j(session, clear=clear)
+        driver.close()
+
+        click.echo(f"\n Done! Graph built in Neo4j ({metrics.get('num_nodes', 0)} nodes, {metrics.get('num_edges', 0)} edges)")
+    else:
+        # ── networkx path: in-memory build → export files ──
+        pipeline.execute()
+        click.echo(f"\n Done! Output written to {output_dir}")
 
 
 @main.command()
@@ -91,13 +129,38 @@ def run(
     type=click.Path(),
     help="Directory for output.",
 )
-def quick(input_paths: tuple[str, ...], output_dir: str) -> None:
+@click.option(
+    "-l", "--language",
+    default="en",
+    show_default=True,
+    type=click.Choice(["en", "vi"]),
+    help="Language of the input data.",
+)
+@click.option(
+    "--llm/--no-llm",
+    default=False,
+    show_default=True,
+    help="Enable GraphGen-style joint entity/relation extraction with DeepSeek.",
+)
+def quick(
+    input_paths: tuple[str, ...],
+    output_dir: str,
+    language: str,
+    llm: bool,
+) -> None:
     """Run with sensible defaults — no config file needed."""
     from kg_generator.pipeline import Pipeline
 
-    config = PipelineConfig(input_paths=[Path(p) for p in input_paths])
-    pipeline = Pipeline(config, Path(output_dir))
-    pipeline.execute()
+    config = PipelineConfig(
+        input_paths=[Path(p) for p in input_paths],
+        language=Language(language),
+        use_llm=llm,
+    )
+    try:
+        pipeline = Pipeline(config, Path(output_dir))
+        pipeline.execute()
+    except RuntimeError as error:
+        raise click.ClickException(str(error)) from error
     click.echo(f"\n Done! Output written to {output_dir}")
 
 
@@ -160,6 +223,135 @@ def curate(
     except (FileExistsError, RuntimeError, ValueError) as error:
         raise click.ClickException(str(error)) from error
     click.echo(f"Curated dataset written to {output_dir}")
+
+
+@main.command("scrape")
+@click.option(
+    "--seed-file",
+    type=click.Path(exists=True),
+    help="Text file with URLs/domains/path-prefixes (one per line).",
+)
+@click.option(
+    "--seed-urls", "-u",
+    multiple=True,
+    help="Inline URLs/domains/path-prefixes (repeatable).",
+)
+@click.option(
+    "--discovery",
+    type=click.Choice(["exact", "sitemap", "crawl", "auto"]),
+    default="auto",
+    show_default=True,
+    help="URL discovery mode.",
+)
+@click.option(
+    "--path-prefix",
+    default=None,
+    help="Only collect URLs starting with this prefix.",
+)
+@click.option(
+    "--max-pages", "-n",
+    default=50,
+    show_default=True,
+    type=int,
+    help="Maximum pages to scrape.",
+)
+@click.option(
+    "--max-time", "-t",
+    default=600,
+    show_default=True,
+    type=int,
+    help="Maximum wall-clock seconds (0 = no limit).",
+)
+@click.option(
+    "--depth", "-d",
+    default=1,
+    show_default=True,
+    type=int,
+    help="Crawl link depth (0 = seed pages only).",
+)
+@click.option(
+    "--delay",
+    default=2.0,
+    show_default=True,
+    type=float,
+    help="Delay between requests in seconds.",
+)
+@click.option(
+    "--output", "-o",
+    "output_dir",
+    default="./data/scraped/vn_web_default",
+    type=click.Path(),
+    show_default=True,
+    help="Output directory for JSONL + manifest + audit.",
+)
+@click.option(
+    "--language", "-l",
+    default="vi",
+    type=click.Choice(["en", "vi"]),
+    show_default=True,
+    help="Content language.",
+)
+@click.option("--dataset-name", default="vietnamese-web-corpus", help="Dataset name for manifest.")
+@click.option("--version", default="v1", help="Dataset version.")
+@click.option("--license", "license_str", default="Public / Legally Published Exception", help="License string.")
+@click.option("--contact-info", default="info@yourdomain.vn", help="Contact for User-Agent.")
+@click.option("--bot-name", default="VN-LLM-Data-Collector/1.0", help="Bot name for User-Agent.")
+def scrape(
+    seed_file: str | None,
+    seed_urls: tuple[str, ...],
+    discovery: str,
+    path_prefix: str | None,
+    max_pages: int,
+    max_time: int,
+    depth: int,
+    delay: float,
+    output_dir: str,
+    language: str,
+    dataset_name: str,
+    version: str,
+    license_str: str,
+    contact_info: str,
+    bot_name: str,
+) -> None:
+    """Scrape Vietnamese web sources for LLM dataset collection.
+
+    Discovers pages via sitemap or controlled crawl, respecting robots.txt
+    and rate limits. Outputs pipeline-ready JSONL with provenance audit trail.
+    """
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    output = Path(output_dir)
+    cmd = [
+        sys.executable,
+        str(Path(__file__).resolve().parent.parent.parent / "data" / "download_data" / "scraper.py"),
+        "--output", str(output),
+        "--discovery", discovery,
+        "--max-pages", str(max_pages),
+        "--max-time", str(max_time),
+        "--depth", str(depth),
+        "--delay", str(delay),
+        "--language", language,
+        "--dataset-name", dataset_name,
+        "--version", version,
+        "--license", license_str,
+        "--contact-info", contact_info,
+        "--bot-name", bot_name,
+    ]
+    if seed_file:
+        cmd.extend(["--seed-file", seed_file])
+    elif seed_urls:
+        cmd.extend(["--seed-urls", *seed_urls])
+    else:
+        raise click.UsageError("Either --seed-file or --seed-urls is required.")
+    if path_prefix:
+        cmd.extend(["--path-prefix", path_prefix])
+
+    try:
+        result = subprocess.run(cmd, check=True)
+    except subprocess.CalledProcessError as e:
+        raise click.ClickException(f"Scraper failed with exit code {e.returncode}") from e
 
 
 @main.command()
@@ -417,6 +609,162 @@ def neo4j_download(
 
     download_graph(output_path)
     click.echo(f"\n Done! Graph saved to {output_path}")
+
+
+@main.command("add-doc")
+@click.option(
+    "-i", "--input",
+    "input_paths",
+    multiple=True,
+    required=True,
+    type=click.Path(exists=True),
+    help="Input file(s) to incrementally add to the Neo4j knowledge graph.",
+)
+@click.option(
+    "-c", "--config",
+    "config_path",
+    type=click.Path(exists=True),
+    help="Path to a YAML pipeline configuration file.",
+)
+@click.option(
+    "-o", "--output",
+    "output_dir",
+    default="./output",
+    type=click.Path(),
+    help="Directory for output artifacts (metrics only).",
+)
+@click.option(
+    "-l", "--language",
+    default="en",
+    type=click.Choice(["en", "vi"]),
+    help="Language of the input data.",
+)
+@click.option(
+    "--llm/--no-llm",
+    default=None,
+    help="Enable GraphGen-style joint entity/relation extraction with DeepSeek.",
+)
+@click.option(
+    "--uri",
+    default=None,
+    help="Neo4j connection URI (default: $NEO4J_URI or bolt://localhost:7687).",
+)
+@click.option(
+    "--user",
+    default=None,
+    help="Neo4j username (default: $NEO4J_USER or neo4j).",
+)
+@click.option(
+    "--password",
+    default=None,
+    help="Neo4j password (default: $NEO4J_PASSWORD).",
+)
+def add_doc(
+    input_paths: tuple[str, ...],
+    config_path: str | None,
+    output_dir: str,
+    language: str,
+    llm: bool | None,
+    uri: str | None,
+    user: str | None,
+    password: str | None,
+) -> None:
+    """Incrementally add one or more documents to an existing Neo4j knowledge graph.
+
+    Only the new documents are processed — the existing graph is NOT rebuilt.
+    Entities from the new documents are resolved against existing Entity nodes
+    in Neo4j so that the same real-world entity is not duplicated.
+
+    Requires a running Neo4j instance.
+    """
+    import os
+
+    from kg_generator.pipeline import Pipeline
+
+    try:
+        from neo4j import GraphDatabase
+    except ImportError:
+        click.echo("Neo4j driver not installed. Run: uv pip install -e \".[neo4j]\"")
+        raise click.Abort()
+
+    config = load_config(Path(config_path) if config_path else None)
+    config.input_paths = [Path(p) for p in input_paths]
+    config.language = Language(language)
+    config.graph_backend = GraphBackend.NEO4J
+    if llm is not None:
+        config.use_llm = llm
+
+    uri = uri or os.getenv("NEO4J_URI", "bolt://localhost:7687")
+    user = user or os.getenv("NEO4J_USER", "neo4j")
+    password = password or os.getenv("NEO4J_PASSWORD", "")
+
+    driver = GraphDatabase.driver(uri, auth=(user, password))
+    pipeline = Pipeline(config, Path(output_dir))
+
+    with driver.session() as session:
+        metrics = pipeline.execute_neo4j(session, clear=False)
+
+    driver.close()
+
+    click.echo(
+        f"\n Done! Added {len(input_paths)} file(s) to Neo4j "
+        f"({metrics.get('num_nodes', 0)} total nodes, "
+        f"{metrics.get('num_edges', 0)} total edges)"
+    )
+
+
+@main.command("neo4j-clear")
+@click.option(
+    "--uri",
+    default=None,
+    help="Neo4j connection URI (default: $NEO4J_URI or bolt://localhost:7687).",
+)
+@click.option(
+    "--user",
+    default=None,
+    help="Neo4j username (default: $NEO4J_USER or neo4j).",
+)
+@click.option(
+    "--password",
+    default=None,
+    help="Neo4j password (default: $NEO4J_PASSWORD).",
+)
+@click.option(
+    "--yes",
+    is_flag=True,
+    help="Skip confirmation prompt.",
+)
+def neo4j_clear(
+    uri: str | None,
+    user: str | None,
+    password: str | None,
+    yes: bool,
+) -> None:
+    """Delete all nodes and relationships from Neo4j."""
+    import os
+
+    try:
+        from neo4j import GraphDatabase
+    except ImportError:
+        click.echo("Neo4j driver not installed. Run: uv pip install -e \".[neo4j]\"")
+        raise click.Abort()
+
+    if not yes:
+        click.confirm(
+            "This will DELETE all nodes and relationships in Neo4j. Continue?",
+            abort=True,
+        )
+
+    uri = uri or os.getenv("NEO4J_URI", "bolt://localhost:7687")
+    user = user or os.getenv("NEO4J_USER", "neo4j")
+    password = password or os.getenv("NEO4J_PASSWORD", "")
+
+    driver = GraphDatabase.driver(uri, auth=(user, password))
+    with driver.session() as session:
+        session.run("MATCH (n) DETACH DELETE n")
+    driver.close()
+
+    click.echo("Neo4j database cleared.")
 
 
 if __name__ == "__main__":

@@ -130,7 +130,7 @@ def _auto_plot_method1(output_dir: Path) -> None:
 # Method 1: SFT Data Quality Assessment
 # ═══════════════════════════════════════════════════════════════
 
-def run_method1(kg_path: Path, config: dict[str, Any], output_base: Path) -> dict[str, Any]:
+def run_method1(kg_path: Path, config: dict[str, Any], output_base: Path, neo4j: bool = False) -> dict[str, Any]:
     """Run Method 1: SFT Data Quality Assessment."""
     m1_config = config.get("method1", {})
     output_dir = output_base / "method1"
@@ -140,12 +140,63 @@ def run_method1(kg_path: Path, config: dict[str, Any], output_base: Path) -> dic
     logger.info("METHOD 1: SFT Data Quality Assessment")
     logger.info("=" * 60)
 
+    results: dict[str, Any] = {}
+
+    # ── Neo4j-native path ──────────────────────────────────
+    if neo4j:
+        import os
+        from dotenv import load_dotenv
+        load_dotenv()
+        from neo4j import GraphDatabase
+        from evaluation.data_eval.neo4j_auditor import Neo4jStructuralAuditor
+
+        uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+        user = os.getenv("NEO4J_USER", "neo4j")
+        password = os.getenv("NEO4J_PASSWORD", "")
+
+        driver = GraphDatabase.driver(uri, auth=(user, password))
+        with driver.session() as session:
+            logger.info("Connected to Neo4j at %s", uri)
+
+            # Step 1.1: Structural Audit (direct Neo4j queries — no RAM limit)
+            logger.info("\n--- Step 1.1: Structural Audit (Neo4j-native) ---")
+            audit_config = m1_config.get("structural_audit", {})
+            auditor = Neo4jStructuralAuditor(
+                session,
+                entity_dedup_threshold=audit_config.get("entity_dedup_threshold", 0.85),
+            )
+            audit_report = auditor.audit()
+        driver.close()
+
+        results["structural_audit"] = audit_report
+
+        audit_path = output_dir / "structural_audit.json"
+        with open(audit_path, "w") as f:
+            json.dump(audit_report, f, indent=2)
+        logger.info("Structural audit saved → %s", audit_path)
+        logger.info("Overall health score: %.1f/100 — %s",
+                     audit_report["overall_health_score"], audit_report["verdict"])
+
+        # Steps 1.2–1.4 require full graph in RAM — skipped in Neo4j mode
+        logger.info("Steps 1.2–1.4 (SFT generation, evaluation, coverage) skipped "
+                     "in --neo4j mode (require full graph in RAM).")
+
+        # Save combined results
+        combined_path = output_dir / "method1_results.json"
+        with open(combined_path, "w") as f:
+            json.dump(results, f, indent=2)
+        logger.info("Method 1 (Neo4j audit) complete → %s", combined_path)
+
+        # ── Auto-generate plots ──────────────────────────
+        _auto_plot_method1(output_dir)
+        return results
+
+    # ── Original JSON path (unchanged) ────────────────────
+
     # Load KG
     graph, entities, triples = load_kg_for_audit(kg_path)
     logger.info("Loaded KG: %d nodes, %d edges, %d triples",
                  graph.number_of_nodes(), graph.number_of_edges(), len(triples))
-
-    results: dict[str, Any] = {}
 
     # Step 1.1: Structural Audit
     logger.info("\n--- Step 1.1: Structural Audit ---")
@@ -742,10 +793,16 @@ Examples:
         default="cpu",
         help="Device for fine-tuning: cpu (default), cuda, or auto",
     )
+    parser.add_argument(
+        "--neo4j",
+        action="store_true",
+        help="Run structural audit directly against Neo4j (no JSON download, no RAM limit). "
+             "Uses NEO4J_URI/NEO4J_USER/NEO4J_PASSWORD from .env.",
+    )
     args = parser.parse_args()
 
-    # Validate KG path
-    if not args.kg.exists():
+    # Validate KG path (skip when using --neo4j)
+    if not args.neo4j and not args.kg.exists():
         logger.error("KG file not found: %s", args.kg)
         logger.info("Run the pipeline first: kg-gen run -c configs/pipeline.yaml")
         sys.exit(1)
@@ -764,7 +821,7 @@ Examples:
 
     if args.method in ("1", "all"):
         try:
-            run_method1(args.kg, config, output_base)
+            run_method1(args.kg, config, output_base, neo4j=args.neo4j)
         except Exception as e:
             logger.error("Method 1 failed: %s", e, exc_info=True)
 

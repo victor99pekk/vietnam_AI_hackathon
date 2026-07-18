@@ -14,9 +14,13 @@ from kg_generator.extract.entities import Entity
 from kg_generator.extract.graphgen_prompts import (
     COMPLETION_DELIMITER,
     CONTINUE_PROMPT,
+    CONTINUE_PROMPT_VI,
     FIGURE_8_TEMPLATE,
+    FIGURE_8_VI_TEMPLATE,
     FIGURE_9_SUMMARIZATION_TEMPLATE,
+    FIGURE_9_SUMMARIZATION_TEMPLATE_VI,
     IF_LOOP_PROMPT,
+    IF_LOOP_PROMPT_VI,
     RECORD_DELIMITER,
     TUPLE_DELIMITER,
 )
@@ -32,7 +36,7 @@ class GraphGenExtractor:
     only the neutral carrier label required by our tuple/Neo4j representation.
     """
 
-    prompt_version = "graphgen-figure8-figure9-v1"
+    prompt_version = "graphgen-figure8-figure9-v2"
 
     def __init__(
         self,
@@ -63,7 +67,12 @@ class GraphGenExtractor:
         if not text.strip():
             return [], []
 
-        prompt = FIGURE_8_TEMPLATE.format(
+        prompt_template = (
+            FIGURE_8_VI_TEMPLATE
+            if self.language == Language.VIETNAMESE
+            else FIGURE_8_TEMPLATE
+        )
+        prompt = prompt_template.format(
             output_language=self.output_language,
             entity_types=", ".join(entity_type.lower() for entity_type in self.entity_types),
             tuple_delimiter=TUPLE_DELIMITER,
@@ -80,19 +89,40 @@ class GraphGenExtractor:
 
         for _ in range(self.max_gleanings):
             if_loop = self._generate(
-                [*history, {"role": "user", "content": IF_LOOP_PROMPT}],
+                [
+                    *history,
+                    {
+                        "role": "user",
+                        "content": IF_LOOP_PROMPT_VI
+                        if self.language == Language.VIETNAMESE
+                        else IF_LOOP_PROMPT,
+                    },
+                ],
                 max_tokens=64,
             )
             if if_loop.strip().strip('"').strip("'").casefold() != "yes":
                 break
 
             glean = self._generate(
-                [*history, {"role": "user", "content": CONTINUE_PROMPT}]
+                [
+                    *history,
+                    {
+                        "role": "user",
+                        "content": CONTINUE_PROMPT_VI
+                        if self.language == Language.VIETNAMESE
+                        else CONTINUE_PROMPT,
+                    },
+                ]
             )
             final_result += f"{RECORD_DELIMITER}{glean}"
             history.extend(
                 [
-                    {"role": "user", "content": CONTINUE_PROMPT},
+                    {
+                        "role": "user",
+                        "content": CONTINUE_PROMPT_VI
+                        if self.language == Language.VIETNAMESE
+                        else CONTINUE_PROMPT,
+                    },
                     {"role": "assistant", "content": glean},
                 ]
             )
@@ -280,7 +310,12 @@ class GraphGenExtractor:
         if len(unique) == 1:
             return unique[0]
 
-        prompt = FIGURE_9_SUMMARIZATION_TEMPLATE.format(
+        summary_template = (
+            FIGURE_9_SUMMARIZATION_TEMPLATE_VI
+            if self.language == Language.VIETNAMESE
+            else FIGURE_9_SUMMARIZATION_TEMPLATE
+        )
+        prompt = summary_template.format(
             output_language=self.output_language,
             name=name,
             description_list=unique,
