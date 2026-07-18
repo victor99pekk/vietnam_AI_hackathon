@@ -28,7 +28,10 @@ DEMO_TEXT = (
 )
 
 app = FastAPI(title="AI Việt Knowledge Graph Demo", version="0.1.0")
-DEMO_DIR = Path(__file__).resolve().parents[2] / "demo"
+_SOURCE_DEMO_DIR = Path(__file__).resolve().parents[2] / "demo"
+DEMO_DIR = Path(os.getenv("KG_DEMO_DIR", "/app/demo"))
+if not DEMO_DIR.exists():
+    DEMO_DIR = _SOURCE_DEMO_DIR
 
 
 class PipelineRequest(BaseModel):
@@ -46,6 +49,12 @@ class PipelineRequest(BaseModel):
 
 @app.get("/healthz")
 def healthz() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@app.get("/api/healthz")
+def api_healthz() -> dict[str, str]:
+    """Public health route; /healthz may be reserved by hosting infrastructure."""
     return {"status": "ok"}
 
 

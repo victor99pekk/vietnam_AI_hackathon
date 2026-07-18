@@ -3,7 +3,7 @@
 This is the first presentation surface for the knowledge-graph pipeline. It
 leaves the legacy `Html/` pages untouched and talks to the same-origin API:
 
-- `GET /healthz`
+- `GET /api/healthz`
 - `GET /api/demo/sample`
 - `POST /api/pipeline/run`
 

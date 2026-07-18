@@ -10,6 +10,9 @@ def test_healthz():
     response = client.get("/healthz")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+    response = client.get("/api/healthz")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
 
 
 def test_demo_sample():
