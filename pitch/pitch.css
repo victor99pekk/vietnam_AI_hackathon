@@ -1,0 +1,185 @@
+/* ============================================================
+   Vietnamese KG Pitch Deck — Clean & Minimal
+   White background, black text
+   ============================================================ */
+
+:root {
+  --fg: #111;
+  --muted: #555;
+  --accent: #2563eb;
+  --accent-light: #dbeafe;
+  --border: #e5e5e5;
+  --surface: #f9fafb;
+  --font: 'Inter', system-ui, sans-serif;
+  --transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #fff;
+  color: var(--fg);
+  font-family: var(--font);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ---- slide counter ---- */
+.slide-counter {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  z-index: 100;
+  font-size: 13px;
+  color: #bbb;
+  letter-spacing: 0.04em;
+}
+
+/* ---- deck & slides ---- */
+.deck {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+.slide.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.slide-inner {
+  width: 90vw;
+  max-width: 800px;
+  text-align: center;
+  padding: 40px;
+}
+
+/* ---- title slide ---- */
+.title-main {
+  font: 800 clamp(32px, 5vw, 48px) / 1.1 var(--font);
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+
+.title-sub {
+  font-size: 18px;
+  color: var(--muted);
+  line-height: 1.4;
+  max-width: 620px;
+  margin: 0 auto 24px;
+}
+
+.title-small {
+  font-size: 12px;
+  color: #bbb;
+}
+
+/* ---- generic slide layouts ---- */
+.slide-headline {
+  font: 700 clamp(28px, 4vw, 42px) / 1.15 var(--font);
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
+}
+
+.slide-body {
+  font-size: 17px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto 16px;
+}
+
+.slide-subhead {
+  font: 600 15px var(--font);
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* ---- grid: two cards side by side ---- */
+.card-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 700px;
+  margin: 24px auto 0;
+  text-align: left;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 24px;
+}
+
+.card h3 {
+  font: 600 17px var(--font);
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ---- grid: three cards ---- */
+.card-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  max-width: 750px;
+  margin: 24px auto 0;
+  text-align: left;
+}
+
+/* ---- bullet list ---- */
+.bullet-list {
+  list-style: none;
+  text-align: left;
+  max-width: 600px;
+  margin: 20px auto 0;
+}
+.bullet-list li {
+  font-size: 16px;
+  color: var(--muted);
+  padding: 8px 0 8px 24px;
+  position: relative;
+  line-height: 1.5;
+}
+.bullet-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 16px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* ---- inline accent ---- */
+.accent { color: var(--accent); }
+
+/* ---- responsive ---- */
+@media (max-width: 600px) {
+  .card-grid-2,
+  .card-grid-3 { grid-template-columns: 1fr; }
+  .slide-inner { padding: 20px; }
+}

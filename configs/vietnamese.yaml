@@ -1,6 +1,8 @@
-# Vietnamese core KG pipeline.
-# GraphGen quality path: kg-gen run -c configs/vietnamese.yaml
-# Offline path:          kg-gen run -c configs/vietnamese.yaml --no-llm
+# Vietnamese KG pipeline — optimized for best extraction quality.
+#
+# Fast path (no LLM):  kg-gen run -c configs/vietnamese.yaml --no-llm
+# Full quality path:   kg-gen run -c configs/vietnamese.yaml
+# Add to Neo4j:        kg-gen run ... && kg-gen neo4j-upload -o generated_KGs/output_vi
 
 pipeline:
   language: vi
@@ -11,26 +13,35 @@ pipeline:
   file_formats:
     - jsonl
 
-  # Balanced demo defaults. Override methods from the CLI or use the fast and
-  # quality presets next to this file.
+  # ── Chunking ──────────────────────────────────────────
+  # Vietnamese words are short (avg 1-2 syllables). Bump token target so
+  # chunks carry enough semantic context for relation extraction.
   chunking:
-    method: sentence              # none | fixed | sentence | semantic
-    target_tokens: 450
-    overlap_tokens: 60
+    method: sentence
+    target_tokens: 600
+    overlap_tokens: 80
 
+  # ── Quality ───────────────────────────────────────────
   quality:
-    method: heuristic             # none | heuristic
+    method: heuristic
 
+  # ── Deduplication ─────────────────────────────────────
+  # Lower thresholds than English — Vietnamese diacritics (dấu) create
+  # surface variance that should NOT count as different documents.
+  # Layered: exact hash → MinHash → semantic (BGE-M3, best multilingual).
   deduplication:
-    document_method: minhash      # none | exact | minhash | simhash | ngram | semantic | layered
-    document_threshold: 0.85
+    document_method: layered
+    document_threshold: 0.80
     chunk_method: minhash
-    chunk_threshold: 0.85
-    semantic_threshold: 0.92
-    embedding_model: paraphrase-multilingual-MiniLM-L12-v2
+    chunk_threshold: 0.80
+    semantic_threshold: 0.88
+    embedding_model: BAAI/bge-m3
 
+  # ── Extraction ────────────────────────────────────────
+  # GraphGen (DeepSeek) is the only reliable option for Vietnamese NER.
+  # 3 gleanings catches entities missed in the first pass.
   extraction:
-    method: graphgen              # offline | graphgen
+    method: graphgen
     model: deepseek-v4-pro
     max_gleanings: 3
     entity_types:
@@ -49,11 +60,17 @@ pipeline:
       - mission
       - gene
 
+  # ── Entity Resolution ─────────────────────────────────
+  # Embedding-based — handles Vietnamese name variations with diacritics
+  # better than string similarity (e.g., "Nguyễn Văn A" ≈ "Nguyen Van A").
   resolution:
-    method: string                # string | embedding
+    method: embedding
     threshold: 0.85
+    embedding_model: paraphrase-multilingual-MiniLM-L12-v2
 
+  # ── Export ────────────────────────────────────────────
   export_formats:
     - json
     - graphml
     - neo4j_csv
+

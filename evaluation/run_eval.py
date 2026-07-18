@@ -43,7 +43,7 @@ if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
 from evaluation.data_eval.structural_audit import StructuralAuditor, load_kg_for_audit
-from evaluation.data_eval.sft_generator import SFTGenerator, TemplateSFTGenerator
+from evaluation.data_eval.sft_generator import SFTGenerator
 from evaluation.data_eval.sft_evaluator import SFTEvaluator
 from evaluation.model_eval.dataset_gen import (
     QADatasetGenerator,
@@ -223,37 +223,19 @@ def run_method1(kg_path: Path, config: dict[str, Any], output_base: Path, neo4j:
     logger.info("\n--- Step 1.2: SFT Data Generation ---")
     gen_config = m1_config.get("sft_generation", {})
 
-    # Try LLM-powered generation first, fall back to template-based
-    use_llm = gen_config.get("llm_model", "") != "" and _check_api_key()
-    if use_llm:
-        logger.info("Using LLM-powered SFT generation (%s)", gen_config.get("llm_model"))
-        generator = SFTGenerator(
-            model=gen_config.get("llm_model", "deepseek-chat"),
-            provider=gen_config.get("llm_provider", "deepseek"),
-            num_samples=gen_config.get("num_samples", 50),
-            hop_distribution=tuple(gen_config.get("hop_distribution", [0.3, 0.4, 0.3])),
-            temperature=gen_config.get("temperature", 0.7),
-            max_tokens=gen_config.get("max_tokens", 512),
-            seed=config.get("common", {}).get("seed", 42),
-        )
-    else:
-        logger.info("No API key found — using template-based SFT generation")
-        generator = TemplateSFTGenerator(
-            seed=config.get("common", {}).get("seed", 42),
-        )
-        # Adjust interface for template generator
-        sft_path = generator.generate(graph, triples, output_dir,
-                                       num_samples=gen_config.get("num_samples", 50))
-        results["sft_generation"] = {"path": str(sft_path), "method": "template"}
-        sft_file = sft_path
-        logger.info("Template SFT pairs saved → %s", sft_path)
-        # Skip to Step 1.3 directly
-        pass
-
-    if use_llm:
-        sft_path = generator.generate(graph, triples, output_dir)
-        results["sft_generation"] = {"path": str(sft_path), "method": "llm"}
-        sft_file = sft_path
+    logger.info("Using LLM-powered SFT generation (%s)", gen_config.get("llm_model"))
+    generator = SFTGenerator(
+        model=gen_config.get("llm_model", "deepseek-chat"),
+        provider=gen_config.get("llm_provider", "deepseek"),
+        num_samples=gen_config.get("num_samples", 50),
+        hop_distribution=tuple(gen_config.get("hop_distribution", [0.3, 0.4, 0.3])),
+        temperature=gen_config.get("temperature", 0.7),
+        max_tokens=gen_config.get("max_tokens", 512),
+        seed=config.get("common", {}).get("seed", 42),
+    )
+    sft_path = generator.generate(graph, triples, output_dir)
+    results["sft_generation"] = {"path": str(sft_path), "method": "llm"}
+    sft_file = sft_path
 
     # Step 1.3: SFT Quality Evaluation
     logger.info("\n--- Step 1.3: SFT Quality Evaluation ---")
@@ -407,6 +389,7 @@ def run_method2(
 
         # Generate KG-Managed QA pairs (Model B)
         qa_gen = QADatasetGenerator(
+            language=gen_config.get("language", "en"),
             seed=common_config.get("seed", 42),
             max_hops=gen_config.get("max_hops", 3),
             test_split=gen_config.get("test_split", 0.2),
@@ -848,14 +831,6 @@ Examples:
             logger.error("GraphGen method failed: %s", e, exc_info=True)
 
     logger.info("\n✅ Evaluation pipeline complete. Results in: %s", output_base)
-
-
-def _check_api_key() -> bool:
-    """Check if the DeepSeek API key is available."""
-    import os
-    from dotenv import load_dotenv
-    load_dotenv()
-    return bool(os.getenv("DEEPSEEK_API_KEY"))
 
 
 if __name__ == "__main__":

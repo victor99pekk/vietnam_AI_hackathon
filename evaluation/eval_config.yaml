@@ -91,6 +91,8 @@ method2:
 
   # Dataset generation
   dataset_gen:
+    # Language for QA templates: "en" | "vi"
+    language: en
     test_split: 0.2
     max_hops: 3
     # Token volume matching: cap raw-text dataset to KG dataset size

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Standardization of knowledge graphs generation for Vietnamese LLM training</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="pitch.css" />
+</head>
+<body>
+
+  <!-- Slide counter -->
+  <div class="slide-counter" id="slideCounter">1</div>
+
+  <main class="deck" id="deck">
+
+    <!-- ===== SLIDE 0: TITLE ===== -->
+    <section class="slide active" data-slide="0">
+      <div class="slide-inner">
+        <h1 class="title-main">Standardization of knowledge graphs generation for Vietnamese LLM training</h1>
+        <p class="title-sub">A clean, evidence-first pipeline for Vietnamese dataset curation.</p>
+        <p class="title-small">← → arrows or scroll to navigate</p>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 1: WHY LLMS & VIETNAMESE SPECIALIZATION ===== -->
+    <section class="slide" data-slide="1">
+      <div class="slide-inner">
+        <p class="slide-subhead">Why LLMs + Vietnamese</p>
+        <h2 class="slide-headline">Powerful Models Need Native Vietnamese Understanding</h2>
+        <ul class="bullet-list">
+          <li>The Power of LLMs: They serve as an adaptable operating system for human knowledge, scaling the ability to analyze, reason, and communicate instantly.</li>
+          <li>Cultural Precision: Native models naturally master Vietnam's complex tonal language and cultural nuances without losing meaning in translation.</li>
+          <li>Data Sovereignty: Keeping AI infrastructure local ensures sensitive citizen, corporate, and government data never leaves national borders.</li>
+          <li>Tech Autonomy: Owning the technology eliminates risky dependencies on foreign tech giants, pricing spikes, and geopolitical shifts.</li>
+          <li>Economic Boost: Tailored models can be directly optimized to accelerate local industries and power highly efficient public administration tools.</li>
+        </ul>
+        <p class="slide-body">Conclusion: LLMs are powerful, but to make them truly useful for Vietnamese users, they must be trained on Vietnamese language and cultural data — that’s the motivation for our project.</p>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 2: WHY VIETNAMESE DATA IS NEEDED ===== -->
+    <section class="slide" data-slide="2">
+      <div class="slide-inner">
+        <p class="slide-subhead">Data Necessity</p>
+        <h2 class="slide-headline">Vietnamese Data: An Urgent Need</h2>
+        <ul class="bullet-list">
+          <li>Language fidelity: Only native Vietnamese corpora capture idioms, dialects, and cultural references accurately.</li>
+          <li>Cultural competence: Models trained on other languages miss local norms, values, and contextual meaning.</li>
+          <li>Equity & inclusion: People in smaller-language countries deserve models optimized for their language and experiences.</li>
+          <li>Practical impact: Healthcare, legal, education and public services perform better with localized knowledge.</li>
+          <li>Research sovereignty: Building local datasets reduces dependence on externally curated data and biased sources.</li>
+        </ul>
+        <p class="slide-body"><strong>Why we built this:</strong> We thought this project was both fun and crucial — creating a high-quality Vietnamese knowledge base enables fairer, more accurate LLMs that truly serve Vietnamese speakers rather than forcing them to rely on systems optimized for other languages.</p>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 4: TRAINING STAGES ===== -->
+    <section class="slide" data-slide="4">
+      <div class="slide-inner">
+        <p class="slide-subhead">Training Stages</p>
+        <h2 class="slide-headline">What data is needed in LLM training?</h2>
+        <ul class="bullet-list">
+          <li><strong>Pretraining:</strong> Massive, diverse, mostly unlabelled corpora — web text, books, articles, multilingual content to learn general language patterns.</li>
+          <li><strong>Fine-tuning:</strong> Curated, high-quality Vietnamese datasets — instruction-following examples, aligned QA pairs, domain-specific documents, and safety-aligned samples.</li>
+        </ul>
+        <p class="slide-body">Both stages require different mixes of scale and quality — pretraining needs breadth, fine-tuning needs depth and correctness. That means a training pipeline must supply large volumes of Vietnamese text plus smaller, verified, high-quality datasets with provenance.</p>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 5: OUR APPROACH ===== -->
+    <section class="slide" data-slide="5">
+      <div class="slide-inner">
+        <p class="slide-subhead">Our Approach</p>
+        <h2 class="slide-headline">Knowledge Graphs as a Foundation</h2>
+        <ul class="bullet-list">
+          <li>Structured facts with provenance: Triples link entities to evidence sentences and source documents.</li>
+          <li>High-quality curated data: KG triples produce verified, de-duplicated records ideal for fine-tuning and evaluation.</li>
+          <li>Augmentation for pretraining: Serialized KG content and generated narratives increase high-quality Vietnamese coverage.</li>
+          <li>RAG-ready exports: KG-backed retrieval provides grounded context during inference, improving factuality and cultural sensitivity.</li>
+          <li>Interoperability: Exports to JSONL, GraphML, Neo4j CSV let teams plug KG data directly into training and evaluation pipelines.</li>
+        </ul>
+        <p class="slide-body">In short: Knowledge graphs give us provenance-rich, high-precision Vietnamese data for fine-tuning and evaluation, while also enabling augmentation and retrieval strategies that improve pretraining coverage and runtime accuracy.</p>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 6: KG CHARACTERISTICS ===== -->
+    <section class="slide" data-slide="6">
+      <div class="slide-inner">
+        <p class="slide-subhead">KG Characteristics</p>
+        <h2 class="slide-headline">What We Focused On</h2>
+        <ul class="bullet-list">
+          <li><strong>Scalability:</strong> We store the graph in a graph database (Neo4j) to support growing nodes and relations.</li>
+          <li><strong>High-quality data:</strong> We evaluate with metrics (completeness, consistency, duplication rate, factual grounding) and compare fine-tuning LLMs with KG data vs without KG vs no fine-tuning.</li>
+          <li><strong>Data preservation:</strong> We keep historical versions of source documents while evolving the KG by iteratively adding nodes and evidence.</li>
+          <li><strong>Continuous expansion:</strong> We built a legal domain scraper to feed more domain-specific text — LLMs are data-hungry and benefit from continuous ingestion.</li>
+        </ul>
+        <p class="slide-body">These characteristics ensure the KG is robust, auditable, and ready to drive both model training and runtime retrieval strategies.</p>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 7: PIPELINE ARCHITECTURE ===== -->
+    <section class="slide" data-slide="7">
+      <div class="slide-inner">
+        <p class="slide-subhead">Pipeline</p>
+        <h2 class="slide-headline">Overall Pipeline Architecture</h2>
+        <ul class="bullet-list">
+          <li><strong>Ingest:</strong> Collect TXT/JSON/JSONL/HTML, normalize encoding and whitespace.</li>
+          <li><strong>Chunk & Clean:</strong> Sentence or semantic chunking, noise removal, language detection.</li>
+          <li><strong>Deduplication & QA:</strong> Exact, MinHash/SimHash, semantic layers; quality scoring per chunk.</li>
+          <li><strong>Extraction:</strong> NER + relation extraction (spaCy rules or LLM prompts) to produce triples.</li>
+          <li><strong>Entity Resolution:</strong> Embedding similarity and canonicalization across documents.</li>
+          <li><strong>Graph Build & Validation:</strong> Construct triples, validate against ontology, attach provenance.</li>
+          <li><strong>Evaluate & Export:</strong> Compute quality metrics, export JSONL/GraphML/Neo4j CSV, and prepare RAG indexes.</li>
+          <li><strong>Continuous Loop:</strong> Scrapers and manual curation feed new data; versioning preserves history while KG grows.</li>
+        </ul>
+        <p class="slide-body">This modular pipeline supports both large-scale pretraining augmentation and fine-grained curated datasets for fine-tuning and evaluation.</p>
+      </div>
+    </section>
+
+  </main>
+  <script src="pitch.js"></script>
+</body>
+</html>

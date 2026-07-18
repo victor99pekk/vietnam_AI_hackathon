@@ -65,7 +65,22 @@ DEFAULT_MAX_TIME = 600  # 10 minutes
 DEFAULT_DEPTH = 1
 DEFAULT_LANGUAGE = "vi"
 DEFAULT_DISCOVERY = "auto"
+DEFAULT_SITEMAP_TIMEOUT = 30  # seconds before giving up on sitemap
 DEFAULT_LICENSE = "Public / Legally Published Exception (Article 37a/Decree 134)"
+
+# Article URL patterns — only crawl paths matching these regexes.
+# Empty list means accept all same-domain paths.
+_ARTICLE_PATTERNS: dict[str, str] = {
+    # tuoitre.vn: article detail pages have section/slug.htm structure
+    # e.g. /kinh-doanh/gia-vang-sjc-tang-20260718.htm
+    # Section-only pages like /kinh-doanh.htm are skipped
+    "tuoitre.vn": r"/[a-z-]+/[a-z0-9-]+\.htm$",
+    # vnexpress.net: article URLs end with -NNNNNNN.html (numeric ID)
+    # Also matches /tin-tuc-24h which is their news feed
+    "vnexpress.net": r"/(?:tin-tuc-24h|[a-z-]+/[a-z0-9-]+-\d+\.html)",
+    # mof.gov.vn: any path with content
+    "mof.gov.vn": r"/(?:tin-tuc|van-ban|thong-tin|hoi-dap|.*)",
+}
 
 
 # ---------------------------------------------------------------------------
@@ -77,10 +92,12 @@ def discover_via_sitemap(
     path_prefix: str | None,
     rp: RobotFileParser,
     max_pages: int,
+    timeout: int = DEFAULT_SITEMAP_TIMEOUT,
 ) -> list[str]:
     """Discover URLs from /sitemap.xml and /sitemap_index.xml, filtered by path_prefix.
 
     Respects robots.txt for each discovered URL before returning it.
+    Has a hard timeout to prevent hanging on massive sitemaps.
     """
     parsed = urlparse(base_url)
     domain = f"{parsed.scheme}://{parsed.netloc}"
@@ -88,15 +105,22 @@ def discover_via_sitemap(
 
     # Check robots.txt for sitemap references first
     sitemaps = rp.site_maps() or []
+
+    start = time.monotonic()
     for sm_url in sitemaps:
-        _collect_from_sitemap(sm_url, domain, path_prefix, rp, found, max_pages)
+        if time.monotonic() - start > timeout:
+            logger.warning(f"Sitemap discovery timed out after {timeout}s for {domain}")
+            break
+        _collect_from_sitemap(sm_url, domain, path_prefix, rp, found, max_pages, timeout)
         if len(found) >= max_pages:
             break
 
-    # Fallback: try the standard location
+    # Fallback: try the standard location (with tight timeout)
     if not found and not sitemaps:
         for candidate in (f"{domain}/sitemap.xml", f"{domain}/sitemap_index.xml"):
-            _collect_from_sitemap(candidate, domain, path_prefix, rp, found, max_pages)
+            if time.monotonic() - start > timeout:
+                break
+            _collect_from_sitemap(candidate, domain, path_prefix, rp, found, max_pages, timeout)
             if found:
                 break
 
@@ -111,8 +135,14 @@ def _collect_from_sitemap(
     rp: RobotFileParser,
     found: list[str],
     max_pages: int,
+    timeout: int = DEFAULT_SITEMAP_TIMEOUT,
+    _start: float | None = None,
 ) -> None:
     """Parse a single sitemap (or sitemap index) and add matching URLs."""
+    if _start is None:
+        _start = time.monotonic()
+    if time.monotonic() - _start > timeout:
+        return
     try:
         resp = requests.get(sm_url, timeout=15)
         if resp.status_code != 200:
@@ -120,19 +150,21 @@ def _collect_from_sitemap(
         soup = BeautifulSoup(resp.content, "xml")
 
         # Handle sitemap index (recursively)
+        if time.monotonic() - _start > timeout:
+            return
         sitemap_tags = soup.find_all("sitemap")
         if sitemap_tags:
             for sm in sitemap_tags:
-                if len(found) >= max_pages:
+                if len(found) >= max_pages or time.monotonic() - _start > timeout:
                     return
                 loc = sm.find("loc")
                 if loc and loc.text:
-                    _collect_from_sitemap(loc.text.strip(), domain, path_prefix, rp, found, max_pages)
+                    _collect_from_sitemap(loc.text.strip(), domain, path_prefix, rp, found, max_pages, timeout, _start)
             return
 
         # Regular sitemap: collect <url><loc> entries
         for url_tag in soup.find_all("url"):
-            if len(found) >= max_pages:
+            if len(found) >= max_pages or time.monotonic() - _start > timeout:
                 return
             loc = url_tag.find("loc")
             if not loc or not loc.text:
@@ -157,9 +189,24 @@ def discover_via_crawl(
     delay: float,
     headers: dict[str, str],
 ) -> list[str]:
-    """Breadth-first crawl: follow <a href> links within the same domain."""
+    """Breadth-first crawl: follow <a href> links within the same domain.
+
+    Filters discovered URLs against _ARTICLE_PATTERNS if a pattern is defined
+    for the domain. This prevents wasting page quota on section listings,
+    navigation pages, and other non-content URLs.
+    """
     parsed = urlparse(seed_url)
-    domain = f"{parsed.scheme}://{parsed.netloc}"
+    domain_url = f"{parsed.scheme}://{parsed.netloc}"
+    domain_name = parsed.netloc.lower()
+
+    # Check if we have an article pattern for this domain
+    article_pattern: re.Pattern[str] | None = None
+    for key, pat in _ARTICLE_PATTERNS.items():
+        if key in domain_name:
+            article_pattern = re.compile(pat)
+            logger.info(f"Using article URL pattern for {domain_name}: {pat}")
+            break
+
     visited: set[str] = set()
     to_visit: list[tuple[str, int]] = [(seed_url, 0)]
     found: list[str] = []
@@ -182,6 +229,12 @@ def discover_via_crawl(
         # Robots.txt check
         if not rp.can_fetch(DEFAULT_BOT_NAME, url) or not rp.can_fetch("*", url):
             logger.debug(f"Skipping {url} — blocked by robots.txt")
+            continue
+
+        # Article pattern filter: if we have a pattern, skip non-matching URLs
+        # Exception: always accept the seed URL (depth 0)
+        if article_pattern and depth > 0 and not article_pattern.search(url):
+            logger.debug(f"Skipping {url} — doesn't match article pattern")
             continue
 
         found.append(url)

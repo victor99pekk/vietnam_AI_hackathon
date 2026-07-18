@@ -6,10 +6,16 @@
 #
 # Lines starting with # are ignored.
 
+# VN Express — Vietnam's largest news site, clean RESTful URLs
+https://vnexpress.net
+
+# Tuoi Tre — major Vietnamese newspaper, SEO-friendly article URLs
+https://tuoitre.vn
+
 # Vietnam government open data portal
 https://data.gov.vn
 
-# Vietnam government news & press releases
+# Vietnam government news & press releases (ASP.NET — limited to depth=1 listings)
 https://chinhphu.vn
 
 # Vietnam Ministry of Finance — open economic data

@@ -10,7 +10,7 @@
 from evaluation.data_eval.metrics import QualityEvaluator
 from evaluation.data_eval.structural_audit import StructuralAuditor, load_kg_for_audit
 from evaluation.data_eval.neo4j_auditor import Neo4jStructuralAuditor
-from evaluation.data_eval.sft_generator import SFTGenerator, TemplateSFTGenerator
+from evaluation.data_eval.sft_generator import SFTGenerator
 from evaluation.data_eval.sft_evaluator import SFTEvaluator
 from evaluation.data_eval.coverage import (
     FactExtractor,
@@ -24,7 +24,6 @@ __all__ = [
     "Neo4jStructuralAuditor",
     "load_kg_for_audit",
     "SFTGenerator",
-    "TemplateSFTGenerator",
     "SFTEvaluator",
     "FactExtractor",
     "CoverageEvaluator",
