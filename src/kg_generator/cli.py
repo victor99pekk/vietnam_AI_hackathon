@@ -52,11 +52,41 @@ def main() -> None:
     help="Enable GraphGen-style joint entity/relation extraction with DeepSeek.",
 )
 @click.option(
+    "--chunk-method",
+    default=None,
+    type=click.Choice(["none", "fixed", "sentence", "semantic"]),
+    help="Override the configured chunking strategy.",
+)
+@click.option(
+    "--quality-method",
+    default=None,
+    type=click.Choice(["none", "heuristic"]),
+    help="Override the configured quality-filtering strategy.",
+)
+@click.option(
+    "--document-dedup-method",
+    default=None,
+    type=click.Choice(["none", "exact", "minhash", "simhash", "ngram", "semantic", "layered"]),
+    help="Override document-level deduplication.",
+)
+@click.option(
+    "--dedup-method",
+    default=None,
+    type=click.Choice(["none", "exact", "minhash", "simhash", "ngram", "semantic", "layered"]),
+    help="Override chunk-level deduplication.",
+)
+@click.option(
+    "--resolve-method",
+    default=None,
+    type=click.Choice(["string", "embedding"]),
+    help="Override the configured entity-resolution strategy.",
+)
+@click.option(
     "--backend",
     "backend",
-    default="networkx",
+    default=None,
     type=click.Choice(["networkx", "neo4j"]),
-    help="Graph backend: networkx (in-memory) or neo4j (on-disk, incremental-capable).",
+    help="Graph backend override: networkx (in-memory) or neo4j (on-disk).",
 )
 @click.option(
     "--clear",
@@ -69,7 +99,12 @@ def run(
     output_dir: str,
     language: str | None,
     llm: bool | None,
-    backend: str,
+    chunk_method: str | None,
+    quality_method: str | None,
+    document_dedup_method: str | None,
+    dedup_method: str | None,
+    resolve_method: str | None,
+    backend: str | None,
     clear: bool,
 ) -> None:
     """Run the full knowledge graph generation pipeline."""
@@ -83,11 +118,25 @@ def run(
         config.input_paths = [Path(p) for p in input_paths]
     if language is not None:
         config.language = Language(language)
-    config.graph_backend = GraphBackend(backend)
+    if backend is not None:
+        config.graph_backend = GraphBackend(backend)
     if llm is not None:
         config.use_llm = llm
+    if chunk_method is not None:
+        config.chunk_method = chunk_method
+    if quality_method is not None:
+        config.quality_method = quality_method
+    if document_dedup_method is not None:
+        config.document_dedup_method = document_dedup_method
+    if dedup_method is not None:
+        config.dedup_method = dedup_method
+    if resolve_method is not None:
+        config.resolve_method = resolve_method
 
-    pipeline = Pipeline(config, Path(output_dir))
+    try:
+        pipeline = Pipeline(config, Path(output_dir))
+    except (RuntimeError, ValueError) as error:
+        raise click.ClickException(str(error)) from error
 
     if config.graph_backend == GraphBackend.NEO4J:
         # ── Neo4j-backed path: direct-to-database ──
@@ -102,14 +151,21 @@ def run(
         password = os.getenv("NEO4J_PASSWORD", "")
 
         driver = GraphDatabase.driver(uri, auth=(user, password))
-        with driver.session() as session:
-            metrics = pipeline.execute_neo4j(session, clear=clear)
-        driver.close()
+        try:
+            with driver.session() as session:
+                metrics = pipeline.execute_neo4j(session, clear=clear)
+        except (RuntimeError, ValueError) as error:
+            raise click.ClickException(str(error)) from error
+        finally:
+            driver.close()
 
         click.echo(f"\n Done! Graph built in Neo4j ({metrics.get('num_nodes', 0)} nodes, {metrics.get('num_edges', 0)} edges)")
     else:
         # ── networkx path: in-memory build → export files ──
-        pipeline.execute()
+        try:
+            pipeline.execute()
+        except (RuntimeError, ValueError) as error:
+            raise click.ClickException(str(error)) from error
         click.echo(f"\n Done! Output written to {output_dir}")
 
 
@@ -142,11 +198,32 @@ def run(
     show_default=True,
     help="Enable GraphGen-style joint entity/relation extraction with DeepSeek.",
 )
+@click.option(
+    "--chunk-method",
+    default="fixed",
+    show_default=True,
+    type=click.Choice(["none", "fixed", "sentence", "semantic"]),
+)
+@click.option(
+    "--dedup-method",
+    default="minhash",
+    show_default=True,
+    type=click.Choice(["none", "exact", "minhash", "simhash", "ngram", "semantic", "layered"]),
+)
+@click.option(
+    "--resolve-method",
+    default="string",
+    show_default=True,
+    type=click.Choice(["string", "embedding"]),
+)
 def quick(
     input_paths: tuple[str, ...],
     output_dir: str,
     language: str,
     llm: bool,
+    chunk_method: str,
+    dedup_method: str,
+    resolve_method: str,
 ) -> None:
     """Run with sensible defaults — no config file needed."""
     from kg_generator.pipeline import Pipeline
@@ -155,11 +232,14 @@ def quick(
         input_paths=[Path(p) for p in input_paths],
         language=Language(language),
         use_llm=llm,
+        chunk_method=chunk_method,
+        dedup_method=dedup_method,
+        resolve_method=resolve_method,
     )
     try:
         pipeline = Pipeline(config, Path(output_dir))
         pipeline.execute()
-    except RuntimeError as error:
+    except (RuntimeError, ValueError) as error:
         raise click.ClickException(str(error)) from error
     click.echo(f"\n Done! Output written to {output_dir}")
 

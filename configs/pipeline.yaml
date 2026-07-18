@@ -15,34 +15,46 @@ pipeline:
     - json
     - csv
 
-  # Deduplication
-  dedup_method: minhash            # minhash | simhash | ngram
-  dedup_threshold: 0.85
+  # The same strategies are available for English and Vietnamese.
+  chunking:
+    method: sentence                # none | fixed | sentence | semantic
+    target_tokens: 450
+    overlap_tokens: 60
+  quality:
+    method: heuristic               # none | heuristic
+  deduplication:
+    document_method: minhash        # none | exact | minhash | simhash | ngram | semantic | layered
+    document_threshold: 0.85
+    chunk_method: minhash
+    chunk_threshold: 0.85
+    semantic_threshold: 0.92
 
   # Entity and relationship extraction
-  spacy_model: en_core_web_lg
-  use_llm: false                    # true = GraphGen-style joint DeepSeek extraction
-  llm_model: deepseek-v4-pro        # use deepseek-v4-flash for cheaper experiments
-  graphgen_max_gleanings: 3         # Figure 8 iterative missed-entity checks
-  graphgen_entity_types:
-    - concept
-    - date
-    - location
-    - keyword
-    - organization
-    - person
-    - event
-    - work
-    - nature
-    - artificial
-    - science
-    - technology
-    - mission
-    - gene
+  extraction:
+    method: offline                 # offline | graphgen
+    spacy_model: en_core_web_lg
+    model: deepseek-v4-pro          # use deepseek-v4-flash for cheaper experiments
+    max_gleanings: 3
+    entity_types:
+      - concept
+      - date
+      - location
+      - keyword
+      - organization
+      - person
+      - event
+      - work
+      - nature
+      - artificial
+      - science
+      - technology
+      - mission
+      - gene
 
   # Entity resolution
-  resolve_method: string        # string | embedding
-  resolve_threshold: 0.85
+  resolution:
+    method: string                  # string | embedding
+    threshold: 0.85
 
   # Neo4j connection — configured via NEO4J_URI / NEO4J_USER / NEO4J_PASSWORD in .env only
 

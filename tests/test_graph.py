@@ -77,6 +77,43 @@ def test_deduplication_removes_exact_duplicates():
     assert ids == {"1", "2"} or ids == {"2", "3"}
 
 
+def test_semantic_deduplication_is_selectable_with_multilingual_embeddings():
+    from kg_generator.dedup.near_dedup import Deduplicator
+    from kg_generator.ingest.loader import Document
+
+    documents = [
+        Document(content="Hà Nội là thủ đô Việt Nam.", doc_id="a"),
+        Document(content="Thủ đô của Việt Nam là Hà Nội.", doc_id="b"),
+        Document(content="Tên lửa bay vào không gian.", doc_id="c"),
+    ]
+    embeddings = [[1.0, 0.0], [0.99, 0.01], [0.0, 1.0]]
+    dedup = Deduplicator(
+        method="semantic",
+        semantic_threshold=0.95,
+        semantic_encoder=lambda _texts: embeddings,
+    )
+
+    result = dedup.deduplicate(documents)
+
+    assert [document.doc_id for document in result] == ["a", "c"]
+
+
+def test_embedding_resolution_does_not_merge_semantically_related_names():
+    from kg_generator.resolve.resolver import EntityResolver
+
+    entities = [
+        {"id": "a", "name": "khoa học", "type": "CONCEPT", "aliases": []},
+        {"id": "b", "name": "công nghệ", "type": "CONCEPT", "aliases": []},
+    ]
+    resolver = EntityResolver(
+        method="embedding",
+        threshold=0.8,
+        encoder=lambda _texts: [[1.0, 0.0], [1.0, 0.0]],
+    )
+
+    assert len(resolver.resolve(entities)) == 2
+
+
 def test_quality_filter_removes_short_docs():
     from kg_generator.dedup.quality import QualityFilter
     from kg_generator.ingest.loader import Document

@@ -34,8 +34,7 @@ class GraphBuilder:
         for entity in entities:
             node_type = entity.get("type", entity.get("label", "ENTITY"))
             node_id = entity.get("id") or entity_id(node_type, entity.get("name", ""))
-            graph.add_node(
-                node_id,
+            node_data = dict(
                 id=node_id,
                 name=entity.get("name", ""),
                 type=node_type,
@@ -52,6 +51,13 @@ class GraphBuilder:
                 index=entity.get("index", 0),
                 chunk_count=entity.get("chunk_count", 0),
             )
+            for key in (
+                "title", "url", "license", "source_domain", "scraped_at",
+                "crawler", "content_hash", "inferred_type",
+            ):
+                if entity.get(key) not in (None, ""):
+                    node_data[key] = entity[key]
+            graph.add_node(node_id, **node_data)
 
         # Add relation edges
         for triple in triples:

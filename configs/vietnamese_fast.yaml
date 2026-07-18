@@ -1,0 +1,26 @@
+# Fast, dependency-light Vietnamese demo preset.
+pipeline:
+  language: vi
+  graph_backend: networkx
+  input_paths:
+    - data/debugg_sample_vi/
+  file_formats: [jsonl]
+
+  chunking:
+    method: sentence
+    target_tokens: 350
+    overlap_tokens: 40
+  quality:
+    method: heuristic
+  deduplication:
+    document_method: minhash
+    document_threshold: 0.85
+    chunk_method: exact
+    chunk_threshold: 1.0
+  extraction:
+    method: offline
+  resolution:
+    method: string
+    threshold: 0.85
+
+  export_formats: [json, graphml, neo4j_csv]

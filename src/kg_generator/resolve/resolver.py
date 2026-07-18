@@ -1,6 +1,8 @@
 """Entity resolution — merging duplicate entity mentions into canonical nodes."""
 
 import logging
+import re
+from collections.abc import Callable, Sequence
 from typing import Any
 
 import numpy as np
@@ -15,9 +17,17 @@ class EntityResolver:
         self,
         threshold: float = 0.80,
         method: str = "embedding",
+        model_name: str = "paraphrase-multilingual-MiniLM-L12-v2",
+        encoder: Callable[[list[str]], Sequence[Sequence[float]]] | None = None,
     ) -> None:
+        if method == "string_similarity":  # legacy config spelling
+            method = "string"
+        if method not in {"string", "embedding"}:
+            raise ValueError("Entity resolution method must be one of: string, embedding")
         self.threshold = threshold
         self.method = method
+        self.model_name = model_name
+        self.encoder = encoder
         self._embedder = None
 
     @property
@@ -27,9 +37,7 @@ class EntityResolver:
             try:
                 from sentence_transformers import SentenceTransformer
                 # Multilingual model — covers English + Vietnamese
-                self._embedder = SentenceTransformer(
-                    "paraphrase-multilingual-MiniLM-L12-v2"
-                )
+                self._embedder = SentenceTransformer(self.model_name)
             except Exception:
                 logger.warning(
                     "sentence-transformers unavailable — falling back to string matching"
@@ -42,8 +50,9 @@ class EntityResolver:
         if not entities:
             return []
 
-        if self.method == "embedding" and self.embedder is not None:
-            return self._embedding_resolve(entities)
+        if self.method == "embedding":
+            if self.encoder is not None or self.embedder is not None:
+                return self._embedding_resolve(entities)
         return self._string_resolve(entities)
 
     def resolve_with_mapping(
@@ -76,7 +85,11 @@ class EntityResolver:
     def _embedding_resolve(self, entities: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Cluster entities by embedding similarity."""
         names = [e["name"] for e in entities]
-        embeddings = self.embedder.encode(names, show_progress_bar=False)
+        embeddings = (
+            self.encoder(names)
+            if self.encoder is not None
+            else self.embedder.encode(names, show_progress_bar=False)
+        )
 
         # Greedy clustering
         clusters: list[list[int]] = []
@@ -93,6 +106,8 @@ class EntityResolver:
                 first_type = entities[i].get("type", entities[i].get("label", "ENTITY"))
                 second_type = entities[j].get("type", entities[j].get("label", "ENTITY"))
                 if first_type != second_type:
+                    continue
+                if not self._surface_compatible(names[i], names[j]):
                     continue
                 sim = float(np.dot(embeddings[i], embeddings[j]) / (
                     np.linalg.norm(embeddings[i]) * np.linalg.norm(embeddings[j])
@@ -209,3 +224,23 @@ class EntityResolver:
         if not tokens_a or not tokens_b:
             return 0.0
         return len(tokens_a & tokens_b) / len(tokens_a | tokens_b)
+
+    @classmethod
+    def _surface_compatible(cls, first: str, second: str) -> bool:
+        """Prevent embeddings from merging related but non-identical concepts."""
+        first_key = first.casefold().strip()
+        second_key = second.casefold().strip()
+        if first_key == second_key or cls._string_similarity(first_key, second_key) > 0:
+            return True
+        return cls._acronym(first_key) == cls._compact(second_key) or (
+            cls._acronym(second_key) == cls._compact(first_key)
+        )
+
+    @staticmethod
+    def _compact(value: str) -> str:
+        return re.sub(r"[^\w]", "", value, flags=re.UNICODE)
+
+    @classmethod
+    def _acronym(cls, value: str) -> str:
+        words = re.findall(r"\w+", value, flags=re.UNICODE)
+        return "".join(word[0] for word in words) if len(words) > 1 else ""

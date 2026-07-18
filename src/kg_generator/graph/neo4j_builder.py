@@ -57,6 +57,7 @@ class Neo4jGraphBuilder:
         text: str = "",
         token_count: int = 0,
         index: int = 0,
+        properties: dict[str, Any] | None = None,
     ) -> None:
         """Create or update a ``:Chunk`` node."""
         self.session.run(
@@ -67,6 +68,7 @@ class Neo4jGraphBuilder:
                 c.text   = $text,
                 c.tokenCount = $tokenCount,
                 c.index  = $index
+            SET c += $properties
             REMOVE c.entityType
             """,
             id=chunk_id,
@@ -74,6 +76,7 @@ class Neo4jGraphBuilder:
             text=text,
             tokenCount=token_count,
             index=index,
+            properties=properties or {},
         )
         self._node_count += 1
 
@@ -85,6 +88,7 @@ class Neo4jGraphBuilder:
         description: str = "",
         source: str = "",
         chunk_count: int = 0,
+        properties: dict[str, Any] | None = None,
     ) -> None:
         """Create or update a ``:Document`` node."""
         self.session.run(
@@ -95,6 +99,7 @@ class Neo4jGraphBuilder:
                 d.description = $description,
                 d.source      = $source,
                 d.chunk_count = $chunk_count
+            SET d += $properties
             REMOVE d.entityType
             """,
             id=doc_id,
@@ -102,6 +107,7 @@ class Neo4jGraphBuilder:
             description=description,
             source=source,
             chunk_count=chunk_count,
+            properties=properties or {},
         )
         self._node_count += 1
 

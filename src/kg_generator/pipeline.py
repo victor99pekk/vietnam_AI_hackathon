@@ -13,17 +13,28 @@ from kg_generator.evaluate.metrics import QualityEvaluator
 from kg_generator.export.exporter import GraphExporter
 from kg_generator.extract.entities import Entity, EntityExtractor, EnglishExtractor, VietnameseExtractor
 from kg_generator.extract.graphgen import GraphGenExtractor
-from kg_generator.extract.relations import RelationExtractor
+from kg_generator.extract.relations import RelationExtractor, SYMMETRIC_PREDICATES
 from kg_generator.graph.builder import GraphBuilder
 from kg_generator.graph.enrich import GraphEnricher
 from kg_generator.identity import chunk_id as stable_chunk_id
 from kg_generator.identity import document_id as stable_document_id
-from kg_generator.ingest.chunker import TextChunker
+from kg_generator.ingest.chunker import SemanticChunker, SentenceChunker, TextChunker
 from kg_generator.ingest.cleaner import TextCleaner
 from kg_generator.ingest.loader import DataLoader
 from kg_generator.resolve.resolver import EntityResolver
 
 logger = logging.getLogger(__name__)
+
+PROVENANCE_FIELDS = (
+    "title",
+    "url",
+    "license",
+    "source_domain",
+    "scraped_at",
+    "crawler",
+    "content_hash",
+    "inferred_type",
+)
 
 
 class Pipeline:
@@ -33,20 +44,34 @@ class Pipeline:
         self.config = config
         self.output_dir = output_dir
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        self._embedding_models: dict[str, Any] = {}
 
         # --- Stage 1: Ingest ---
         self.loader = DataLoader(config.file_formats)
         self.cleaner = TextCleaner(language=config.language)
-        self.chunker = TextChunker(
-            chunk_size=config.chunk_size,
-            chunk_overlap=config.chunk_overlap,
-        )
+        self.chunker = self._build_chunker()
 
         # --- Dedup & Quality ---
-        self.deduplicator = Deduplicator(
+        if config.quality_method not in {"none", "heuristic"}:
+            raise ValueError("quality_method must be one of: none, heuristic")
+        self.document_deduplicator = Deduplicator(
+            threshold=config.document_dedup_threshold,
+            method=config.document_dedup_method,
+            semantic_threshold=config.semantic_dedup_threshold,
+            semantic_model=config.semantic_dedup_model,
+            semantic_max_records=config.semantic_dedup_max_records,
+            semantic_encoder=self._shared_encoder(config.semantic_dedup_model),
+        )
+        self.chunk_deduplicator = Deduplicator(
             threshold=config.dedup_threshold,
             method=config.dedup_method,
+            semantic_threshold=config.semantic_dedup_threshold,
+            semantic_model=config.semantic_dedup_model,
+            semantic_max_records=config.semantic_dedup_max_records,
+            semantic_encoder=self._shared_encoder(config.semantic_dedup_model),
         )
+        # Backward-compatible attribute for callers that inspected the old pipeline.
+        self.deduplicator = self.chunk_deduplicator
         self.quality_filter = QualityFilter(language=config.language.value)
 
         # --- Stage 2: Extract ---
@@ -75,6 +100,12 @@ class Pipeline:
         self.resolver = EntityResolver(
             threshold=config.resolve_threshold,
             method=config.resolve_method,
+            model_name=config.resolve_model,
+            encoder=(
+                self._shared_encoder(config.resolve_model)
+                if config.resolve_method == "embedding"
+                else None
+            ),
         )
 
         # --- Stage 4: Graph ---
@@ -93,6 +124,50 @@ class Pipeline:
             return VietnameseExtractor()
         return EnglishExtractor(model_name=self.config.spacy_model)
 
+    def _build_chunker(self) -> TextChunker:
+        method = self.config.chunk_method
+        if method in {"none", "fixed"}:
+            return TextChunker(
+                chunk_size=self.config.chunk_size,
+                chunk_overlap=self.config.chunk_overlap,
+            )
+        if method == "sentence":
+            return SentenceChunker(
+                target_tokens=self.config.chunk_target_tokens,
+                overlap_tokens=self.config.chunk_overlap_tokens,
+                language=self.config.language,
+            )
+        if method == "semantic":
+            return SemanticChunker(
+                target_tokens=self.config.chunk_target_tokens,
+                overlap_tokens=self.config.chunk_overlap_tokens,
+                language=self.config.language,
+                similarity_threshold=self.config.semantic_chunk_threshold,
+                model_name=self.config.semantic_model,
+                encoder=self._shared_encoder(self.config.semantic_model),
+            )
+        raise ValueError("chunk_method must be one of: none, fixed, sentence, semantic")
+
+    def _shared_encoder(self, model_name: str):
+        """Return a lazy encoder shared by chunking, dedup, and resolution."""
+        def encode(texts: list[str]):
+            if model_name not in self._embedding_models:
+                try:
+                    from sentence_transformers import SentenceTransformer
+                except ImportError as error:
+                    raise RuntimeError(
+                        "Semantic strategies require sentence-transformers. "
+                        "Install it with: uv sync --extra embeddings"
+                    ) from error
+                self._embedding_models[model_name] = SentenceTransformer(model_name)
+            return self._embedding_models[model_name].encode(
+                texts,
+                normalize_embeddings=True,
+                show_progress_bar=False,
+            )
+
+        return encode
+
     @staticmethod
     def _snip_description(text: str, entity_name: str, context_chars: int = 120) -> str:
         """Extract a brief snippet from text around an entity name for auto-description."""
@@ -104,6 +179,15 @@ class Pipeline:
         snippet = text[start:end].strip()
         return snippet
 
+    @staticmethod
+    def _source_metadata(document: Any) -> dict[str, Any]:
+        """Keep scalar scraper/Wikipedia provenance on graph source nodes."""
+        return {
+            key: document.metadata[key]
+            for key in PROVENANCE_FIELDS
+            if document.metadata.get(key) not in (None, "")
+        }
+
     def execute(self) -> None:
         """Run all stages in sequence."""
         logger.info("Starting KG generation pipeline...")
@@ -111,19 +195,33 @@ class Pipeline:
         # ── Stage 1: Ingest & Clean ──
         logger.info("[1/5] Ingesting & cleaning data...")
         documents = self.loader.load(self.config.input_paths)
+        processing = {"loaded_documents": len(documents)}
         documents = self.cleaner.clean_batch(documents)
+        processing["cleaned_documents"] = len(documents)
         logger.info(f"  Loaded & cleaned {len(documents)} documents")
 
+        # Quality and surface deduplication happen at document scope before
+        # chunking, then again at chunk scope after boundaries are created.
+        if self.config.quality_method == "heuristic":
+            documents = self.quality_filter.filter(documents)
+        processing["documents_after_quality"] = len(documents)
+        documents = self.document_deduplicator.deduplicate(documents)
+        processing["documents_after_dedup"] = len(documents)
+
         # ── Chunk ──
-        if self.config.chunk_size > 0:
+        chunking_enabled = self.config.chunk_method != "none" and self.config.chunk_size > 0
+        if chunking_enabled:
             documents = self.chunker.chunk(documents)
             logger.info(f"  Chunked into {len(documents)} pieces")
+        processing["chunks_created"] = len(documents)
 
         # ── Dedup ──
         logger.info("[2/5] Deduplication & quality filtering...")
-        # Quality filter first (lightweight), then dedup (heavier)
-        documents = self.quality_filter.filter(documents)
-        documents = self.deduplicator.deduplicate(documents)
+        if chunking_enabled and self.config.quality_method == "heuristic":
+            documents = self.quality_filter.filter(documents)
+        processing["chunks_after_quality"] = len(documents)
+        documents = self.chunk_deduplicator.deduplicate(documents)
+        processing["chunks_after_dedup"] = len(documents)
         logger.info(f"  {len(documents)} documents after dedup")
 
         # ── Stage 2: Extract Entities & Relations ──
@@ -165,6 +263,7 @@ class Pipeline:
             d["text"] = doc.content
             d["tokenCount"] = doc.metadata.get("token_count", len(doc.content.split()))
             d["index"] = doc.metadata.get("chunk_index", 0)
+            d.update(self._source_metadata(doc))
             structural_entities.append(d)
 
         # :NEXT edges between consecutive chunks of the same document
@@ -180,7 +279,7 @@ class Pipeline:
         seen_docs: set[str] = set()
         for doc, parent_id, _ in chunk_contexts:
             parent = doc.metadata.get("parent_source", doc.source)
-            parent_name = Path(parent).name if parent else "unknown"
+            parent_name = doc.metadata.get("title") or (Path(parent).name if parent else "unknown")
             if parent_id not in seen_docs:
                 seen_docs.add(parent_id)
                 doc_node = Entity(
@@ -209,6 +308,7 @@ class Pipeline:
                         doc.metadata.get("parent_doc_id", doc.doc_id),
                     ) == parent_id
                 )
+                d.update(self._source_metadata(doc))
                 structural_entities.append(d)
 
         for _, parent_id, chunk_id in chunk_contexts:
@@ -262,6 +362,7 @@ class Pipeline:
             )
             for triple in all_triples
         ]
+        all_triples = self._normalize_resolved_triples(all_triples)
         if self.graphgen_extractor is not None:
             resolved_extracted, all_triples = self.graphgen_extractor.aggregate_descriptions(
                 resolved_extracted,
@@ -291,6 +392,9 @@ class Pipeline:
                 else 0
             ),
         }
+        strategy_metadata = self._strategy_metadata()
+        metrics["pipeline"] = strategy_metadata
+        metrics["processing"] = processing
         self._log_metrics(metrics)
 
         # ── Export ──
@@ -304,6 +408,8 @@ class Pipeline:
             metadata={
                 "language": self.config.language.value,
                 "extraction": extraction_metadata,
+                "pipeline": strategy_metadata,
+                "processing": processing,
             },
         )
 
@@ -337,6 +443,76 @@ class Pipeline:
             "backend_version": backend_version,
             "prompt_version": None,
         }
+
+    def _strategy_metadata(self) -> dict[str, Any]:
+        """Describe the selected strategies for reproducible demo runs."""
+        return {
+            "chunking": {
+                "method": self.config.chunk_method,
+                "size_chars": self.config.chunk_size if self.config.chunk_method == "fixed" else None,
+                "overlap_chars": self.config.chunk_overlap if self.config.chunk_method == "fixed" else None,
+                "target_tokens": (
+                    self.config.chunk_target_tokens
+                    if self.config.chunk_method in {"sentence", "semantic"}
+                    else None
+                ),
+                "overlap_tokens": (
+                    self.config.chunk_overlap_tokens
+                    if self.config.chunk_method in {"sentence", "semantic"}
+                    else None
+                ),
+                "semantic_threshold": (
+                    self.config.semantic_chunk_threshold
+                    if self.config.chunk_method == "semantic"
+                    else None
+                ),
+                "embedding_model": (
+                    self.config.semantic_model
+                    if self.config.chunk_method == "semantic"
+                    else None
+                ),
+            },
+            "quality": {"method": self.config.quality_method},
+            "deduplication": {
+                "document_method": self.config.document_dedup_method,
+                "document_threshold": self.config.document_dedup_threshold,
+                "chunk_method": self.config.dedup_method,
+                "chunk_threshold": self.config.dedup_threshold,
+                "semantic_threshold": self.config.semantic_dedup_threshold,
+                "embedding_model": self.config.semantic_dedup_model,
+            },
+            "extraction": {
+                "method": "graphgen" if self.config.use_llm else "offline",
+            },
+            "resolution": {
+                "method": self.config.resolve_method,
+                "threshold": self.config.resolve_threshold,
+                "embedding_model": (
+                    self.config.resolve_model
+                    if self.config.resolve_method == "embedding"
+                    else None
+                ),
+            },
+        }
+
+    @staticmethod
+    def _normalize_resolved_triples(
+        triples: list[tuple[str, ...]],
+    ) -> list[tuple[str, ...]]:
+        """Drop resolution-created self loops and stabilize symmetric edges."""
+        normalized: list[tuple[str, ...]] = []
+        seen: set[tuple[str, ...]] = set()
+        for triple in triples:
+            subject, predicate, object_ = triple[:3]
+            if subject == object_ and predicate not in {"MENTIONS", "PART_OF", "NEXT"}:
+                continue
+            if predicate in SYMMETRIC_PREDICATES and object_ < subject:
+                triple = (object_, predicate, subject, *triple[3:])
+            key = (triple[0], triple[1], triple[2], *triple[4:])
+            if key not in seen:
+                seen.add(key)
+                normalized.append(triple)
+        return normalized
     def execute_neo4j(self, session: Any, *, clear: bool = False) -> dict[str, Any]:
         """Run all stages, writing directly to Neo4j per-chunk.
 
@@ -356,6 +532,12 @@ class Pipeline:
         dict
             Graph statistics queried from Neo4j after completion.
         """
+        if self.config.resolve_method != "string":
+            raise ValueError(
+                "The direct Neo4j backend currently supports string entity resolution only. "
+                "Use the networkx backend plus neo4j-upload for embedding resolution."
+            )
+
         from kg_generator.graph.neo4j_builder import Neo4jGraphBuilder
         from kg_generator.resolve.neo4j_resolver import Neo4jEntityResolver
         from kg_generator.export.neo4j_upload import replace_documents
@@ -369,17 +551,30 @@ class Pipeline:
         # ── Stage 1: Ingest & Clean ──
         logger.info("[1/4] Ingesting & cleaning data...")
         documents = self.loader.load(self.config.input_paths)
+        processing = {"loaded_documents": len(documents)}
         documents = self.cleaner.clean_batch(documents)
+        processing["cleaned_documents"] = len(documents)
         logger.info(f"  Loaded & cleaned {len(documents)} documents")
 
-        if self.config.chunk_size > 0:
+        if self.config.quality_method == "heuristic":
+            documents = self.quality_filter.filter(documents)
+        processing["documents_after_quality"] = len(documents)
+        documents = self.document_deduplicator.deduplicate(documents)
+        processing["documents_after_dedup"] = len(documents)
+
+        chunking_enabled = self.config.chunk_method != "none" and self.config.chunk_size > 0
+        if chunking_enabled:
             documents = self.chunker.chunk(documents)
             logger.info(f"  Chunked into {len(documents)} pieces")
+        processing["chunks_created"] = len(documents)
 
         # ── Dedup ──
         logger.info("[2/4] Deduplication & quality filtering...")
-        documents = self.quality_filter.filter(documents)
-        documents = self.deduplicator.deduplicate(documents)
+        if chunking_enabled and self.config.quality_method == "heuristic":
+            documents = self.quality_filter.filter(documents)
+        processing["chunks_after_quality"] = len(documents)
+        documents = self.chunk_deduplicator.deduplicate(documents)
+        processing["chunks_after_dedup"] = len(documents)
         logger.info(f"  {len(documents)} documents after dedup")
 
         # ── Build chunk contexts (same logic as execute()) ──
@@ -415,19 +610,23 @@ class Pipeline:
                 text=doc.content,
                 token_count=doc.metadata.get("token_count", len(doc.content.split())),
                 index=doc.metadata.get("chunk_index", 0),
+                properties=self._source_metadata(doc),
             )
 
             # MERGE Document node (once per document)
             if parent_id not in seen_docs:
                 seen_docs.add(parent_id)
                 parent_source = doc.metadata.get("parent_source", doc.source)
-                parent_name = Path(parent_source).name if parent_source else "unknown"
+                parent_name = doc.metadata.get("title") or (
+                    Path(parent_source).name if parent_source else "unknown"
+                )
                 builder.merge_document(
                     parent_id,
                     name=parent_name,
                     description=f"Source document: {parent_source}",
                     source=parent_source,
                     chunk_count=chunk_count_by_doc.get(parent_id, 0),
+                    properties=self._source_metadata(doc),
                 )
 
             # MERGE PART_OF edge
@@ -449,6 +648,8 @@ class Pipeline:
                     doc.content, source_chunk_id=chunk_id
                 )
             else:
+                if self.entity_extractor is None:
+                    raise RuntimeError("Baseline entity extractor is not configured")
                 entities = self.entity_extractor.extract(doc.content)
                 triples = self.relation_extractor.extract(
                     doc.content, entities, source_chunk_id=chunk_id
@@ -477,6 +678,10 @@ class Pipeline:
                 subj = id_map.get(triple[0], triple[0])
                 pred = triple[1]
                 obj = id_map.get(triple[2], triple[2])
+                if subj == obj:
+                    continue
+                if pred in SYMMETRIC_PREDICATES and obj < subj:
+                    subj, obj = obj, subj
                 evidence = triple[3] if len(triple) > 3 else ""
                 desc = triple[5] if len(triple) > 5 else ""
                 builder.merge_edge(
@@ -506,6 +711,8 @@ class Pipeline:
                 "method": "graphgen" if self.graphgen_extractor is not None else "baseline",
                 "model": self.config.llm_model if self.graphgen_extractor is not None else None,
             },
+            "pipeline": self._strategy_metadata(),
+            "processing": processing,
         }
         self.output_dir.mkdir(parents=True, exist_ok=True)
         with open(self.output_dir / "metrics.json", "w") as f:

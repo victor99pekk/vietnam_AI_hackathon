@@ -11,34 +11,47 @@ pipeline:
   file_formats:
     - jsonl
 
-  # Larger chunks reduce NLP/LLM calls while retaining paragraph overlap.
-  chunk_size: 2000
-  chunk_overlap: 200
+  # Balanced demo defaults. Override methods from the CLI or use the fast and
+  # quality presets next to this file.
+  chunking:
+    method: sentence              # none | fixed | sentence | semantic
+    target_tokens: 450
+    overlap_tokens: 60
 
-  dedup_method: minhash
-  dedup_threshold: 0.85
+  quality:
+    method: heuristic             # none | heuristic
 
-  use_llm: true
-  llm_model: deepseek-v4-pro
-  graphgen_max_gleanings: 3
-  graphgen_entity_types:
-    - concept
-    - date
-    - location
-    - keyword
-    - organization
-    - person
-    - event
-    - work
-    - nature
-    - artificial
-    - science
-    - technology
-    - mission
-    - gene
+  deduplication:
+    document_method: minhash      # none | exact | minhash | simhash | ngram | semantic | layered
+    document_threshold: 0.85
+    chunk_method: minhash
+    chunk_threshold: 0.85
+    semantic_threshold: 0.92
+    embedding_model: paraphrase-multilingual-MiniLM-L12-v2
 
-  resolve_method: string
-  resolve_threshold: 0.85
+  extraction:
+    method: graphgen              # offline | graphgen
+    model: deepseek-v4-pro
+    max_gleanings: 3
+    entity_types:
+      - concept
+      - date
+      - location
+      - keyword
+      - organization
+      - person
+      - event
+      - work
+      - nature
+      - artificial
+      - science
+      - technology
+      - mission
+      - gene
+
+  resolution:
+    method: string                # string | embedding
+    threshold: 0.85
 
   export_formats:
     - json

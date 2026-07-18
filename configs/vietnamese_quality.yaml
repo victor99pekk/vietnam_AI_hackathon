@@ -1,0 +1,34 @@
+# Highest-quality Vietnamese demo preset. Requires embeddings + LLM extras.
+pipeline:
+  language: vi
+  graph_backend: networkx
+  input_paths:
+    - data/debugg_sample_vi/
+  file_formats: [jsonl]
+
+  chunking:
+    method: semantic
+    target_tokens: 450
+    overlap_tokens: 60
+    semantic_threshold: 0.55
+    embedding_model: paraphrase-multilingual-MiniLM-L12-v2
+  quality:
+    method: heuristic
+  deduplication:
+    document_method: layered
+    document_threshold: 0.85
+    chunk_method: semantic
+    chunk_threshold: 0.85
+    semantic_threshold: 0.92
+    embedding_model: paraphrase-multilingual-MiniLM-L12-v2
+    max_records: 5000
+  extraction:
+    method: graphgen
+    model: deepseek-v4-pro
+    max_gleanings: 3
+  resolution:
+    method: embedding
+    threshold: 0.88
+    embedding_model: paraphrase-multilingual-MiniLM-L12-v2
+
+  export_formats: [json, graphml, neo4j_csv]

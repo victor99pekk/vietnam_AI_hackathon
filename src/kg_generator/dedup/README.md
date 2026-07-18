@@ -11,11 +11,15 @@ Documents → accepted documents, quality profiles, and duplicate-cluster decisi
 ## Key files
 
 - `quality.py` scores text, rejects empty/too-short documents, and records suspicious signals such as repeated lines as review flags.
-- `near_dedup.py` detects exact and near duplicates with MinHash, SimHash, or n-grams.
+- `near_dedup.py` detects exact and near duplicates with exact hashes, MinHash,
+  SimHash, n-grams, multilingual semantic similarity, or a layered
+  MinHash-then-semantic strategy.
 
 ## Place in pipeline
 
-After ingest/cleaning and before curation output or KG extraction. This works on whole documents, not entities.
+The KG pipeline can run deduplication twice: once on cleaned source documents,
+then again on the chunks produced for extraction. Entity duplication is handled
+separately by the resolver.
 
 ## Language handling
 

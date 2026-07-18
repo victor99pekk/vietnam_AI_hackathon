@@ -34,6 +34,30 @@ kg-gen run -c configs/vietnamese.yaml
 kg-gen run -c configs/vietnamese.yaml --no-llm
 ```
 
+Selectable Vietnamese demo presets:
+
+```bash
+# Fast: sentence chunks + MinHash/exact dedup + Underthesea
+kg-gen run -c configs/vietnamese_fast.yaml -o output/vi-fast
+
+# Balanced: sentence chunks + two-level MinHash + GraphGen
+kg-gen run -c configs/vietnamese.yaml -o output/vi-balanced
+
+# Quality: semantic chunks + layered/semantic dedup + GraphGen + embeddings
+uv sync --extra embeddings --extra vi --extra llm
+kg-gen run -c configs/vietnamese_quality.yaml -o output/vi-quality
+```
+
+Scraped JSONL works with the same strategy framework:
+
+```bash
+uv sync --extra scraper --extra embeddings --extra vi --extra llm
+kg-gen scrape --seed-file data/download_data/seeds/vietnamese_sources.txt \
+  -o data/scraped/vietnamese_demo
+kg-gen run -c configs/vietnamese_scraped.yaml \
+  -i data/scraped/vietnamese_demo -o output/vi-scraped
+```
+
 > New to uv? Read the [UV Setup Guide](docs/UV_SETUP.md) — it's written for beginners.
 
 ## Pipeline Stages
@@ -41,7 +65,8 @@ kg-gen run -c configs/vietnamese.yaml --no-llm
 | Stage | Description |
 |---|---|
 | **Ingest** | Load from TXT, JSON, CSV, JSONL; normalize whitespace & encoding |
-| **Dedup & Quality** | MinHash/SimHash/n-gram dedup + heuristic quality filtering |
+| **Chunk** | Select fixed/paragraph, sentence-aware, or multilingual semantic boundaries |
+| **Dedup & Quality** | Document + chunk exact/MinHash/SimHash/n-gram/semantic/layered dedup |
 | **Extract** | spaCy NER + rule-based relation extraction (or LLM-powered) |
 | **Relate** | Entity resolution via embedding similarity (multilingual) |
 | **Build Graph** | Directed graph construction + ontology validation |

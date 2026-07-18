@@ -32,13 +32,26 @@ def test_relation_preserves_stable_ids_evidence_and_source_chunk():
         source_chunk_id="chunk:123",
     )
 
-    assert relations
+    assert len(relations) == 1
     subject, predicate, object_, evidence, source_chunk_id = relations[0]
-    assert subject in {alice.id, acme.id}
-    assert object_ in {alice.id, acme.id}
-    assert predicate
+    assert subject == alice.id
+    assert object_ == acme.id
+    assert predicate == "works_at"
     assert evidence == "Alice works at Acme Corp."
     assert source_chunk_id == "chunk:123"
+
+
+def test_symmetric_relations_have_stable_direction_across_entity_order():
+    first = Entity(name="dữ liệu", label="CONCEPT")
+    second = Entity(name="trí tuệ nhân tạo", label="CONCEPT")
+    extractor = RelationExtractor(language=Language.VIETNAMESE)
+    text = "Dữ liệu và trí tuệ nhân tạo hỗ trợ nghiên cứu."
+
+    forward = extractor.extract(text, [first, second])[0][:3]
+    reversed_input = extractor.extract(text, [second, first])[0][:3]
+
+    assert forward == reversed_input
+    assert forward[1] == "related_to"
 
 
 def test_vietnamese_extractor_reconstructs_bio_entities_and_noun_phrases():

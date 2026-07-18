@@ -199,7 +199,7 @@ class SemanticDeduplicator:
     def __init__(
         self,
         threshold: float = 0.92,
-        model_name: str = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        model_name: str = "paraphrase-multilingual-MiniLM-L12-v2",
         max_records: int = 5_000,
         encoder: Callable[[list[str]], Sequence[Sequence[float]]] | None = None,
     ) -> None:
@@ -278,27 +278,44 @@ class Deduplicator:
         threshold: float = LSH_THRESHOLD_DEFAULT,
         method: str = "minhash",
         num_perm: int = MINHASH_PERMUTATIONS,
+        semantic_threshold: float | None = None,
+        semantic_model: str = "paraphrase-multilingual-MiniLM-L12-v2",
+        semantic_max_records: int = 5_000,
+        semantic_encoder: Callable[[list[str]], Sequence[Sequence[float]]] | None = None,
     ) -> None:
         if threshold < 0 or threshold > 1:
             raise ValueError(f"Threshold must be in [0, 1], got {threshold}")
         self.threshold = threshold
         self.method = method
         self.num_perm = num_perm
+        self.semantic_threshold = semantic_threshold if semantic_threshold is not None else threshold
+        self.semantic_model = semantic_model
+        self.semantic_max_records = semantic_max_records
+        self.semantic_encoder = semantic_encoder
 
     def deduplicate(self, documents: list[Document]) -> list[Document]:
         """Return deduplicated list of documents."""
         if not documents:
             return []
 
+        if self.method == "none":
+            return list(documents)
+        if self.method == "exact":
+            return self._exact_dedup(documents)
         if self.method == "minhash":
             return self._global_minhash_dedup(documents)
         elif self.method == "simhash":
             return self._simhash_dedup(documents)
         elif self.method == "ngram":
             return self._ngram_dedup(documents)
-        else:
-            logger.warning(f"Unknown dedup method '{self.method}', falling back to exact match")
-            return self._exact_dedup(documents)
+        elif self.method == "semantic":
+            return self._semantic_dedup(documents)
+        elif self.method == "layered":
+            return self._semantic_dedup(self._global_minhash_dedup(documents))
+        raise ValueError(
+            f"Unknown dedup method '{self.method}'. Choose one of: "
+            "none, exact, minhash, simhash, ngram, semantic, layered"
+        )
 
     def _global_minhash_dedup(self, documents: list[Document]) -> list[Document]:
         """Use the audit-capable global MinHash engine used by curation."""
@@ -371,6 +388,28 @@ class Deduplicator:
         removed = len(documents) - len(kept)
         if removed:
             logger.info(f"Exact dedup: removed {removed} exact duplicate documents")
+        return kept
+
+    def _semantic_dedup(self, documents: list[Document]) -> list[Document]:
+        """Remove multilingual semantic duplicates while preserving input order."""
+        records = [
+            {"doc_id": str(index), "content": document.content, "quality_score": 0.0}
+            for index, document in enumerate(documents)
+        ]
+        engine = SemanticDeduplicator(
+            threshold=self.semantic_threshold,
+            model_name=self.semantic_model,
+            max_records=self.semantic_max_records,
+            encoder=self.semantic_encoder,
+        )
+        assignments = engine.cluster(records)
+        kept = [
+            document for index, document in enumerate(documents)
+            if not assignments[str(index)].is_duplicate
+        ]
+        removed = len(documents) - len(kept)
+        if removed:
+            logger.info("Semantic dedup: removed %d duplicate documents", removed)
         return kept
 
     # --- helpers ---

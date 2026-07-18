@@ -29,6 +29,11 @@ Full pipeline with configuration.
 | `-o, --output` | Output directory (default: `./output`) |
 | `-l, --language` | `en` or `vi` (default: `en`) |
 | `--llm` / `--no-llm` | Enable LLM-based extraction |
+| `--chunk-method` | `none`, `fixed`, `sentence`, or `semantic` |
+| `--quality-method` | `none` or `heuristic` |
+| `--document-dedup-method` | Document-level dedup strategy |
+| `--dedup-method` | Chunk-level dedup strategy |
+| `--resolve-method` | `string` or multilingual `embedding` |
 
 ### `kg-gen quick`
 
@@ -48,6 +53,20 @@ kg-gen curate -i raw_data/ -m manifest.yaml -o output/curated_datasets --device 
 ```
 
 The manifest declares `en` or `vi`. Curate applies exact and MinHash deletion, BGE-M3 semantic review, sentence-safe 2,048-token records, and deterministic training shards. See [dataset curation](dataset_curation.md) for options and review procedure.
+
+### `kg-gen scrape`
+
+Collect robots-aware web pages into pipeline-ready JSONL with a provenance
+manifest and audit CSV:
+
+```bash
+uv sync --extra scraper
+kg-gen scrape --seed-file data/download_data/seeds/vietnamese_sources.txt \
+  --language vi --max-pages 50 -o data/scraped/vietnamese_demo
+```
+
+The KG loader retains scraper title, URL, license, domain, collection time,
+crawler identity, content hash, and inferred type on source graph nodes.
 
 ### `kg-gen evaluate`
 
@@ -78,6 +97,31 @@ kg-gen evaluate -i output/knowledge_graph.json
 
 See `configs/pipeline.yaml` for all options and `configs/default_ontology.yaml` for entity/relation schema.
 
+Strategy configuration supports nested YAML while retaining the old flat keys:
+
+```yaml
+pipeline:
+  language: vi
+  chunking:
+    method: sentence          # none | fixed | sentence | semantic
+    target_tokens: 450
+    overlap_tokens: 60
+  quality:
+    method: heuristic
+  deduplication:
+    document_method: minhash  # none | exact | minhash | simhash | ngram | semantic | layered
+    chunk_method: semantic
+    semantic_threshold: 0.92
+  extraction:
+    method: graphgen          # offline | graphgen
+  resolution:
+    method: embedding         # string | embedding
+    threshold: 0.88
+```
+
+Every JSON export and `metrics.json` records the selected strategies and the
+document/chunk counts before and after quality filtering and deduplication.
+
 ## Extending
 
 ### Adding Vietnamese Support
@@ -93,6 +137,10 @@ kg-gen run -l vi --no-llm -i vietnamese_data/
 
 # Ready-to-run example configuration
 kg-gen run -c configs/vietnamese.yaml
+
+# Alternative Vietnamese presets
+kg-gen run -c configs/vietnamese_fast.yaml
+kg-gen run -c configs/vietnamese_quality.yaml
 ```
 
 Vietnamese names, descriptions, evidence, and source text remain Vietnamese.

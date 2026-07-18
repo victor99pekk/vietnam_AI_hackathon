@@ -146,6 +146,14 @@ def upload_graph(json_path: str | Path, clear: bool = False) -> None:
         for node in nodes:
             node_type = node.get("type", "Entity")
             node_id = node.get("id", "")
+            provenance = {
+                key: node[key]
+                for key in (
+                    "title", "url", "license", "source_domain", "scraped_at",
+                    "crawler", "content_hash", "inferred_type",
+                )
+                if node.get(key) not in (None, "")
+            }
 
             is_chunk = node_type == "Chunk"
             is_document = node_type == "Document"
@@ -162,6 +170,7 @@ def upload_graph(json_path: str | Path, clear: bool = False) -> None:
                         n.tokenCount = $tokenCount,
                         n.index = $index,
                         n.type = $type
+                    SET n += $provenance
                     REMOVE n.entityType
                     """,
                     id=node_id,
@@ -170,6 +179,7 @@ def upload_graph(json_path: str | Path, clear: bool = False) -> None:
                     tokenCount=node.get("tokenCount", 0),
                     index=node.get("index", 0),
                     type=node_type,
+                    provenance=provenance,
                 )
             elif is_document:
                 session.run(
@@ -180,6 +190,7 @@ def upload_graph(json_path: str | Path, clear: bool = False) -> None:
                         n.description = $description,
                         n.source = $source,
                         n.chunk_count = $chunk_count
+                    SET n += $provenance
                     REMOVE n.entityType
                     """,
                     id=node_id,
@@ -188,6 +199,7 @@ def upload_graph(json_path: str | Path, clear: bool = False) -> None:
                     description=node.get("description", ""),
                     source=node.get("source", []),
                     chunk_count=node.get("chunk_count", 0),
+                    provenance=provenance,
                 )
             else:
                 session.run(

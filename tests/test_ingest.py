@@ -50,3 +50,45 @@ def test_vietnamese_cleaner_normalizes_nfc_and_preserves_diacritics():
 
     assert result.content == "Dữ liệu tiếng Việt...\n\nGiữ nguyên dấu."
     assert "_" not in result.content
+
+
+def test_vietnamese_sentence_chunker_preserves_complete_sentences():
+    from kg_generator.ingest.chunker import SentenceChunker
+
+    text = (
+        "Hà Nội là thủ đô của Việt Nam. "
+        "Thành phố có nhiều hồ đẹp. "
+        "Huế từng là kinh đô của Việt Nam."
+    )
+    chunks = SentenceChunker(
+        target_tokens=9,
+        overlap_tokens=0,
+        language=Language.VIETNAMESE,
+    ).chunk([Document(content=text, source="vi.txt", doc_id="vi")])
+
+    assert len(chunks) >= 2
+    assert all(chunk.content.endswith((".", "!", "?")) for chunk in chunks)
+    assert all("_" not in chunk.content for chunk in chunks)
+    assert [chunk.metadata["chunk_index"] for chunk in chunks] == list(range(len(chunks)))
+
+
+def test_semantic_chunker_splits_at_topic_shift_with_fake_encoder():
+    from kg_generator.ingest.chunker import SemanticChunker
+
+    text = (
+        "Mèo thích ngủ trong nhà. "
+        "Mèo thường chơi vào buổi tối. "
+        "Tên lửa đưa vệ tinh lên quỹ đạo."
+    )
+    encoder = lambda _texts: [[1.0, 0.0], [0.9, 0.1], [0.0, 1.0]]
+    chunks = SemanticChunker(
+        target_tokens=20,
+        overlap_tokens=0,
+        language=Language.ENGLISH,
+        similarity_threshold=0.5,
+        encoder=encoder,
+    ).chunk([Document(content=text, source="topics.txt", doc_id="topics")])
+
+    assert len(chunks) == 2
+    assert "Mèo" in chunks[0].content
+    assert chunks[1].content == "Tên lửa đưa vệ tinh lên quỹ đạo."

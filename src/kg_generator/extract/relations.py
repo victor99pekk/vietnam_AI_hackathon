@@ -51,6 +51,14 @@ RELATION_PATTERNS = [
     ("CONCEPT", "CONCEPT", "related_to"),
 ]
 
+SYMMETRIC_PREDICATES = {
+    "knows",
+    "collaborated_with",
+    "partnered_with",
+    "related_to",
+    "associated_with",
+}
+
 
 class RelationExtractor:
     """Extracts (subject, predicate, object) triples from text."""
@@ -84,8 +92,6 @@ class RelationExtractor:
     ) -> list[tuple[str, str, str, str, str]]:
         """Rule-based relation extraction using entity co-occurrence and heuristics."""
         triples: list[tuple[str, str, str, str, str]] = []
-        entity_map = {e.name.lower(): e for e in entities}
-
         # Use entity co-occurrence within the same sentence
         sentences = self._sentences(text)
 
@@ -97,13 +103,16 @@ class RelationExtractor:
                 continue
 
             # Try pattern matching
-            for e1 in present:
-                for e2 in present:
-                    if e1.name == e2.name:
-                        continue
-                    predicate = self._infer_predicate(sentence, e1, e2, entity_map)
-                    if predicate:
-                        triples.append((e1.id, predicate, e2.id, sentence, source_chunk_id))
+            # Each unordered pair is considered once. The old ordered-pair
+            # loop emitted an incorrect reverse edge for every relationship.
+            for first_index, first in enumerate(present):
+                for second in present[first_index + 1:]:
+                    relation = self._infer_relation(first, second)
+                    if relation:
+                        subject, predicate, object_ = relation
+                        triples.append(
+                            (subject.id, predicate, object_.id, sentence, source_chunk_id)
+                        )
 
         logger.debug(f"RuleBasedRelationExtractor: found {len(triples)} triples")
         return triples
@@ -115,17 +124,36 @@ class RelationExtractor:
         e2: Entity,
         entity_map: dict[str, Entity],
     ) -> str | None:
-        """Infer the predicate between two co-occurring entities."""
+        """Backward-compatible predicate-only view of relation inference."""
+        relation = self._infer_relation(e1, e2)
+        return relation[1] if relation else None
+
+    @staticmethod
+    def _infer_relation(
+        e1: Entity,
+        e2: Entity,
+    ) -> tuple[Entity, str, Entity] | None:
+        """Infer one correctly oriented relation for an unordered entity pair."""
         for head_label, dep_label, predicate in RELATION_PATTERNS:
             if e1.label == head_label and e2.label == dep_label:
-                return predicate
+                return RelationExtractor._canonicalize_symmetric(e1, predicate, e2)
             if e1.label == dep_label and e2.label == head_label:
-                return predicate
+                return RelationExtractor._canonicalize_symmetric(e2, predicate, e1)
 
         # Generic fallback based on labels
         if e1.label == e2.label:
-            return "related_to"
-        return "associated_with"
+            return RelationExtractor._canonicalize_symmetric(e1, "related_to", e2)
+        return RelationExtractor._canonicalize_symmetric(e1, "associated_with", e2)
+
+    @staticmethod
+    def _canonicalize_symmetric(
+        subject: Entity,
+        predicate: str,
+        object_: Entity,
+    ) -> tuple[Entity, str, Entity]:
+        if predicate in SYMMETRIC_PREDICATES and object_.id < subject.id:
+            return object_, predicate, subject
+        return subject, predicate, object_
 
     def _llm_extract(
         self, text: str, entities: list[Entity], source_chunk_id: str = ""

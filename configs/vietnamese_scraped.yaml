@@ -1,0 +1,30 @@
+# Balanced GraphGen preset for JSONL produced by `kg-gen scrape`.
+pipeline:
+  language: vi
+  graph_backend: networkx
+  input_paths:
+    - data/scraped/vn_web_10/
+  file_formats: [jsonl]
+
+  chunking:
+    method: sentence
+    target_tokens: 450
+    overlap_tokens: 60
+  quality:
+    method: heuristic
+  deduplication:
+    document_method: layered
+    document_threshold: 0.85
+    chunk_method: minhash
+    chunk_threshold: 0.85
+    semantic_threshold: 0.92
+    embedding_model: paraphrase-multilingual-MiniLM-L12-v2
+  extraction:
+    method: graphgen
+    model: deepseek-v4-pro
+    max_gleanings: 3
+  resolution:
+    method: string
+    threshold: 0.85
+
+  export_formats: [json, graphml, neo4j_csv]

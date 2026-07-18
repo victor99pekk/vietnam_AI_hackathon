@@ -33,6 +33,10 @@ def _source(tmp_path):
         json.dumps(
             {
                 "id": "giap",
+                "title": "Đại tướng Võ Nguyên Giáp",
+                "url": "https://example.vn/vo-nguyen-giap",
+                "license": "Demo license",
+                "source_domain": "example.vn",
                 "text": (
                     "Võ Nguyên Giáp sinh năm 1911 tại Quảng Bình và là một nhân vật "
                     "quan trọng trong lịch sử Việt Nam. Ông tham gia chỉ huy chiến dịch "
@@ -74,6 +78,17 @@ def _assert_vietnamese_graph(path):
         triple["subject"] in node_ids and triple["object"] in node_ids
         for triple in payload["triples"]
     )
+    semantic = {
+        (triple["subject"], triple["predicate"], triple["object"])
+        for triple in payload["triples"]
+        if triple["predicate"] not in {"MENTIONS", "PART_OF", "NEXT"}
+    }
+    assert all(subject != object_ for subject, _, object_ in semantic)
+    assert not any((object_, predicate, subject) in semantic for subject, predicate, object_ in semantic)
+    document = next(entity for entity in payload["entities"] if entity["type"] == "Document")
+    assert document["name"] == "Đại tướng Võ Nguyên Giáp"
+    assert document["url"] == "https://example.vn/vo-nguyen-giap"
+    assert document["source_domain"] == "example.vn"
 
 
 def test_offline_vietnamese_pipeline_builds_non_empty_graph(monkeypatch, tmp_path):
@@ -114,3 +129,6 @@ def test_graphgen_vietnamese_pipeline_does_not_require_underthesea(monkeypatch, 
     _assert_vietnamese_graph(output / "knowledge_graph.json")
     assert payload["metadata"]["extraction"]["method"] == "graphgen"
     assert payload["metadata"]["extraction"]["prompt_version"].endswith("v2")
+    assert payload["metadata"]["pipeline"]["chunking"]["method"] == "fixed"
+    assert payload["metadata"]["pipeline"]["deduplication"]["chunk_method"] == "minhash"
+    assert payload["metadata"]["processing"]["loaded_documents"] == 1
