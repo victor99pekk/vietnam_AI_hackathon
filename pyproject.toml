@@ -55,6 +55,10 @@ scraper = [
     "lxml>=5.0",
     "trafilatura>=1.12",
 ]
+# MongoDB document archive (versioned storage for all ingested documents)
+mongo = [
+    "pymongo>=4.8",
+]
 # Graph DB export support
 neo4j = [
     "neo4j>=5.15",

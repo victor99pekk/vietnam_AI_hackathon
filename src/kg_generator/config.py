@@ -107,6 +107,10 @@ class PipelineConfig:
     neo4j_user: str = ""
     neo4j_password: str = ""
 
+    # MongoDB — document archive (empty = disabled; set to enable versioning)
+    mongo_uri: str = ""
+    mongo_database: str = "kg_documents"
+
     # Export
     export_formats: list[str] = field(default_factory=lambda: ["json", "graphml"])
 
@@ -200,6 +204,8 @@ class PipelineConfig:
                 pipeline.get("resolve_model", "paraphrase-multilingual-MiniLM-L12-v2"),
             ),
             export_formats=pipeline.get("export_formats", ["json", "graphml"]),
+            mongo_uri=pipeline.get("mongo_uri", ""),
+            mongo_database=pipeline.get("mongo_database", "kg_documents"),
         )
 
 
@@ -214,5 +220,11 @@ def load_config(config_path: Path | None = None) -> PipelineConfig:
     config.neo4j_uri = os.environ.get("NEO4J_URI", "")
     config.neo4j_user = os.environ.get("NEO4J_USER", "")
     config.neo4j_password = os.environ.get("NEO4J_PASSWORD", "")
+
+    # MongoDB — allow env var override (MONGO_URI trumps yaml)
+    if os.environ.get("MONGO_URI"):
+        config.mongo_uri = os.environ["MONGO_URI"]
+    if os.environ.get("MONGO_DATABASE"):
+        config.mongo_database = os.environ["MONGO_DATABASE"]
 
     return config

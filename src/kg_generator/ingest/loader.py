@@ -70,12 +70,22 @@ class DataLoader:
                 Document(
                     content=item.get("text", item.get("content", "")),
                     source=str(path),
-                    doc_id=item.get("id", f"{path}#{i}"),
-                    metadata={k: v for k, v in item.items() if k not in ("text", "content", "id")},
+                    doc_id=item.get("url") or item.get("id") or f"{path}#{i}",
+                    metadata={
+                        k: v
+                        for k, v in item.items()
+                        if k not in ("text", "content", "id")
+                    },
                 )
                 for i, item in enumerate(data)
             ]
-        return [Document(content=data.get("text", data.get("content", "")), source=str(path))]
+        return [
+            Document(
+                content=data.get("text", data.get("content", "")),
+                source=str(path),
+                doc_id=data.get("url") or data.get("id") or str(path),
+            )
+        ]
 
     def _load_jsonl(self, path: Path) -> list[Document]:
         docs = []
@@ -83,12 +93,27 @@ class DataLoader:
             for i, line in enumerate(f):
                 if line.strip():
                     item = json.loads(line)
+                    # Prefer a stable canonical id (url, DOI, etc.) over
+                    # file-scoped numeric ids.  Falls back to file path + index.
+                    doc_id = (
+                        item.get("url")
+                        or item.get("id")
+                        or f"{path}#{i}"
+                    )
+                    # Carry upload_date into metadata so the pipeline can
+                    # forward it to MongoDB without extra lookups.
+                    metadata = {
+                        k: v
+                        for k, v in item.items()
+                        if k not in ("text", "content", "id")
+                    }
+                    metadata.setdefault("upload_date", "")
                     docs.append(
                         Document(
                             content=item.get("text", item.get("content", "")),
                             source=str(path),
-                            doc_id=item.get("id", f"{path}#{i}"),
-                            metadata={k: v for k, v in item.items() if k not in ("text", "content", "id")},
+                            doc_id=doc_id,
+                            metadata=metadata,
                         )
                     )
         return docs
@@ -103,7 +128,7 @@ class DataLoader:
                     Document(
                         content=row[text_col],
                         source=str(path),
-                        doc_id=row.get("id", f"{path}#{i}"),
+                        doc_id=row.get("url") or row.get("id") or f"{path}#{i}",
                         metadata={k: v for k, v in row.items() if k != text_col and k != "id"},
                     )
                 )
