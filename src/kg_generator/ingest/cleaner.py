@@ -2,12 +2,28 @@
 
 import re
 import logging
+import unicodedata
 from abc import ABC, abstractmethod
 
 from kg_generator.config import Language
 from kg_generator.ingest.loader import Document
 
 logger = logging.getLogger(__name__)
+
+
+def normalize_vietnamese_unicode(text: str) -> str:
+    """Return NFC text while removing duplicate combining marks in a glyph."""
+    characters: list[str] = []
+    combining_marks: set[str] = set()
+    for character in unicodedata.normalize("NFD", text):
+        if unicodedata.combining(character) == 0:
+            combining_marks.clear()
+        elif character in combining_marks:
+            continue
+        else:
+            combining_marks.add(character)
+        characters.append(character)
+    return unicodedata.normalize("NFC", "".join(characters))
 
 
 class TextCleanerBackend(ABC):
@@ -42,15 +58,10 @@ class EnglishCleaner(TextCleanerBackend):
 
 
 class VietnameseCleaner(TextCleanerBackend):
-    """Vietnamese-specific text normalization. Stub — will use underthesea when vi support is enabled."""
+    """Vietnamese normalization that preserves original readable surface text."""
 
     def clean(self, text: str) -> str:
-        # Base cleaning (same as English)
-        text = EnglishCleaner().clean(text)
-        # TODO: Add underthesea-based tokenization & normalization
-        # from underthesea import text_normalize
-        # text = text_normalize(text)
-        return text
+        return normalize_vietnamese_unicode(EnglishCleaner().clean(text))
 
 
 class TextCleaner:

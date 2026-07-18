@@ -1,0 +1,46 @@
+# Vietnamese core KG pipeline.
+# GraphGen quality path: kg-gen run -c configs/vietnamese.yaml
+# Offline path:          kg-gen run -c configs/vietnamese.yaml --no-llm
+
+pipeline:
+  language: vi
+  graph_backend: networkx
+
+  input_paths:
+    - data/debugg_sample_vi/
+  file_formats:
+    - jsonl
+
+  # Larger chunks reduce NLP/LLM calls while retaining paragraph overlap.
+  chunk_size: 2000
+  chunk_overlap: 200
+
+  dedup_method: minhash
+  dedup_threshold: 0.85
+
+  use_llm: true
+  llm_model: deepseek-v4-pro
+  graphgen_max_gleanings: 3
+  graphgen_entity_types:
+    - concept
+    - date
+    - location
+    - keyword
+    - organization
+    - person
+    - event
+    - work
+    - nature
+    - artificial
+    - science
+    - technology
+    - mission
+    - gene
+
+  resolve_method: string
+  resolve_threshold: 0.85
+
+  export_formats:
+    - json
+    - graphml
+    - neo4j_csv

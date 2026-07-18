@@ -10,7 +10,8 @@ The Knowledge Graph Generator converts raw text into structured knowledge graphs
 Raw Data → [1. Ingest & Clean] → [2. Extract] → [3. Resolve] → [4. Build Graph] → [5. Evaluate & Export]
 ```
 
-Supports English out of the box, with a Vietnamese backend available via `underthesea`.
+Supports English out of the box. Vietnamese supports both DeepSeek GraphGen
+extraction and an offline `underthesea` backend while keeping one graph schema.
 
 ## Quick Start
 
@@ -23,6 +24,14 @@ python -m spacy download en_core_web_sm
 
 # Run
 kg-gen quick -i data/sample/
+```
+
+Vietnamese GraphGen and offline runs:
+
+```bash
+uv sync --extra vi --extra llm
+kg-gen run -c configs/vietnamese.yaml
+kg-gen run -c configs/vietnamese.yaml --no-llm
 ```
 
 > New to uv? Read the [UV Setup Guide](docs/UV_SETUP.md) — it's written for beginners.

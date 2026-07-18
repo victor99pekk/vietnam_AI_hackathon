@@ -42,9 +42,9 @@ def main() -> None:
 )
 @click.option(
     "-l", "--language",
-    default="en",
+    default=None,
     type=click.Choice(["en", "vi"]),
-    help="Language of the input data.",
+    help="Language of the input data; overrides the config file when supplied.",
 )
 @click.option(
     "--llm/--no-llm",
@@ -55,7 +55,7 @@ def run(
     input_paths: tuple[str, ...],
     config_path: str | None,
     output_dir: str,
-    language: str,
+    language: str | None,
     llm: bool | None,
 ) -> None:
     """Run the full knowledge graph generation pipeline."""
@@ -65,12 +65,16 @@ def run(
 
     if input_paths:
         config.input_paths = [Path(p) for p in input_paths]
-    config.language = Language(language)
+    if language is not None:
+        config.language = Language(language)
     if llm is not None:
         config.use_llm = llm
 
-    pipeline = Pipeline(config, Path(output_dir))
-    pipeline.execute()
+    try:
+        pipeline = Pipeline(config, Path(output_dir))
+        pipeline.execute()
+    except RuntimeError as error:
+        raise click.ClickException(str(error)) from error
 
     click.echo(f"\n Done! Output written to {output_dir}")
 
@@ -91,13 +95,38 @@ def run(
     type=click.Path(),
     help="Directory for output.",
 )
-def quick(input_paths: tuple[str, ...], output_dir: str) -> None:
+@click.option(
+    "-l", "--language",
+    default="en",
+    show_default=True,
+    type=click.Choice(["en", "vi"]),
+    help="Language of the input data.",
+)
+@click.option(
+    "--llm/--no-llm",
+    default=False,
+    show_default=True,
+    help="Enable GraphGen-style joint entity/relation extraction with DeepSeek.",
+)
+def quick(
+    input_paths: tuple[str, ...],
+    output_dir: str,
+    language: str,
+    llm: bool,
+) -> None:
     """Run with sensible defaults — no config file needed."""
     from kg_generator.pipeline import Pipeline
 
-    config = PipelineConfig(input_paths=[Path(p) for p in input_paths])
-    pipeline = Pipeline(config, Path(output_dir))
-    pipeline.execute()
+    config = PipelineConfig(
+        input_paths=[Path(p) for p in input_paths],
+        language=Language(language),
+        use_llm=llm,
+    )
+    try:
+        pipeline = Pipeline(config, Path(output_dir))
+        pipeline.execute()
+    except RuntimeError as error:
+        raise click.ClickException(str(error)) from error
     click.echo(f"\n Done! Output written to {output_dir}")
 
 

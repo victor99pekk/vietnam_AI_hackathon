@@ -2,6 +2,7 @@
 
 import json
 import logging
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any
 
@@ -49,7 +50,11 @@ class Pipeline:
         self.quality_filter = QualityFilter(language=config.language.value)
 
         # --- Stage 2: Extract ---
-        self.entity_extractor = self._build_entity_extractor()
+        # GraphGen performs joint extraction and must not require an offline
+        # Vietnamese NLP installation.
+        self.entity_extractor = (
+            None if config.use_llm else self._build_entity_extractor()
+        )
         self.graphgen_extractor = (
             GraphGenExtractor(
                 language=config.language,
@@ -216,6 +221,8 @@ class Pipeline:
                     doc.content, source_chunk_id=chunk_id
                 )
             else:
+                if self.entity_extractor is None:
+                    raise RuntimeError("Baseline entity extractor is not configured")
                 entities = self.entity_extractor.extract(doc.content)
                 triples = self.relation_extractor.extract(
                     doc.content, entities, source_chunk_id=chunk_id
@@ -269,18 +276,15 @@ class Pipeline:
         logger.info("[5/5] Building graph...")
         graph = self.graph_builder.build(resolved_entities, all_triples)
         graph = self.enricher.enrich(graph)
+        extraction_metadata = self._extraction_metadata()
+        graph.graph["language"] = self.config.language.value
+        graph.graph["extraction_method"] = extraction_metadata["method"]
 
         # ── Evaluate ──
         logger.info("Evaluating quality...")
         metrics = self.evaluator.evaluate_graph(graph, resolved_entities, all_triples)
         metrics["extraction"] = {
-            "method": "graphgen" if self.graphgen_extractor is not None else "baseline",
-            "model": self.config.llm_model if self.graphgen_extractor is not None else None,
-            "prompt_version": (
-                self.graphgen_extractor.prompt_version
-                if self.graphgen_extractor is not None
-                else None
-            ),
+            **extraction_metadata,
             "max_gleanings": (
                 self.config.graphgen_max_gleanings
                 if self.graphgen_extractor is not None
@@ -297,13 +301,42 @@ class Pipeline:
             triples=all_triples,
             output_dir=self.output_dir,
             formats=self.config.export_formats,
+            metadata={
+                "language": self.config.language.value,
+                "extraction": extraction_metadata,
+            },
         )
 
         # Save metrics
-        with open(self.output_dir / "metrics.json", "w") as f:
-            json.dump(metrics, f, indent=2)
+        with open(self.output_dir / "metrics.json", "w", encoding="utf-8") as f:
+            json.dump(metrics, f, indent=2, ensure_ascii=False)
 
         logger.info("Pipeline complete!")
+
+    def _extraction_metadata(self) -> dict[str, Any]:
+        if self.graphgen_extractor is not None:
+            return {
+                "language": self.config.language.value,
+                "method": "graphgen",
+                "backend": "deepseek",
+                "model": self.config.llm_model,
+                "backend_version": None,
+                "prompt_version": self.graphgen_extractor.prompt_version,
+            }
+
+        backend = "underthesea" if self.config.language == Language.VIETNAMESE else "spacy"
+        try:
+            backend_version = version(backend)
+        except PackageNotFoundError:
+            backend_version = None
+        return {
+            "language": self.config.language.value,
+            "method": "baseline",
+            "backend": backend,
+            "model": None,
+            "backend_version": backend_version,
+            "prompt_version": None,
+        }
 
     def _log_metrics(self, metrics: dict[str, Any]) -> None:
         logger.info("  Quality Metrics:")

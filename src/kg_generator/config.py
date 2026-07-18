@@ -107,6 +107,8 @@ class PipelineConfig:
             graph_backend=GraphBackend(pipeline.get("graph_backend", "networkx")),
             input_paths=[Path(p) for p in pipeline.get("input_paths", [])],
             file_formats=pipeline.get("file_formats", ["txt", "json", "csv"]),
+            chunk_size=pipeline.get("chunk_size", 500),
+            chunk_overlap=pipeline.get("chunk_overlap", 100),
             dedup_threshold=pipeline.get("dedup_threshold", 0.85),
             dedup_method=pipeline.get("dedup_method", "minhash"),
             llm_model=pipeline.get("llm_model", "deepseek-v4-pro"),

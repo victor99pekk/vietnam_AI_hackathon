@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from kg_generator.dedup.near_dedup import DuplicateMatch
+from kg_generator.ingest.cleaner import normalize_vietnamese_unicode
 
 
 DEFAULT_BGE_MODEL = "BAAI/bge-m3"
@@ -36,7 +37,11 @@ class CurationTextProcessor:
 
     def normalize(self, text: str) -> str:
         """Repair safe Unicode issues without changing linguistic content."""
-        text = unicodedata.normalize("NFC", text)
+        text = (
+            normalize_vietnamese_unicode(text)
+            if self.language == "vi"
+            else unicodedata.normalize("NFC", text)
+        )
         try:
             from ftfy import fix_text
 
@@ -380,6 +385,12 @@ class SemanticReviewer:
         import numpy as np
 
         limit = min(self.top_k + 1, len(embeddings))
+        if self.encoder is not None:
+            # Injected encoders are used for deterministic/local review. Exact
+            # NumPy search avoids optional FAISS GPU/Metal initialization.
+            scores = embeddings @ embeddings.T
+            indices = np.argsort(-scores, axis=1)[:, :limit]
+            return np.take_along_axis(scores, indices, axis=1), indices
         try:
             import faiss
         except ImportError as error:
@@ -392,8 +403,13 @@ class SemanticReviewer:
             return np.take_along_axis(scores, indices, axis=1), indices
         index: Any = faiss.IndexFlatIP(embeddings.shape[1])
         if self.device.startswith("cuda") and hasattr(faiss, "StandardGpuResources"):
-            resources = faiss.StandardGpuResources()
-            index = faiss.index_cpu_to_gpu(resources, 0, index)
+            try:
+                resources = faiss.StandardGpuResources()
+                index = faiss.index_cpu_to_gpu(resources, 0, index)
+            except RuntimeError:
+                # Some FAISS builds expose GPU/Metal symbols even when no
+                # usable device exists. CPU search remains deterministic.
+                index = faiss.IndexFlatIP(embeddings.shape[1])
         index.add(embeddings)
         return index.search(embeddings, limit)
 

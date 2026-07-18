@@ -5,7 +5,7 @@ import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any
+from typing import Any, Callable, Sequence
 
 from kg_generator.config import Language
 from kg_generator.identity import entity_id
@@ -42,7 +42,7 @@ class Entity:
     @property
     def aliases(self) -> list[str]:
         """All known surface forms (synonyms, misspellings, abbreviations)."""
-        return sorted(set(m.lower() for m in self.mentions))
+        return sorted(set(m.casefold() for m in self.mentions))
 
     @property
     def displayName(self) -> str:
@@ -134,15 +134,111 @@ class EnglishExtractor(EntityExtractor):
 
 
 class VietnameseExtractor(EntityExtractor):
-    """underthesea-based entity extraction for Vietnamese. Stub until vi deps installed."""
+    """Underthesea-backed Vietnamese named-entity and noun-phrase extraction."""
+
+    LABEL_MAP = {
+        "PER": "PERSON",
+        "LOC": "GPE",
+        "ORG": "ORG",
+    }
+
+    def __init__(
+        self,
+        ner_function: Callable[[str], Sequence[Sequence[str]]] | None = None,
+    ) -> None:
+        if ner_function is None:
+            try:
+                from underthesea import ner
+            except ImportError as error:
+                raise RuntimeError(
+                    "Vietnamese offline extraction requires Underthesea. "
+                    "Install it with: uv sync --extra vi"
+                ) from error
+            ner_function = ner
+        self._ner = ner_function
 
     def extract(self, text: str) -> list[Entity]:
-        # Stub — will use underthesea when installed:
-        # from underthesea import ner
-        # results = ner(text)
-        # for ent in results: ...
-        logger.warning("VietnameseExtractor is a stub — install kg-generator[vi] for full support")
-        return []
+        rows = [tuple(str(value) for value in row) for row in self._ner(text)]
+        entities: list[Entity] = []
+        seen: set[str] = set()
+
+        for name, raw_label in self._tagged_spans(rows, tag_index=3):
+            key = name.casefold()
+            if key in seen or len(name) <= 1:
+                continue
+            seen.add(key)
+            entities.append(
+                Entity(
+                    name=name,
+                    label=self.LABEL_MAP.get(raw_label, raw_label),
+                    mentions=[name],
+                    confidence=0.85,
+                )
+            )
+
+        for name, phrase_type in self._tagged_spans(rows, tag_index=2):
+            if phrase_type != "NP":
+                continue
+            key = name.casefold()
+            if key in seen or len(name) <= 2 or not any(char.isalpha() for char in name):
+                continue
+            seen.add(key)
+            entities.append(
+                Entity(
+                    name=name,
+                    label="CONCEPT",
+                    mentions=[name],
+                    confidence=0.70,
+                )
+            )
+
+        logger.debug("VietnameseExtractor: found %d entities", len(entities))
+        return entities
+
+    @staticmethod
+    def _tagged_spans(
+        rows: Sequence[Sequence[str]],
+        *,
+        tag_index: int,
+    ) -> list[tuple[str, str]]:
+        """Reconstruct BIO spans from Underthesea token rows.
+
+        A malformed I-tag starts a new span so one bad tag cannot discard the
+        remaining sentence.
+        """
+        spans: list[tuple[str, str]] = []
+        words: list[str] = []
+        current_type = ""
+
+        def flush() -> None:
+            nonlocal words, current_type
+            if words and current_type:
+                spans.append((" ".join(words).strip(), current_type))
+            words = []
+            current_type = ""
+
+        for row in rows:
+            if len(row) <= tag_index:
+                flush()
+                continue
+            word = row[0].strip()
+            tag = row[tag_index].strip().upper()
+            if not word or tag == "O" or "-" not in tag:
+                flush()
+                continue
+
+            prefix, span_type = tag.split("-", 1)
+            if prefix == "B" or prefix == "I" and span_type != current_type:
+                flush()
+                words = [word]
+                current_type = span_type
+            elif prefix == "I" and current_type == span_type:
+                words.append(word)
+            else:
+                flush()
+
+        flush()
+        return spans
 
 
 class SimpleExtractor(EntityExtractor):
@@ -185,11 +281,7 @@ class SimpleExtractor(EntityExtractor):
 def get_extractor(language: Language, spacy_model: str = "en_core_web_sm") -> EntityExtractor:
     """Factory: return the appropriate extractor for the given language."""
     if language == Language.VIETNAMESE:
-        try:
-            return VietnameseExtractor()
-        except ImportError:
-            logger.warning("underthesea not available — falling back to SimpleExtractor")
-            return SimpleExtractor()
+        return VietnameseExtractor()
     try:
         return EnglishExtractor(model_name=spacy_model)
     except ImportError:

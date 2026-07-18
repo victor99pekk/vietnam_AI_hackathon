@@ -82,9 +82,56 @@ Text: {input_text}
 Output:
 """
 
+FIGURE_8_VI_TEMPLATE = """Bạn là chuyên gia NLP về tiếng Việt, có nhiệm vụ trích xuất thực thể và quan hệ từ văn bản.
+
+-Mục tiêu-
+Từ văn bản và danh sách loại thực thể, xác định mọi thực thể phù hợp cùng những cặp thực thể có quan hệ rõ ràng. Tên, phần mô tả thực thể, mô tả quan hệ và từ khóa phải viết bằng tiếng Việt. Giữ nguyên mã loại thực thể bằng tiếng Anh.
+
+-Các bước-
+1. Với mỗi thực thể, trả về:
+- entity_name: tên đúng như trong văn bản, giữ nguyên dấu tiếng Việt.
+- entity_type: một loại trong [{entity_types}].
+- entity_summary: mô tả đầy đủ bằng tiếng Việt.
+Định dạng: ("entity"{tuple_delimiter}<entity_name>{tuple_delimiter}<entity_type>{tuple_delimiter}<entity_summary>)
+
+2. Với mỗi cặp có quan hệ rõ ràng, trả về source_entity, target_entity và relationship_summary bằng tiếng Việt.
+Định dạng: ("relationship"{tuple_delimiter}<source_entity>{tuple_delimiter}<target_entity>{tuple_delimiter}<relationship_summary>)
+
+3. Trả về từ khóa cấp cao:
+("content_keywords"{tuple_delimiter}<high_level_keywords>)
+
+4. Phân cách mọi bản ghi bằng {record_delimiter}. Kết thúc bằng {completion_delimiter}. Giữ nguyên chính xác các khóa kỹ thuật "entity", "relationship" và "content_keywords".
+
+################
+-Ví dụ-
+################
+Văn bản:
+Đại học Quốc gia Hà Nội hợp tác với Viện Hàn lâm Khoa học và Công nghệ Việt Nam để phát triển nghiên cứu trí tuệ nhân tạo tại Hà Nội.
+################
+Kết quả:
+("entity"{tuple_delimiter}"Đại học Quốc gia Hà Nội"{tuple_delimiter}"organization"{tuple_delimiter}"Một đại học quốc gia tham gia phát triển nghiên cứu trí tuệ nhân tạo."){record_delimiter}
+("entity"{tuple_delimiter}"Viện Hàn lâm Khoa học và Công nghệ Việt Nam"{tuple_delimiter}"organization"{tuple_delimiter}"Một tổ chức nghiên cứu hợp tác phát triển trí tuệ nhân tạo."){record_delimiter}
+("entity"{tuple_delimiter}"trí tuệ nhân tạo"{tuple_delimiter}"technology"{tuple_delimiter}"Lĩnh vực công nghệ được hai tổ chức cùng nghiên cứu."){record_delimiter}
+("entity"{tuple_delimiter}"Hà Nội"{tuple_delimiter}"location"{tuple_delimiter}"Địa điểm diễn ra hoạt động nghiên cứu."){record_delimiter}
+("relationship"{tuple_delimiter}"Đại học Quốc gia Hà Nội"{tuple_delimiter}"Viện Hàn lâm Khoa học và Công nghệ Việt Nam"{tuple_delimiter}"Hai tổ chức hợp tác để phát triển nghiên cứu trí tuệ nhân tạo."){record_delimiter}
+("content_keywords"{tuple_delimiter}"hợp tác nghiên cứu, trí tuệ nhân tạo"){completion_delimiter}
+
+################
+-Dữ liệu thực-
+################
+Entity_types: {entity_types}
+Văn bản: {input_text}
+################
+Kết quả:
+"""
+
 CONTINUE_PROMPT = """MANY entities and relationships were missed in the last extraction. Add them below using the same format:"""
 
+CONTINUE_PROMPT_VI = """Nhiều thực thể và quan hệ còn thiếu. Hãy bổ sung bằng đúng định dạng trước đó:"""
+
 IF_LOOP_PROMPT = """It appears some entities and relationships may have still been missed. Answer YES | NO if there are still entities and relationships that need to be added."""
+
+IF_LOOP_PROMPT_VI = """Có còn thực thể hoặc quan hệ nào cần bổ sung không? Chỉ trả lời YES hoặc NO."""
 
 FIGURE_9_SUMMARIZATION_TEMPLATE = """You are an NLP expert responsible for generating a comprehensive summary of the data provided below.
 Given one entity or relationship and a list of descriptions all related to that same entity or relationship, combine them into one comprehensive description. Include information from every description. If descriptions contradict each other, resolve the contradictions and provide one coherent summary. Write in the third person and include the entity names for full context.
@@ -96,6 +143,17 @@ Entity or relationship: {name}
 Description List: {description_list}
 #######
 Output:
+"""
+
+FIGURE_9_SUMMARIZATION_TEMPLATE_VI = """Bạn là chuyên gia NLP tạo bản tổng hợp đầy đủ từ dữ liệu bên dưới.
+Hãy kết hợp mọi mô tả của cùng một thực thể hoặc quan hệ thành một mô tả mạch lạc bằng tiếng Việt. Giữ đủ thông tin, xử lý mâu thuẫn và nêu rõ tên thực thể. Không dịch các mã định danh kỹ thuật.
+
+#######
+-Dữ liệu-
+Thực thể hoặc quan hệ: {name}
+Danh sách mô tả: {description_list}
+#######
+Kết quả:
 """
 
 TUPLE_DELIMITER = "<|>"

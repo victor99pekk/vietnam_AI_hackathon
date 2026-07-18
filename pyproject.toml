@@ -40,7 +40,7 @@ dev = [
 ]
 # Vietnamese NLP support (install when switching to vi)
 vi = [
-    "underthesea>=1.4",
+    "underthesea>=9.5,<10",
 ]
 # Public dataset download and streaming
 data = [

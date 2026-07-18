@@ -83,9 +83,22 @@ See `configs/pipeline.yaml` for all options and `configs/default_ontology.yaml` 
 ### Adding Vietnamese Support
 
 ```bash
-uv pip install -e ".[vi]"
-kg-gen run -l vi -i vietnamese_data/
+uv sync --extra vi --extra llm
+
+# GraphGen quality path (does not require Underthesea at runtime)
+kg-gen run -l vi --llm -i vietnamese_data/
+
+# Offline path (requires Underthesea)
+kg-gen run -l vi --no-llm -i vietnamese_data/
+
+# Ready-to-run example configuration
+kg-gen run -c configs/vietnamese.yaml
 ```
+
+Vietnamese names, descriptions, evidence, and source text remain Vietnamese.
+Entity types and structural predicates remain the same English schema identifiers
+used by English graphs. If Underthesea is missing, the offline path stops with an
+install command instead of exporting an empty graph.
 
 ### Using Embedding-based Entity Resolution
 
