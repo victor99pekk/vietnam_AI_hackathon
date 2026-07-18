@@ -46,6 +46,13 @@ vi = [
 data = [
     "datasets>=3.0",
 ]
+# Web scraping for LLM dataset collection (robots.txt compliant, sitemap/crawl discovery)
+scraper = [
+    "requests>=2.31",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.0",
+    "trafilatura>=1.12",
+]
 # Graph DB export support
 neo4j = [
     "neo4j>=5.15",
@@ -57,7 +64,7 @@ llm = [
 ]
 # All extras
 all = [
-    "kg-generator[embeddings,curation,vi,data,neo4j,llm,dev,eval-data,eval-model]",
+    "kg-generator[embeddings,curation,vi,data,scraper,neo4j,llm,dev,eval-data,eval-model]",
 ]
 # Evaluation — data_eval: SFT data quality (lightweight, works everywhere)
 eval-data = [

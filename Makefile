@@ -18,26 +18,42 @@ model   ?= all
 DEVICE  ?= cpu
 wiki_count ?= 100
 wiki_lang  ?= en
+scrape_seed  ?= data/download_data/seeds/vietnamese_sources.txt
+scrape_count ?= 50
+scrape_lang  ?= vi
+scrape_time  ?= 600
+scrape_depth ?= 2
 
-.PHONY: help test ingest upload download download-wikipedia new-graph add plots LLM_plots install clean \
+.PHONY: help test ingest upload download download-wikipedia scrape scrape-standalone new-graph add plots LLM_plots install clean \
+        neo4j-new-graph neo4j-add neo4j-add-file neo4j-clear \
+        neo4j-eval-method1 \
         eval-install eval-install-model eval-method1 eval-method2 eval-graphgen eval-all \
         eval-local eval-datasets
 
 help:
 	@echo "Usage: make <target> [dataset=<name>] [MODEL=<model>]"
 	@echo ""
-	@echo "── Pipeline ────────────────────────────────────────────"
+	@echo "── Pipeline (networkx — in-memory, no external services) ─"
 	@echo "   test             Run the test suite"
 	@echo "   ingest           Run the KG generation pipeline"
-	@echo "   upload           Replace Neo4j contents with the generated graph"
-	@echo "   download         Download graph from Neo4j → knowledge_graph.json"
 	@echo "   new-graph        Build KG from data and upload to Neo4j [dataset=small|wikipedia]"
 	@echo "   add              Add all .jsonl files from data/add/ to the Neo4j graph"
-	@echo "   plots            Generate PNG plots from evaluation results"
-	@echo "   LLM_plots        Generate model comparison plots from ablation results"
+	@echo "   upload           Replace Neo4j contents with the generated graph"
+	@echo "   download         Download graph from Neo4j → knowledge_graph.json"
 	@echo "   download-wikipedia  Download Wikipedia articles as JSONL [wiki_count=100] [wiki_lang=en]"
 	@echo "   install          Set up the project and install dependencies"
 	@echo "   clean            Remove generated output folders"
+	@echo ""
+	@echo "── Pipeline (neo4j — on-disk, incremental, scales beyond RAM) ─"
+	@echo "   neo4j-new-graph  Build KG directly in Neo4j (clears existing) [dataset=small|wikipedia]"
+	@echo "   neo4j-add        Incrementally add files from data/add/ to Neo4j"
+	@echo "   neo4j-add-file   Add a single file to Neo4j [FILE=path/to/file.jsonl]"
+	@echo "   neo4j-clear      Delete everything in Neo4j"
+	@echo "   neo4j-eval-method1  Run structural audit directly against Neo4j [dataset=small|wikipedia]"
+	@echo ""
+	@echo "── Visualization ────────────────────────────────────────"
+	@echo "   plots            Generate PNG plots from evaluation results"
+	@echo "   LLM_plots        Generate model comparison plots from ablation results"
 	@echo ""
 	@echo "── Evaluation ──────────────────────────────────────────"
 	@echo ""
@@ -71,11 +87,26 @@ help:
 	@echo "   DEVICE   = cpu | cuda                 (default: cpu)"
 	@echo "   wiki_count = 100                      (articles to download)"
 	@echo "   wiki_lang  = en | vi                  (Wikipedia language)"
+	@echo "   scrape_count = 50                     (pages to scrape)"
+	@echo "   scrape_lang  = vi                     (scraping language)"
+	@echo "   scrape_time  = 600                    (max seconds, 0=no limit)"
+	@echo "   scrape_depth = 2                      (crawl link depth, 1=landing pages only)"
+	@echo "   scrape_seed  = data/download_data/seeds/vietnamese_sources.txt"
 	@echo ""
 	@echo "── Examples ────────────────────────────────────────────"
-	@echo "   make download-wikipedia wiki_count=500            # download 500 en articles"
+	@echo "   # Classic pipeline (networkx in-memory → JSON → upload)"
+	@echo "   make scrape                                       # scrape 50 pages from Vietnamese sources"
+	@echo "   make scrape scrape_count=100 scrape_time=300       # 100 pages or 5 min"
 	@echo "   make new-graph dataset=wikipedia                  # build KG + upload to Neo4j"
 	@echo "   make add                                          # add data/add/*.jsonl to Neo4j"
+	@echo ""
+	@echo "   # Neo4j-native pipeline (direct-to-database, scales beyond RAM)"
+	@echo "   make neo4j-new-graph dataset=wikipedia            # build KG directly in Neo4j"
+	@echo "   make neo4j-add                                    # incrementally add data/add/*.jsonl"
+	@echo "   make neo4j-add-file FILE=data/new_article.jsonl   # add a single file"
+	@echo "   make neo4j-eval-method1 dataset=small             # audit graph directly in Neo4j"
+	@echo ""
+	@echo "   make download-wikipedia wiki_count=500            # download 500 en articles"
 	@echo "   make eval-method1                                 # quick KG health check"
 	@echo "   make eval-local                                  # full local eval: audit + QA datasets"
 	@echo "   make eval-datasets                               # generate QA datasets for Colab"
@@ -98,6 +129,21 @@ upload:
 ## download: Download the graph from Neo4j (e.g., for Colab evaluation)  [dataset=small|wikipedia]
 download:
 	$(VENV) && kg-gen neo4j-download -o ./generated_KGs/output_$(dataset)/knowledge_graph.json
+
+## scrape: Scrape Vietnamese web sources into JSONL  [scrape_seed=path] [scrape_count=50] [scrape_lang=vi] [scrape_time=600] [scrape_depth=2]
+scrape:
+	$(VENV) && python data/download_data/scraper.py \
+		--seed-file $(scrape_seed) \
+		--max-pages $(scrape_count) \
+		--language $(scrape_lang) \
+		--max-time $(scrape_time) \
+		--depth $(scrape_depth) \
+		--min-unique-chars 120 \
+		--discovery auto \
+		--output data/scraped/vn_web_$(scrape_count)/
+
+## scrape-standalone: Run scraper directly (alias for scrape — same behavior)
+scrape-standalone: scrape
 
 ## download-wikipedia: Download Wikipedia articles as JSONL  [wiki_count=100] [wiki_lang=en]
 download-wikipedia:
@@ -125,6 +171,47 @@ add:
 		-o ./generated_KGs/output_$(dataset)_add; \
 	$(VENV) && kg-gen neo4j-upload \
 		-o ./generated_KGs/output_$(dataset)_add
+
+# ═══════════════════════════════════════════════════════════
+# Neo4j-native pipeline (direct-to-database, scales beyond RAM)
+# ═══════════════════════════════════════════════════════════
+
+## neo4j-new-graph: Build KG directly in Neo4j (clears existing graph first)  [dataset=small|wikipedia]
+neo4j-new-graph:
+	$(VENV) && kg-gen run \
+		-c $(dataset_conf.$(dataset)) \
+		$(dataset_input.$(dataset)) \
+		-o ./generated_KGs/output_$(dataset) \
+		--backend neo4j \
+		--clear
+
+## neo4j-add: Incrementally add all .jsonl files from data/add/ to the existing Neo4j graph
+neo4j-add:
+	@files=$$(find data/add -name '*.jsonl' -type f 2>/dev/null); \
+	if [ -z "$$files" ]; then \
+		echo "ERROR: no .jsonl files found in data/add/"; \
+		exit 1; \
+	fi; \
+	echo "Adding files:"; \
+	echo "$$files" | sed 's/^/  /'; \
+	input_args=$$(echo "$$files" | sed 's/^/-i /' | tr '\n' ' '); \
+	$(VENV) && kg-gen add-doc \
+		-c $(dataset_conf.$(dataset)) \
+		$$input_args \
+		-o ./generated_KGs/output_$(dataset)
+
+## neo4j-add-file: Add a single file to Neo4j (usage: make neo4j-add-file FILE=data/new_article.jsonl)
+neo4j-add-file:
+	@test -f "$(FILE)" || { echo "ERROR: $(FILE) not found"; exit 1; }
+	$(VENV) && kg-gen add-doc -c $(dataset_conf.$(dataset)) -i "$(FILE)" -o ./generated_KGs/output_$(dataset)
+
+## neo4j-clear: Delete everything in Neo4j
+neo4j-clear:
+	$(VENV) && kg-gen neo4j-clear --yes
+
+## neo4j-eval-method1: Run structural audit directly against Neo4j (no JSON download, no RAM limit)
+neo4j-eval-method1:
+	$(VENV) && python evaluation/run_eval.py --method 1 --kg $(dataset_kg.$(dataset)) --neo4j -o output_eval/$(dataset)
 
 ## plots: Generate visual plots from evaluation results  [dataset=small|wikipedia]
 plots:
