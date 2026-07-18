@@ -58,6 +58,10 @@
       <div class="slide-inner">
         <p class="slide-subhead">Training Stages</p>
         <h2 class="slide-headline">What data is needed in LLM training?</h2>
+        <ul class="bullet-list">
+          <li><strong>Pretraining:</strong> Broad Vietnamese corpora and multilingual context to teach language patterns.</li>
+          <li><strong>Fine-tuning:</strong> Curated Vietnamese examples, QA pairs, domain documents, and safety-aligned samples.</li>
+        </ul>
         <div class="img-row-2">
           <div class="img-col">
             <img src="images/1.png" alt="Data management pipeline in the pretraining stage of LLMs: domain composition, quantity control, quality filtering, deduplication, toxicity filtering, diversity and age" />
@@ -189,7 +193,7 @@
             <text x="650" y="238" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#888">atomic transaction</text>
           </svg>
         </div>
-        <p class="slide-body">Documents flow through the pipeline, are archived to MongoDB as ground truth, then checked against Neo4j — old chunks are deleted and new data is merged atomically.</p>
+        <p class="slide-body">The knowledge graph is exported to <strong>JSONL</strong>, <strong>GraphML</strong>, and <strong>Neo4j CSV</strong> for downstream training pipelines. For large-scale graphs that would exhaust pipeline machine RAM, we stream entities and triples directly into Neo4j — building the graph in-database rather than in memory. Old chunks are atomically replaced when documents are updated.</p>
       </div>
     </section>
 
