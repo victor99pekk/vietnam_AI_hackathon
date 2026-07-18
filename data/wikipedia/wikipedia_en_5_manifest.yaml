@@ -1,0 +1,6 @@
+dataset_name: wikimedia-wikipedia-en-sample
+version: 20231101-en-5
+license: CC-BY-SA-3.0 AND GFDL
+source: https://huggingface.co/datasets/wikimedia/wikipedia
+language: en
+collection_date: '2023-11-01'
