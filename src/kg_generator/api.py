@@ -10,6 +10,7 @@ import re
 import tempfile
 import os
 import hashlib
+import logging
 import threading
 import time
 import json
@@ -19,6 +20,7 @@ from typing import Any, Literal
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel, Field, field_validator, ConfigDict, model_validator
 from fastapi.staticfiles import StaticFiles
+from dotenv import load_dotenv
 
 from kg_generator.config import Language, PipelineConfig
 from kg_generator.identity import entity_id
@@ -26,6 +28,47 @@ from kg_generator.identity import entity_id
 MAX_INPUT_CHARS = 20_000
 RUN_LOCK = threading.Lock()
 DEEPSEEK_MODELS = ("deepseek-v4-flash", "deepseek-v4-pro")
+LOGGER = logging.getLogger(__name__)
+
+# ``uvicorn kg_generator.api:app`` does not execute the CLI's dotenv loader.
+# Load the project-local file explicitly, while preserving environment variables
+# injected by Docker/Cloud Run/another process.
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+load_dotenv(PROJECT_ROOT / ".env", override=False)
+
+
+def _neo4j_config(scope: Literal["global", "interactive"]) -> dict[str, str]:
+    """Resolve one Neo4j target without exposing credentials to the browser."""
+    prefix = f"NEO4J_{scope.upper()}"
+
+    def first(*names: str, default: str = "") -> str:
+        for name in names:
+            value = os.getenv(name)
+            if value:
+                return value
+        return default
+
+    # The generic names keep the existing CLI compatible. The split names let
+    # the demo use the read-only global Aura instance and writable lab instance
+    # at the same time.
+    return {
+        "uri": first(f"{prefix}_URI", "NEO4J_URI"),
+        "user": first(f"{prefix}_USER", f"{prefix}_USERNAME", "NEO4J_USER", "NEO4J_USERNAME"),
+        "password": first(f"{prefix}_PASSWORD", "NEO4J_PASSWORD"),
+        "database": first(f"{prefix}_DATABASE", "NEO4J_DATABASE", default="neo4j"),
+    }
+
+
+def _neo4j_driver(config: dict[str, str]):
+    """Build an Aura driver, with an explicit opt-in for intercepted TLS."""
+    from neo4j import GraphDatabase
+
+    options: dict[str, Any] = {"connection_timeout": 8}
+    uri = config["uri"]
+    if os.getenv("NEO4J_TRUST_ALL_CERTIFICATES", "").lower() in {"1", "true", "yes"}:
+        uri = uri.replace("neo4j+s://", "neo4j+ssc://").replace("bolt+s://", "bolt+ssc://")
+        LOGGER.warning("NEO4J_TRUST_ALL_CERTIFICATES is enabled; use only on a trusted local network")
+    return GraphDatabase.driver(uri, auth=(config["user"], config["password"]), **options)
 
 DEMO_TEXT = (
     "Võ Nguyên Giáp sinh năm 1911 tại Quảng Bình. Ông là một nhân vật quan trọng "
@@ -150,11 +193,10 @@ def options() -> dict[str, Any]:
         embeddings_available = importlib.util.find_spec("sentence_transformers") is not None
     except (ImportError, ValueError):
         embeddings_available = False
-    interactive_configured = bool(
-        os.getenv("NEO4J_URI")
-        and (os.getenv("NEO4J_INTERACTIVE_USER") or os.getenv("NEO4J_USER"))
-        and (os.getenv("NEO4J_INTERACTIVE_PASSWORD") or os.getenv("NEO4J_PASSWORD"))
-    )
+    interactive_config = _neo4j_config("interactive")
+    global_config = _neo4j_config("global")
+    interactive_configured = all(interactive_config.values())
+    global_configured = all(global_config.values())
     return {"languages": ["vi", "en"], "extraction": ["offline", "graphgen"],
             "llm_models": list(DEEPSEEK_MODELS), "chunk_methods": ["none", "fixed", "sentence", "semantic"],
             "quality_methods": ["none", "heuristic"], "resolve_methods": ["string", "embedding"],
@@ -164,7 +206,7 @@ def options() -> dict[str, Any]:
                            "chunk_overlap_tokens": {"min": 0, "max": 3999},
                            "threshold": {"min": 0, "max": 1}},
             "availability": {"neo4j": interactive_configured, "interactive_neo4j": interactive_configured,
-                             "global_neo4j": bool(os.getenv("NEO4J_URI")),
+                             "global_neo4j": global_configured,
                              "graphgen": bool(os.getenv("DEEPSEEK_API_KEY")),
                              "embeddings": embeddings_available}}
 
@@ -299,20 +341,16 @@ def create_run(request: RunRequest) -> dict[str, Any]:
 
 def _persist_interactive(payload: dict[str, Any]) -> dict[str, Any]:
     """Atomically replace the interactive graph when Neo4j is configured."""
-    uri = os.getenv("NEO4J_URI")
-    user = os.getenv("NEO4J_INTERACTIVE_USER")
-    password = os.getenv("NEO4J_INTERACTIVE_PASSWORD") or os.getenv("NEO4J_PASSWORD")
-    user = user or os.getenv("NEO4J_USER")
-    if not (uri and user and password):
+    config = _neo4j_config("interactive")
+    if not all(config.values()):
         return {"status": "skipped", "reason": "interactive Neo4j is not configured"}
     try:
-        from neo4j import GraphDatabase
         from kg_generator.export.neo4j_upload import replace_documents_atomic
         graph = payload.get("graph", {})
         nodes, edges = graph.get("nodes", []), graph.get("links", graph.get("edges", []))
         document_ids = [n.get("id", "") for n in nodes if n.get("type") == "Document"]
-        driver = GraphDatabase.driver(uri, auth=(user, password))
-        with driver.session(database=os.getenv("NEO4J_INTERACTIVE_DATABASE", "interactive")) as session:
+        driver = _neo4j_driver(config)
+        with driver.session(database=config["database"]) as session:
             def writer(tx):
                 for node in nodes:
                     label = "Document" if node.get("type") == "Document" else ("Chunk" if node.get("type") == "Chunk" else "Entity")
@@ -322,9 +360,10 @@ def _persist_interactive(payload: dict[str, Any]) -> dict[str, Any]:
                         tx.run("MATCH (a {id:$source}), (b {id:$target}) MERGE (a)-[r:RELATION {predicate:$predicate}]->(b)", source=edge.get("source"), target=edge.get("target"), predicate=predicate)
             replace_documents_atomic(session, document_ids, writer, clear_all=True)
         driver.close()
-        return {"status": "persisted", "database": os.getenv("NEO4J_INTERACTIVE_DATABASE", "interactive")}
+        return {"status": "persisted", "database": config["database"]}
     except Exception as error:
-        return {"status": "failed", "reason": str(error)}
+        LOGGER.warning("Interactive Neo4j persistence failed: %s", type(error).__name__)
+        return {"status": "failed", "reason": "Neo4j write failed; graph preview remains available"}
 
 
 @app.post("/api/pipeline/run")
@@ -359,17 +398,14 @@ def _sample_global_graph() -> dict[str, Any]:
     }
 
 
-def _neo4j_graph(*, database: str, user_env: str, password_env: str,
+def _neo4j_graph(*, scope: Literal["global", "interactive"],
                  node_id: str | None = None, query: str = "", limit: int = 150) -> dict[str, Any] | None:
-    uri = os.getenv("NEO4J_URI")
-    user = os.getenv(user_env) or os.getenv("NEO4J_USER")
-    password = os.getenv(password_env) or os.getenv("NEO4J_PASSWORD")
-    if not (uri and user and password):
+    config = _neo4j_config(scope)
+    if not all(config.values()):
         return None
     try:
-        from neo4j import GraphDatabase
-        driver = GraphDatabase.driver(uri, auth=(user, password))
-        with driver.session(database=database) as session:
+        driver = _neo4j_driver(config)
+        with driver.session(database=config["database"]) as session:
             if node_id:
                 record = session.run(
                     "MATCH (n {id:$id}) OPTIONAL MATCH (n)-[r]-(m) "
@@ -381,8 +417,8 @@ def _neo4j_graph(*, database: str, user_env: str, password_env: str,
                 links = list(record["links"] or []) if record else []
             else:
                 nodes = [row["node"] for row in session.run(
-                    "MATCH (n) WHERE $query='' OR toLower(coalesce(n.name,n.id,'')) CONTAINS toLower($query) "
-                    "RETURN n AS node LIMIT $limit", query=query, limit=limit,
+                    "MATCH (n) WHERE $search_query='' OR toLower(coalesce(n.name,n.id,'')) CONTAINS toLower($search_query) "
+                    "RETURN n AS node LIMIT $limit", search_query=query, limit=limit,
                 )]
                 ids = [str(dict(node).get("id", "")) for node in nodes]
                 links = [dict(row) for row in session.run(
@@ -392,18 +428,22 @@ def _neo4j_graph(*, database: str, user_env: str, password_env: str,
         driver.close()
         unique_nodes = {str(dict(node).get("id", "")): dict(node) for node in nodes if node}
         serial_nodes = list(unique_nodes.values())
-        scope = "global" if database == os.getenv("NEO4J_GLOBAL_DATABASE", "neo4j") else "interactive"
         return {"metadata": {"source": "live", "read_only": scope == "global", "scope": scope},
                 "graph": {"nodes": serial_nodes, "links": links},
                 "stats": {"num_nodes": len(serial_nodes), "num_edges": len(links), "num_triples": len(links)}}
-    except Exception:
+    except Exception as error:
+        LOGGER.warning("%s Neo4j graph read failed: %s", scope, type(error).__name__)
         return None
 
 
 @app.get("/api/graph/global")
 def global_graph(q: str = Query(default="", max_length=120), limit: int = Query(default=150, ge=1, le=500)) -> dict[str, Any]:
-    return _neo4j_graph(database=os.getenv("NEO4J_GLOBAL_DATABASE", "neo4j"), user_env="NEO4J_GLOBAL_USER",
-                        password_env="NEO4J_GLOBAL_PASSWORD", query=q, limit=limit) or _sample_global_graph()
+    live = _neo4j_graph(scope="global", query=q, limit=limit)
+    # An Aura instance can be reachable but empty (for example immediately
+    # after creation). Keep the visual surface useful until data is uploaded.
+    if live and live.get("graph", {}).get("nodes"):
+        return live
+    return _sample_global_graph()
 
 
 @app.get("/api/graphs/global")
@@ -418,15 +458,13 @@ def graph_read() -> dict[str, Any]:
 
 @app.get("/api/graph/{node_id}")
 def graph_node(node_id: str) -> dict[str, Any]:
-    return _neo4j_graph(database=os.getenv("NEO4J_GLOBAL_DATABASE", "neo4j"), user_env="NEO4J_GLOBAL_USER",
-                        password_env="NEO4J_GLOBAL_PASSWORD", node_id=node_id) or {
+    return _neo4j_graph(scope="global", node_id=node_id) or {
                             "graph": {"nodes": [], "links": []}, "metadata": {"read_only": True, "scope": "global"}}
 
 
 @app.get("/api/graphs/interactive")
 def graphs_interactive(q: str = Query(default="", max_length=120), limit: int = Query(default=150, ge=1, le=500)) -> dict[str, Any]:
-    return _neo4j_graph(database=os.getenv("NEO4J_INTERACTIVE_DATABASE", "interactive"), user_env="NEO4J_INTERACTIVE_USER",
-                        password_env="NEO4J_INTERACTIVE_PASSWORD", query=q, limit=limit) or {
+    return _neo4j_graph(scope="interactive", query=q, limit=limit) or {
                             "metadata": {"source": "empty", "read_only": False, "scope": "interactive"},
                             "graph": {"nodes": [], "links": []}, "stats": {"num_nodes": 0, "num_edges": 0, "num_triples": 0}}
 

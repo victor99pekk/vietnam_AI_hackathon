@@ -29,6 +29,21 @@
   opacity: 0.52;
 }
 
+.setting-help {
+  display: block;
+  min-height: 2.5em;
+  margin-top: 6px;
+  color: #78969e;
+  font-size: 10px;
+  line-height: 1.35;
+  text-transform: none;
+}
+
+.field:has(select:focus) .setting-help,
+.field:has(input:focus) .setting-help {
+  color: #a8c4c9;
+}
+
 @media (max-width: 620px) {
   .settings-grid {
     grid-template-columns: 1fr;

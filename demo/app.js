@@ -51,9 +51,48 @@
 
   function applyAvailability(options) {
     const availability = options?.availability || {};
-    const method = $('#method'); const graphgen = method.querySelector('option[value="graphgen"]'); if (graphgen) { graphgen.disabled = availability.graphgen === false; graphgen.textContent = availability.graphgen === false ? 'GraphGen (API key needed)' : 'GraphGen'; }
+    const method = $('#method'); const graphgen = method.querySelector('option[value="graphgen"]'); if (graphgen) { graphgen.disabled = availability.graphgen === false; graphgen.textContent = availability.graphgen === false ? 'GraphGen — Recommended quality · API key needed' : 'GraphGen — Recommended · best relationships'; }
     ['chunkMethod', 'documentDedupMethod', 'dedupMethod', 'resolveMethod'].forEach((id) => { const select = $(`#${id}`); if (!select) return; const advanced = [...select.options].filter((option) => ['semantic', 'layered', 'embedding'].includes(option.value)); advanced.forEach((option) => { option.disabled = availability.embeddings === false; if (availability.embeddings === false && option.value === select.value) select.value = select.options[0].value; }); });
     $('#modelField').classList.toggle('hidden', method.value !== 'graphgen');
+    updateGuidance();
+  }
+
+  function updateGuidance() {
+    const guidance = {
+      extraction: {
+        offline: 'Beta and fastest. Good for demonstrating entities, but its baseline relation logic may connect too many node pairs.',
+        graphgen: 'Recommended for meaningful entities and relationships. Uses an LLM, so it is slower and requires the API key.',
+      },
+      chunk: {
+        sentence: 'Recommended default: 450 target tokens with 60-token overlap. Preserves sentence boundaries at good demo speed.',
+        fixed: 'Fast and predictable, but can split sentences. Recommended starting values: 500 characters with 100 overlap.',
+        none: 'Fastest for short input. Avoid it for long documents because the extractor receives one large block.',
+        semantic: 'Best contextual boundaries. Uses embeddings and is the slowest chunking choice.',
+      },
+      quality: {
+        heuristic: 'Recommended. Applies lightweight quality checks without an external model call.',
+        none: 'Skips quality filtering for maximum speed; noisy input can produce a noisier graph.',
+      },
+      dedup: {
+        minhash: 'Recommended at 0.85: fast, robust near-duplicate detection for normal documents.',
+        none: 'Fastest, but repeated text can create repeated entities and facts.',
+        exact: 'Removes identical text only. Very fast, but misses small wording changes.',
+        simhash: 'Fast near-match detection; useful for lightly edited copies.',
+        ngram: 'Balances lexical precision and speed for similar phrasing.',
+        semantic: 'Finds paraphrases by meaning. Better recall, with extra embedding time.',
+        layered: 'Most thorough option: combines multiple checks, with the highest runtime cost.',
+      },
+      resolution: {
+        string: 'Recommended for the demo. Fast and deterministic; merges names with strong textual similarity.',
+        embedding: 'Best for aliases and semantic variants, but slower because it computes embeddings.',
+      },
+    };
+    $('#extractionHelp').textContent = guidance.extraction[$('#method').value];
+    $('#chunkHelp').textContent = guidance.chunk[$('#chunkMethod').value];
+    $('#qualityHelp').textContent = guidance.quality[$('#qualityMethod').value];
+    $('#documentDedupHelp').textContent = guidance.dedup[$('#documentDedupMethod').value];
+    $('#chunkDedupHelp').textContent = guidance.dedup[$('#dedupMethod').value];
+    $('#resolutionHelp').textContent = guidance.resolution[$('#resolveMethod').value];
   }
 
   async function loadOptions() { try { state.options = await getJSON('/api/options'); applyAvailability(state.options); } catch (error) { /* defaults remain usable */ } }
@@ -85,11 +124,12 @@
   document.querySelectorAll('.view').forEach((button) => button.addEventListener('click', () => { document.querySelectorAll('.view').forEach((item) => item.classList.toggle('active', item === button)); $('#globalView').classList.toggle('hidden', button.dataset.view !== 'global'); $('#labView').classList.toggle('hidden', button.dataset.view !== 'lab'); }));
   document.querySelectorAll('.tab').forEach((button) => button.addEventListener('click', () => { document.querySelectorAll('.tab').forEach((item) => item.classList.toggle('active', item === button)); ['sample', 'paste', 'upload'].forEach((name) => $(`#${name}Pane`).classList.toggle('hidden', button.dataset.tab !== name)); }));
   $('#method').addEventListener('change', () => { $('#modelField').classList.toggle('hidden', $('#method').value !== 'graphgen'); applyAvailability(state.options); });
-  $('#chunkMethod').addEventListener('change', () => { const method = $('#chunkMethod').value; const fixed = method === 'fixed'; const advanced = method === 'sentence' || method === 'semantic'; $('#chunkSizeField').classList.toggle('hidden', !fixed); $('#chunkOverlapField').classList.toggle('hidden', !fixed); $('#chunkTargetField').classList.toggle('hidden', !advanced); $('#chunkTokenOverlapField').classList.toggle('hidden', !advanced); $('#semanticThresholdField').classList.toggle('hidden', method !== 'semantic'); });
+  $('#chunkMethod').addEventListener('change', () => { const method = $('#chunkMethod').value; const fixed = method === 'fixed'; const advanced = method === 'sentence' || method === 'semantic'; $('#chunkSizeField').classList.toggle('hidden', !fixed); $('#chunkOverlapField').classList.toggle('hidden', !fixed); $('#chunkTargetField').classList.toggle('hidden', !advanced); $('#chunkTokenOverlapField').classList.toggle('hidden', !advanced); $('#semanticThresholdField').classList.toggle('hidden', method !== 'semantic'); updateGuidance(); });
+  ['qualityMethod', 'documentDedupMethod', 'dedupMethod', 'resolveMethod'].forEach((id) => $(`#${id}`).addEventListener('change', updateGuidance));
   $('#loadSample').addEventListener('click', async () => { try { const result = await getJSON('/api/demo/sample'); $('#source').value = result.text || ''; $('#count').textContent = $('#source').value.length; document.querySelector('[data-tab="paste"]').click(); } catch (error) { $('#error').textContent = 'Sample unavailable; paste your own text.'; $('#error').classList.remove('hidden'); } });
   $('#source').addEventListener('input', () => { $('#count').textContent = $('#source').value.length; });
   $('#file').addEventListener('change', (event) => { const file = event.target.files[0]; if (!file) return; $('#filename').textContent = file.name; const reader = new FileReader(); reader.onload = () => { $('#source').value = String(reader.result).slice(0, 20000); $('#count').textContent = $('#source').value.length; document.querySelector('[data-tab="paste"]').click(); }; reader.readAsText(file); });
   $('#run').addEventListener('click', run); $('#globalSearch').addEventListener('input', (event) => search('global', event.target.value)); $('#labSearch').addEventListener('input', (event) => search('lab', event.target.value)); $('#globalFit').addEventListener('click', () => state.cyGlobal?.fit(undefined, 35)); $('#labFit').addEventListener('click', () => state.cyLab?.fit(undefined, 35)); $('#globalReset').addEventListener('click', () => { state.cyGlobal?.elements().removeStyle('opacity'); state.cyGlobal?.fit(undefined, 35); });
   $('#download').addEventListener('click', () => { if (!state.lab) return; const url = URL.createObjectURL(new Blob([JSON.stringify(state.lab, null, 2)], { type: 'application/json' })); const link = document.createElement('a'); link.href = url; link.download = 'vietgraph-result.json'; link.click(); URL.revokeObjectURL(url); });
-  $('#modelField').classList.add('hidden'); $('#chunkMethod').dispatchEvent(new Event('change')); loadOptions(); loadGlobal();
+  $('#modelField').classList.add('hidden'); $('#chunkMethod').dispatchEvent(new Event('change')); updateGuidance(); loadOptions(); loadGlobal();
 })();

@@ -1,0 +1,26 @@
+# Vietnamese GraphGen-style subgraph and QA generation.
+# Use with evaluation/run_eval.py --method graphgen.
+
+common:
+  seed: 42
+  output_dir: output_eval
+
+graphgen:
+  subgraphs:
+    max_depth: 2
+    max_premise_tokens: 512
+    max_extra_edges: 4
+    # max_loss currently falls back to stable IDs when comprehension-loss
+    # values are absent. Seeded random sampling gives broader coverage.
+    edge_sampling: random
+    bidirectional: true
+    max_subgraphs: 1000
+
+  qa_generation:
+    model: deepseek-v4-pro
+    provider: deepseek
+    language: Vietnamese
+    temperature: 0.0
+    max_tokens: 768
+    max_questions: 500
+

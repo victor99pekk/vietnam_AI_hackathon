@@ -1,0 +1,67 @@
+# Scale-safe, quality-first Vietnamese pipeline for a global Neo4j graph.
+#
+# Required environment variables:
+#   NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, DEEPSEEK_API_KEY
+# Optional document version archive:
+#   MONGO_URI, MONGO_DATABASE
+#
+# Override input_paths per immutable batch with:
+#   kg-gen run -c configs/vietnamese_global_quality.yaml -i PATH/TO/BATCH.jsonl
+
+pipeline:
+  language: vi
+  graph_backend: neo4j
+
+  input_paths:
+    - data/global_vi_batches/batch-00000.jsonl
+  file_formats: [jsonl]
+
+  # Semantic boundaries improve extraction context without using globally
+  # quadratic semantic deduplication.
+  chunking:
+    method: semantic
+    target_tokens: 450
+    overlap_tokens: 60
+    semantic_threshold: 0.55
+    embedding_model: BAAI/bge-m3
+
+  quality:
+    method: heuristic
+
+  # These methods scale much better than semantic/layered dedup. Thresholds
+  # are conservative to favor factual recall over aggressive deletion.
+  deduplication:
+    document_method: minhash
+    document_threshold: 0.90
+    chunk_method: minhash
+    chunk_threshold: 0.95
+
+  extraction:
+    method: graphgen
+    model: deepseek-v4-pro
+    max_gleanings: 3
+    # Keep types mutually exclusive. Add domain-specific types only after a
+    # labeled pilot shows that the model applies them consistently.
+    entity_types:
+      - person
+      - organization
+      - location
+      - date
+      - event
+      - work
+      - product
+      - law
+      - concept
+      - technology
+      - science
+      - nature
+      - gene
+
+  # The direct Neo4j pipeline currently supports string resolution only.
+  # A high threshold minimizes destructive false merges.
+  resolution:
+    method: string
+    threshold: 0.92
+
+  mongo_database: kg_documents
+

@@ -1,0 +1,8 @@
+# Copy this file and replace every REPLACE_ME value before curation.
+dataset_name: vietnamese-global
+version: REPLACE_ME_VERSION
+license: REPLACE_ME_LICENSE_OR_MIXED_LICENSE_POLICY
+source: REPLACE_ME_SOURCE_DESCRIPTION
+language: vi
+collection_date: 2026-07-18
+
