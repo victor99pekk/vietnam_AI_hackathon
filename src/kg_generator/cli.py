@@ -499,6 +499,22 @@ def neo4j_upload(
         if clear:
             click.echo("Clearing existing graph (--clear was supplied)...")
             session.run("MATCH (n) DETACH DELETE n")
+
+            # Also clear MongoDB document archive if configured
+            mongo_uri = os.getenv("MONGO_URI", "")
+            if mongo_uri:
+                from kg_generator.ingest.mongo_store import MongoDocumentStore
+                mongo = MongoDocumentStore(
+                    uri=mongo_uri,
+                    database=os.getenv("MONGO_DATABASE", "kg_documents"),
+                )
+                counts = mongo.clear_database()
+                click.echo(
+                    f"  MongoDB cleared: {counts['documents']} documents, "
+                    f"{counts['archived_chunks']} archived chunks, "
+                    f"{counts['ingestion_runs']} runs"
+                )
+                mongo.close()
         else:
             click.echo("Replacing matching documents and preserving unrelated graph data...")
 
@@ -626,6 +642,75 @@ def neo4j_upload(
         click.echo(f"Done! Uploaded {len(documents)} docs, {len(chunks)} chunks, {len(entities)} entities, {edge_count} relationships to {uri}")
 
     driver.close()
+
+    # ── Also archive documents in MongoDB if configured ──
+    _archive_to_mongo(data, clear)
+
+
+def _archive_to_mongo(data: dict, _clear: bool) -> None:
+    """Reconstruct documents from KG export and archive them in MongoDB."""
+    import os
+
+    mongo_uri = os.getenv("MONGO_URI", "")
+    if not mongo_uri:
+        return
+
+    from kg_generator.ingest.mongo_store import MongoDocumentStore, _now, _safe_hash
+
+    mongo = MongoDocumentStore(
+        uri=mongo_uri,
+        database=os.getenv("MONGO_DATABASE", "kg_documents"),
+    )
+
+    nodes = data["graph"]["nodes"]
+    doc_nodes = [n for n in nodes if n.get("type") == "Document"]
+    chunk_nodes = [n for n in nodes if n.get("type") == "Chunk"]
+
+    # Build a mapping from document source → chunks
+    doc_chunks: dict[str, list[dict]] = {}
+    for chunk in chunk_nodes:
+        source = chunk.get("source", "")
+        doc_chunks.setdefault(source, []).append(chunk)
+
+    archived = 0
+    for doc in doc_nodes:
+        source = (doc.get("source") or [""])[0] if isinstance(doc.get("source"), list) else doc.get("source", "")
+        chunks = doc_chunks.get(source, [])
+
+        # Sort chunks by index and concatenate text
+        chunks_sorted = sorted(chunks, key=lambda c: c.get("index", 0))
+        full_text = " ".join(c.get("text", "") for c in chunks_sorted)
+
+        if not full_text:
+            continue
+
+        # Use source URL/path as canonical_id
+        canonical_id = source or doc.get("id", "")
+
+        from kg_generator.ingest.loader import Document as LoaderDoc
+        wrapper = LoaderDoc(
+            content=full_text,
+            source=source,
+            doc_id=canonical_id,
+            metadata={
+                "title": doc.get("name", ""),
+                "url": source if source.startswith("http") else "",
+                "upload_date": _now(),
+                "chunk_count": doc.get("chunk_count", len(chunks)),
+            },
+        )
+        mongo.store_document(wrapper, canonical_id, upload_date=_now())
+
+        # Link KG chunks
+        chunk_ids = [c["id"] for c in chunks_sorted]
+        mongo.link_kg_chunks(canonical_id, chunk_ids, 0)
+
+        archived += 1
+
+    if archived:
+        click.echo(f"  MongoDB: archived {archived} document(s)")
+
+    mongo.close()
 
 
 @main.command("neo4j-download")
@@ -845,6 +930,22 @@ def neo4j_clear(
     driver.close()
 
     click.echo("Neo4j database cleared.")
+
+    # Also clear MongoDB if configured
+    mongo_uri = os.getenv("MONGO_URI", "")
+    if mongo_uri:
+        from kg_generator.ingest.mongo_store import MongoDocumentStore
+        mongo = MongoDocumentStore(
+            uri=mongo_uri,
+            database=os.getenv("MONGO_DATABASE", "kg_documents"),
+        )
+        counts = mongo.clear_database()
+        click.echo(
+            f"MongoDB cleared: {counts['documents']} documents, "
+            f"{counts['archived_chunks']} archived chunks, "
+            f"{counts['ingestion_runs']} runs"
+        )
+        mongo.close()
 
 
 if __name__ == "__main__":

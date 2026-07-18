@@ -14,6 +14,18 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+try:
+    from pymongo import ASCENDING, DESCENDING, IndexModel, MongoClient
+    from pymongo.collection import Collection
+    from pymongo.errors import DuplicateKeyError
+except ImportError:
+    ASCENDING = None  # type: ignore[assignment]
+    DESCENDING = None  # type: ignore[assignment]
+    IndexModel = None  # type: ignore[assignment]
+    MongoClient = None  # type: ignore[assignment]
+    Collection = None  # type: ignore[assignment]
+    DuplicateKeyError = None  # type: ignore[assignment]
+
 from kg_generator.ingest.loader import Document
 
 logger = logging.getLogger(__name__)
@@ -49,14 +61,11 @@ class MongoDocumentStore:
         uri: str = "mongodb://localhost:27017",
         database: str = "kg_documents",
     ) -> None:
-        try:
-            from pymongo import ASCENDING, DESCENDING, IndexModel, MongoClient
-            from pymongo.collection import Collection
-        except ImportError as exc:
+        if MongoClient is None:
             raise RuntimeError(
                 "pymongo is required for MongoDB integration. "
                 "Install with: uv sync --extra mongo"
-            ) from exc
+            )
 
         self.client = MongoClient(uri)
         self.db = self.client[database]
@@ -69,8 +78,6 @@ class MongoDocumentStore:
     # ── Indexes ─────────────────────────────────────────────────
 
     def _ensure_indexes(self) -> None:
-        from pymongo import ASCENDING, DESCENDING, IndexModel
-
         self.documents.create_indexes([
             IndexModel(
                 [("canonical_id", ASCENDING), ("version", DESCENDING)],
@@ -234,7 +241,7 @@ class MongoDocumentStore:
         triple_count: int,
     ) -> None:
         """Record which KG chunks were produced from this document version."""
-        self.documents.update_one(
+        self.documents.find_one_and_update(
             {"canonical_id": canonical_id},
             {"$set": {
                 "kg_chunk_ids": chunk_ids,
@@ -270,3 +277,16 @@ class MongoDocumentStore:
     def close(self) -> None:
         self.client.close()
         logger.debug("MongoDB connection closed")
+
+    def clear_database(self) -> dict[str, int]:
+        """Drop all documents, archived chunks, and ingestion runs.
+
+        Returns the count of documents removed from each collection.
+        """
+        counts = {}
+        for name in ("documents", "archived_chunks", "ingestion_runs"):
+            col = self.db[name]
+            counts[name] = col.count_documents({})
+            col.drop()
+            logger.info("Dropped collection '%s' (%d documents)", name, counts[name])
+        return counts
