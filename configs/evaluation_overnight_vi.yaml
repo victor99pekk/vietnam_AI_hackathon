@@ -1,0 +1,46 @@
+# Fair Vietnamese Method 2 ablation preset used by scripts/run_method2_overnight.sh.
+common:
+  seed: 42
+
+method2:
+  lora:
+    r: 8
+    alpha: 16
+    dropout: 0.05
+    target_modules:
+      - q_proj
+      - k_proj
+      - v_proj
+      - o_proj
+      - gate_proj
+      - up_proj
+      - down_proj
+
+  training:
+    max_seq_length: 1024
+    per_device_train_batch_size: 2
+    gradient_accumulation_steps: 8
+    learning_rate: 1.0e-4
+    max_steps: -1
+    num_train_epochs: 3
+    warmup_steps: 0
+    warmup_ratio: 0.05
+    logging_steps: 10
+    weight_decay: 0.01
+
+  dataset_gen:
+    language: vi
+    test_split: 0.2
+    max_hops: 3
+    max_triples: 2000
+    max_paths_per_start: 20
+    max_pairs: 10000
+    match_token_volume: true
+
+  benchmark:
+    max_test_samples: 200
+    metrics:
+      - factual_accuracy
+      - multi_hop_accuracy
+      - hallucination_rate
+      - consistency

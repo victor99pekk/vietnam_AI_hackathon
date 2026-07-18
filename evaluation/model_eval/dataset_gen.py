@@ -5,10 +5,13 @@ Generates two parallel datasets from the same underlying information:
 - **KG-Managed (Model B)**: Multi-hop QA pairs traversing the knowledge graph
 - **Unmanaged (Model C)**: Flat QA pairs from raw source documents without KG structure
 
-Key design principle: both datasets cover the same facts, but differ in structure.
-This isolates "KG structure" as the single independent variable.
+Key design principle: both datasets use the same cleaned source chunks, the
+same source-level train/test split, and matched estimated training-token
+budgets. Their QA transformations differ: graph templates for Model B and
+source-text-only heuristics for Model C.
 """
 
+import hashlib
 import json
 import logging
 import random
@@ -40,11 +43,11 @@ _KG_SINGLE_HOP_TEMPLATES: dict[str, list[tuple[str, str]]] = {
 
 _KG_MULTI_HOP_TEMPLATES: dict[str, tuple[str, str]] = {
     "en": (
-        "Given that {chain}, what {last_rel} {mid_node}?",
+        "Starting from {start}, follow these relationships in order: {relations}. Which entity is reached?",
         "{answer}",
     ),
     "vi": (
-        "Biết rằng {chain}, vậy {last_rel} của {mid_node} là gì?",
+        "Bắt đầu từ {start}, lần lượt đi theo các quan hệ sau: {relations}. Ta đến thực thể nào?",
         "{answer}",
     ),
 }
@@ -112,6 +115,67 @@ _COPULA_PATTERNS: dict[str, str] = {
     "vi": r'(.+?)\s+là\s+(?:một\s+)?(.+)',
 }
 
+_PRONOUNS: dict[str, set[str]] = {
+    "en": {"he", "she", "his", "her", "they", "their", "it", "its", "this", "that"},
+    "vi": {"anh", "chị", "ông", "bà", "họ", "nó", "cô", "người", "tổ chức này", "đây"},
+}
+
+_STRUCTURAL_PREDICATES = {"NEXT", "PART_OF", "MENTIONS"}
+
+
+def estimate_qa_tokens(item: dict[str, Any]) -> int:
+    """Return a deterministic tokenizer-independent QA token estimate."""
+    question = str(item.get("question", item.get("instruction", "")))
+    answer = str(item.get("answer", item.get("response", "")))
+    return max(1, len(re.findall(r"\w+|[^\w\s]", f"{question}\n{answer}", re.UNICODE)))
+
+
+def balance_jsonl_token_volume(
+    first_path: Path, second_path: Path
+) -> dict[str, dict[str, int]]:
+    """Trim the larger training dataset so both have comparable token volume.
+
+    Input order is already deterministically shuffled by QADatasetGenerator.
+    Files are rewritten only inside the current experiment output directory.
+    """
+
+    def read(path: Path) -> list[dict[str, Any]]:
+        with open(path, encoding="utf-8") as handle:
+            return [json.loads(line) for line in handle if line.strip()]
+
+    def token_total(items: list[dict[str, Any]]) -> int:
+        return sum(estimate_qa_tokens(item) for item in items)
+
+    def trim(items: list[dict[str, Any]], budget: int) -> list[dict[str, Any]]:
+        selected: list[dict[str, Any]] = []
+        used = 0
+        for item in items:
+            item_tokens = estimate_qa_tokens(item)
+            if selected and used + item_tokens > budget:
+                continue
+            selected.append(item)
+            used += item_tokens
+            if used >= budget:
+                break
+        return selected
+
+    first = read(first_path)
+    second = read(second_path)
+    if not first or not second:
+        raise ValueError("Both KG and raw-text training datasets must be non-empty")
+
+    target = min(token_total(first), token_total(second))
+    first = trim(first, target)
+    second = trim(second, target)
+    QADatasetGenerator._write_jsonl(first, first_path)
+    QADatasetGenerator._write_jsonl(second, second_path)
+
+    return {
+        "kg": {"examples": len(first), "estimated_tokens": token_total(first)},
+        "raw": {"examples": len(second), "estimated_tokens": token_total(second)},
+        "target_estimated_tokens": {"value": target},
+    }
+
 
 class QADatasetGenerator:
     """Generates QA pairs from a knowledge graph and its source documents.
@@ -133,12 +197,18 @@ class QADatasetGenerator:
         seed: int = 42,
         max_hops: int = 3,
         test_split: float = 0.2,
+        max_triples: int = 2000,
+        max_paths_per_start: int = 20,
+        max_pairs: int = 10000,
     ) -> None:
         self.language = language
         self.seed = seed
         self.max_hops = max_hops
         self.test_split = test_split
-        random.seed(seed)
+        self.max_triples = max_triples
+        self.max_paths_per_start = max_paths_per_start
+        self.max_pairs = max_pairs
+        self._rng = random.Random(seed)
 
         # Resolve template sets — fall back to English for unknown languages
         self._single_hop_tmpl = _KG_SINGLE_HOP_TEMPLATES.get(language, _KG_SINGLE_HOP_TEMPLATES["en"])
@@ -156,7 +226,7 @@ class QADatasetGenerator:
         self,
         graph: nx.DiGraph,
         entities: list[dict[str, Any]],
-        triples: list[tuple[str, str, str, str]],
+        triples: list[tuple[str, str, str, str, str]],
         output_dir: Path,
     ) -> tuple[Path, Path]:
         """Generate KG-structured QA pairs (Model B dataset).
@@ -168,7 +238,6 @@ class QADatasetGenerator:
         qa_pairs: list[dict[str, Any]] = []
         qa_pairs.extend(self._single_hop_qa(graph, triples))
         qa_pairs.extend(self._multi_hop_qa(graph))
-        qa_pairs.extend(self._comparison_qa(graph, entities))
         qa_pairs.extend(self._true_false_qa(graph, triples))
 
         # Deduplicate by question
@@ -181,10 +250,11 @@ class QADatasetGenerator:
                 if qa["answer"].strip():  # Skip empty answers
                     unique.append(qa)
 
-        random.shuffle(unique)
-        split_idx = int(len(unique) * (1 - self.test_split))
-        train = unique[:split_idx]
-        test = unique[split_idx:]
+        if len(unique) > self.max_pairs:
+            self._rng.shuffle(unique)
+            unique = unique[: self.max_pairs]
+
+        train, test = self._grouped_split(unique)
 
         data_dir = output_dir / "test_training_data"
         data_dir.mkdir(parents=True, exist_ok=True)
@@ -209,8 +279,8 @@ class QADatasetGenerator:
         Parameters:
             documents: list of {"content": str, "source": str} dicts
             output_dir: where to write the output files
-            target_count: if set, cap the dataset to this many pairs
-                          (for token-volume matching with Model B)
+            target_count: backward-compatible optional example-count cap.
+                          Method 2 now balances final training files by tokens.
 
         Returns paths to (train_file, test_file).
         """
@@ -231,15 +301,17 @@ class QADatasetGenerator:
                 seen.add(key)
                 unique.append(qa)
 
-        random.shuffle(unique)
+        if len(unique) > self.max_pairs:
+            self._rng.shuffle(unique)
+            unique = unique[: self.max_pairs]
+
+        self._rng.shuffle(unique)
 
         # Token-volume control: match KG dataset size if requested
         if target_count and len(unique) > target_count:
             unique = unique[:target_count]
 
-        split_idx = int(len(unique) * (1 - self.test_split))
-        train = unique[:split_idx]
-        test = unique[split_idx:]
+        train, test = self._grouped_split(unique)
 
         data_dir = output_dir / "test_training_data"
         data_dir.mkdir(parents=True, exist_ok=True)
@@ -256,12 +328,15 @@ class QADatasetGenerator:
     # ── KG QA Generation ───────────────────────────────────────
 
     def _single_hop_qa(
-        self, graph: nx.DiGraph, triples: list[tuple[str, str, str, str]]
+        self, graph: nx.DiGraph, triples: list[tuple[str, str, str, str, str]]
     ) -> list[dict[str, Any]]:
         """Generate single-hop factual questions from each triple."""
         qa_pairs: list[dict[str, Any]] = []
 
-        for subj, pred, obj, source_text in triples:
+        selected_triples = list(triples)
+        if len(selected_triples) > self.max_triples:
+            selected_triples = self._rng.sample(selected_triples, self.max_triples)
+        for subj, pred, obj, source_text, source_chunk_id in selected_triples:
             subj_label = self._node_label(graph, subj)
             obj_label = self._node_label(graph, obj)
             pred_readable = pred.replace("_", " ")
@@ -276,6 +351,11 @@ class QADatasetGenerator:
                     "hops": 1,
                     "source": "kg",
                     "evidence": source_text,
+                    "source_chunk_ids": [source_chunk_id] if source_chunk_id else [],
+                    "_group_id": (
+                        f"source:{source_chunk_id}"
+                        if source_chunk_id else f"triple:{subj}|{pred}|{obj}"
+                    ),
                 })
 
         return qa_pairs
@@ -286,7 +366,12 @@ class QADatasetGenerator:
         q_tmpl, a_tmpl = self._multi_hop_tmpl
 
         for start_node in list(graph.nodes())[:200]:  # Limit traversal
-            paths = self._find_paths(graph, start_node, max_hops=self.max_hops)
+            paths = self._find_paths(
+                graph,
+                start_node,
+                max_hops=self.max_hops,
+                max_paths=self.max_paths_per_start,
+            )
 
             for path_nodes, path_edges in paths:
                 if len(path_nodes) < 3:
@@ -295,24 +380,38 @@ class QADatasetGenerator:
                 start = self._node_label(graph, path_nodes[0])
                 end = self._node_label(graph, path_nodes[-1])
 
-                # Build the chain description
+                # Build the relation sequence without revealing intermediate nodes.
                 steps = []
+                relations = []
+                source_chunk_ids: set[str] = set()
                 for i, (s, o) in enumerate(zip(path_nodes[:-1], path_nodes[1:])):
                     edge_data = graph.edges.get((s, o), {})
-                    preds = edge_data.get("predicates", ["related_to"])
-                    pred_readable = preds[0].replace("_", " ")
+                    predicates = self._domain_predicates(edge_data)
+                    if not predicates:
+                        steps = []
+                        break
+                    pred_readable = predicates[0].replace("_", " ")
                     s_label = self._node_label(graph, s)
                     o_label = self._node_label(graph, o)
                     steps.append(f"{s_label} {pred_readable} {o_label}")
+                    relations.append(pred_readable)
+                    source_chunk_ids.update(
+                        str(chunk_id)
+                        for chunk_id in edge_data.get("source_chunk_ids", [])
+                        if chunk_id
+                    )
 
-                # Question: given start + chain, ask for end
+                # Following only the named relation sequence requires graph traversal.
                 if len(steps) >= 2:
-                    chain_desc = ", ".join(steps[:-1])
-                    last_step = steps[-1]
-                    last_rel = last_step.split(" ", 1)[1] if " " in last_step else last_step
-                    mid_node = self._node_label(graph, path_nodes[-2])
-
-                    question = q_tmpl.format(chain=chain_desc, last_rel=last_rel, mid_node=mid_node, answer=end)
+                    source_groups = [f"source:{chunk_id}" for chunk_id in sorted(source_chunk_ids)]
+                    assignments = {self._is_test_group(group) for group in source_groups}
+                    if len(assignments) > 1:
+                        continue
+                    question = q_tmpl.format(
+                        start=start,
+                        relations=" → ".join(relations),
+                        answer=end,
+                    )
                     answer = a_tmpl.format(answer=end)
 
                     qa_pairs.append({
@@ -322,6 +421,11 @@ class QADatasetGenerator:
                         "hops": len(steps),
                         "path": " → ".join(steps),
                         "source": "kg",
+                        "source_chunk_ids": sorted(source_chunk_ids),
+                        "_group_id": (
+                            source_groups[0]
+                            if source_groups else "path:" + "|".join(path_nodes)
+                        ),
                     })
 
         return qa_pairs
@@ -348,61 +452,104 @@ class QADatasetGenerator:
             for i in range(min(len(ents), 10)):
                 for j in range(i + 1, min(len(ents), 10)):
                     e1, e2 = ents[i], ents[j]
+                    e1_id = str(e1.get("id", e1.get("name", "")))
+                    e2_id = str(e2.get("id", e2.get("name", "")))
+                    if e1_id not in graph or e2_id not in graph:
+                        continue
+                    e1_label = self._node_label(graph, e1_id)
+                    e2_label = self._node_label(graph, e2_id)
 
                     # Find shared relations
-                    e1_neighbors = set(graph.successors(e1["name"])) | set(graph.predecessors(e1["name"]))
-                    e2_neighbors = set(graph.successors(e2["name"])) | set(graph.predecessors(e2["name"]))
+                    e1_neighbors = set(graph.successors(e1_id)) | set(graph.predecessors(e1_id))
+                    e2_neighbors = set(graph.successors(e2_id)) | set(graph.predecessors(e2_id))
 
-                    if e1_neighbors or e2_neighbors:
-                        answer = self._describe_entity(graph, e1["name"])
+                    shared_neighbors = sorted(e1_neighbors & e2_neighbors)
+                    if shared_neighbors:
+                        answer = ", ".join(
+                            self._node_label(graph, node_id)
+                            for node_id in shared_neighbors[:5]
+                        )
                         qa_pairs.append({
-                            "question": q_tmpl.format(e1=e1["name"], e2=e2["name"], answer=answer),
+                            "question": q_tmpl.format(e1=e1_label, e2=e2_label, answer=answer),
                             "answer": a_tmpl.format(answer=answer),
                             "type": "comparison",
                             "hops": 1,
                             "source": "kg",
-                            "compare_with": e2["name"],
+                            "compare_with": e2_label,
+                            "_group_id": f"comparison:{e1_id}|{e2_id}",
                         })
 
         return qa_pairs
 
     def _true_false_qa(
-        self, graph: nx.DiGraph, triples: list[tuple[str, str, str, str]]
+        self, graph: nx.DiGraph, triples: list[tuple[str, str, str, str, str]]
     ) -> list[dict[str, Any]]:
         """Generate true/false statements from KG facts + negative sampling."""
         qa_pairs: list[dict[str, Any]] = []
         q_tmpl, a_tmpl = self._true_false_tmpl
+        true_answer = "Đúng" if self.language == "vi" else "True"
+        false_answer = "Sai" if self.language == "vi" else "False"
+        known_triples = {(subj, pred, obj) for subj, pred, obj, _, _ in triples}
 
         # True statements from real triples
-        for subj, pred, obj, _ in triples[:200]:
+        for subj, pred, obj, source_text, source_chunk_id in triples[:200]:
             subj_label = self._node_label(graph, subj)
             obj_label = self._node_label(graph, obj)
             pred_readable = pred.replace("_", " ")
 
             qa_pairs.append({
-                "question": q_tmpl.format(subj=subj_label, rel=pred_readable, obj=obj_label, answer="True"),
-                "answer": a_tmpl.format(answer="True"),
+                "question": q_tmpl.format(subj=subj_label, rel=pred_readable, obj=obj_label, answer=true_answer),
+                "answer": a_tmpl.format(answer=true_answer),
                 "type": "true_false",
                 "hops": 1,
                 "source": "kg",
+                "evidence": source_text,
+                "source_chunk_ids": [source_chunk_id] if source_chunk_id else [],
+                "_group_id": (
+                    f"source:{source_chunk_id}"
+                    if source_chunk_id else f"triple:{subj}|{pred}|{obj}"
+                ),
             })
 
         # False statements: corrupt the object
         all_nodes = list(graph.nodes())
         if len(all_nodes) > 2:
-            for subj, pred, obj, _ in triples[:100]:
-                # Pick a random wrong object
-                wrong_obj = random.choice([n for n in all_nodes if n != obj and n != subj])
+            for subj, pred, obj, source_text, source_chunk_id in triples[:100]:
+                object_type = graph.nodes[obj].get("type") if obj in graph else None
+                candidates = [
+                    node for node in all_nodes
+                    if node not in {obj, subj}
+                    and (subj, pred, node) not in known_triples
+                    and (
+                        object_type is None
+                        or graph.nodes[node].get("type") == object_type
+                    )
+                ]
+                if not candidates:
+                    candidates = [
+                        node for node in all_nodes
+                        if node not in {obj, subj}
+                        and (subj, pred, node) not in known_triples
+                    ]
+                if not candidates:
+                    continue
+                wrong_obj = self._rng.choice(candidates)
                 subj_label = self._node_label(graph, subj)
                 wrong_label = self._node_label(graph, wrong_obj)
                 pred_readable = pred.replace("_", " ")
 
                 qa_pairs.append({
-                    "question": q_tmpl.format(subj=subj_label, rel=pred_readable, obj=wrong_label, answer="False"),
-                    "answer": a_tmpl.format(answer="False"),
+                    "question": q_tmpl.format(subj=subj_label, rel=pred_readable, obj=wrong_label, answer=false_answer),
+                    "answer": a_tmpl.format(answer=false_answer),
                     "type": "true_false",
                     "hops": 1,
                     "source": "kg",
+                    "evidence": source_text,
+                    "source_chunk_ids": [source_chunk_id] if source_chunk_id else [],
+                    "_group_id": (
+                        f"source:{source_chunk_id}"
+                        if source_chunk_id else f"triple:{subj}|{pred}|{obj}"
+                    ),
                 })
 
         return qa_pairs
@@ -442,6 +589,13 @@ class QADatasetGenerator:
             else:
                 proper_nouns = re.findall(r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b', sent)
 
+            pronouns = _PRONOUNS.get(self.language, _PRONOUNS["en"])
+            proper_nouns = [
+                noun for noun in proper_nouns
+                if noun.strip().lower() not in pronouns
+            ]
+            group_id = f"source:{source}"
+
             # ── Copula/definition pattern (e.g. "X is Y" / "X là Y") ──
             is_match = re.match(self._copula_pattern, sent, re.IGNORECASE)
             if is_match and len(proper_nouns) >= 1:
@@ -458,7 +612,9 @@ class QADatasetGenerator:
                     "type": "definition",
                     "hops": 1,
                     "source": "raw_text",
+                    "source_id": source,
                     "evidence": sent,
+                    "_group_id": group_id,
                 })
 
             # ── Proper noun pair → relationship question ────────
@@ -473,7 +629,9 @@ class QADatasetGenerator:
                                 "type": "relationship",
                                 "hops": 1,
                                 "source": "raw_text",
+                                "source_id": source,
                                 "evidence": sent,
+                                "_group_id": group_id,
                             })
 
             # ── Factual patterns (e.g. "born in", "sinh tại") ──
@@ -482,18 +640,80 @@ class QADatasetGenerator:
                 if match:
                     subject = match.group(1).strip()
                     fact = match.group(2).strip().rstrip(".")
+                    if subject.lower() in pronouns:
+                        continue
                     qa_pairs.append({
                         "question": q_template.format(subject),
                         "answer": fact,
                         "type": "factual",
                         "hops": 1,
                         "source": "raw_text",
+                        "source_id": source,
                         "evidence": sent,
+                        "_group_id": group_id,
                     })
+
+            # Broad source-only control pair. This keeps Model C useful when a
+            # sentence does not match one of the narrow factual regexes.
+            if proper_nouns and len(sent) <= 600:
+                subject = proper_nouns[0]
+                question = (
+                    f"Theo văn bản, thông tin nào được nêu về {subject}?"
+                    if self.language == "vi"
+                    else f"According to the source, what is stated about {subject}?"
+                )
+                qa_pairs.append({
+                    "question": question,
+                    "answer": sent,
+                    "type": "source_grounded",
+                    "hops": 1,
+                    "source": "raw_text",
+                    "source_id": source,
+                    "evidence": sent,
+                    "_group_id": group_id,
+                })
 
         return qa_pairs
 
     # ── Helpers ─────────────────────────────────────────────────
+
+    def _grouped_split(
+        self, items: list[dict[str, Any]]
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Split by provenance group so paraphrases of one fact never leak."""
+        grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for index, item in enumerate(items):
+            grouped[str(item.get("_group_id", f"item:{index}"))].append(item)
+
+        group_ids = sorted(grouped)
+        if len(group_ids) <= 1:
+            train_ids = set(group_ids)
+        else:
+            test_ids = {group_id for group_id in group_ids if self._is_test_group(group_id)}
+            if not test_ids:
+                test_ids = {max(group_ids, key=self._group_score)}
+            if len(test_ids) == len(group_ids):
+                test_ids.remove(min(group_ids, key=self._group_score))
+            train_ids = set(group_ids) - test_ids
+
+        train: list[dict[str, Any]] = []
+        test: list[dict[str, Any]] = []
+        for group_id in group_ids:
+            target = train if group_id in train_ids else test
+            for item in grouped[group_id]:
+                clean = dict(item)
+                clean.pop("_group_id", None)
+                target.append(clean)
+        self._rng.shuffle(train)
+        self._rng.shuffle(test)
+        return train, test
+
+    def _group_score(self, group_id: str) -> float:
+        digest = hashlib.sha256(f"{self.seed}:{group_id}".encode("utf-8")).digest()
+        return int.from_bytes(digest[:8], "big") / float(2**64)
+
+    def _is_test_group(self, group_id: str) -> bool:
+        return self._group_score(group_id) < self.test_split
 
     @staticmethod
     def _node_label(graph: nx.DiGraph, node_id: str) -> str:
@@ -514,16 +734,25 @@ class QADatasetGenerator:
         return node_id
 
     def _find_paths(
-        self, graph: nx.DiGraph, start: str, max_hops: int = 3
+        self,
+        graph: nx.DiGraph,
+        start: str,
+        max_hops: int = 3,
+        max_paths: int = 20,
     ) -> list[tuple[list[str], list[tuple[str, str]]]]:
         """Find multi-hop paths from a start node up to max_hops."""
         paths: list[tuple[list[str], list[tuple[str, str]]]] = []
 
         def dfs(current: str, visited: list[str], edges: list[tuple[str, str]], depth: int):
-            if depth > max_hops:
+            if depth > max_hops or len(paths) >= max_paths:
                 return
-            neighbors = list(graph.successors(current))
+            neighbors = [
+                neighbor for neighbor in graph.successors(current)
+                if self._domain_predicates(graph.edges.get((current, neighbor), {}))
+            ]
             for neighbor in neighbors:
+                if len(paths) >= max_paths:
+                    break
                 if neighbor in visited:
                     continue
                 new_visited = visited + [neighbor]
@@ -537,6 +766,14 @@ class QADatasetGenerator:
         return paths
 
     @staticmethod
+    def _domain_predicates(edge_data: dict[str, Any]) -> list[str]:
+        return [
+            str(predicate)
+            for predicate in edge_data.get("predicates", ["related_to"])
+            if str(predicate).upper() not in _STRUCTURAL_PREDICATES
+        ]
+
+    @staticmethod
     def _write_jsonl(data: list[dict[str, Any]], path: Path) -> Path:
         """Write a list of dicts to a JSONL file."""
         with open(path, "w", encoding="utf-8") as f:
@@ -545,25 +782,72 @@ class QADatasetGenerator:
         return path
 
 
-def load_kg(path: Path) -> tuple[nx.DiGraph, list[dict[str, Any]], list[tuple[str, str, str, str]]]:
+def load_kg(path: Path) -> tuple[
+    nx.DiGraph,
+    list[dict[str, Any]],
+    list[tuple[str, str, str, str, str]],
+]:
     """Load a knowledge graph from a JSON export file."""
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         data = json.load(f)
 
     entities = data.get("entities", [])
     triples_raw = data.get("triples", [])
-    graph = nx.node_link_graph(data.get("graph", {}), link="edges")
+    graph_data = data.get("graph", {})
+    graph = nx.node_link_graph(graph_data, edges="edges")
 
-    # Normalize triples to (subj, pred, obj, source_text) format
-    triples: list[tuple[str, str, str, str]] = []
+    # Normalize to (subj, pred, obj, source_text, source_chunk_id).
+    triples: list[tuple[str, str, str, str, str]] = []
     for t in triples_raw:
-        if isinstance(t, (list, tuple)):
+        if isinstance(t, dict):
+            subj = str(t.get("subject", ""))
+            pred = str(t.get("predicate", ""))
+            obj = str(t.get("object", ""))
+            source_text = str(
+                t.get("evidence_sentence") or t.get("description") or ""
+            )
+            source_chunk_value = t.get("source_chunk_id") or t.get("source_chunk_ids") or ""
+            if isinstance(source_chunk_value, (list, tuple, set)):
+                source_chunk_value = next(iter(source_chunk_value), "")
+            source_chunk_id = str(source_chunk_value)
+            if subj and obj and pred.upper() not in _STRUCTURAL_PREDICATES:
+                triples.append((subj, pred, obj, source_text, source_chunk_id))
+        elif isinstance(t, (list, tuple)):
             if len(t) >= 4:
-                triples.append((str(t[0]), str(t[1]), str(t[2]), str(t[3])))
+                if str(t[1]).upper() not in _STRUCTURAL_PREDICATES:
+                    triples.append((
+                        str(t[0]), str(t[1]), str(t[2]), str(t[3]),
+                        str(t[4]) if len(t) > 4 else "",
+                    ))
             elif len(t) == 3:
-                triples.append((str(t[0]), str(t[1]), str(t[2]), ""))
+                if str(t[1]).upper() not in _STRUCTURAL_PREDICATES:
+                    triples.append((str(t[0]), str(t[1]), str(t[2]), "", ""))
 
     return graph, entities, triples
+
+
+def load_raw_documents_from_kg(path: Path) -> list[dict[str, str]]:
+    """Recover cleaned source chunks embedded in a KG export.
+
+    Model C receives these texts only. It does not consume entities, triples,
+    relations, or graph paths, while still seeing the same processed corpus as
+    Model B.
+    """
+    with open(path, encoding="utf-8") as handle:
+        data = json.load(handle)
+
+    documents: list[dict[str, str]] = []
+    for node in data.get("graph", {}).get("nodes", []):
+        if node.get("type") != "Chunk":
+            continue
+        content = str(node.get("text", "")).strip()
+        if not content:
+            continue
+        documents.append({
+            "content": content,
+            "source": str(node.get("id", node.get("source", "unknown"))),
+        })
+    return documents
 
 
 def load_raw_documents(paths: list[Path]) -> list[dict[str, str]]:

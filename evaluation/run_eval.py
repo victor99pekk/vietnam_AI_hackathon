@@ -47,8 +47,10 @@ from evaluation.data_eval.sft_generator import SFTGenerator
 from evaluation.data_eval.sft_evaluator import SFTEvaluator
 from evaluation.model_eval.dataset_gen import (
     QADatasetGenerator,
+    balance_jsonl_token_volume,
     load_kg,
     load_raw_documents,
+    load_raw_documents_from_kg,
 )
 
 # Fine-tuning & benchmarking require torch+GPU — gracefully degrade on CPU
@@ -346,6 +348,9 @@ def run_method2(
 
     m2_config = config.get("method2", {})
     common_config = config.get("common", {})
+    base_model = model_override or m2_config.get(
+        "base_model", "Qwen/Qwen2.5-0.5B-Instruct"
+    )
     output_dir = output_base / "method2"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -354,6 +359,7 @@ def run_method2(
     logger.info("=" * 60)
 
     results: dict[str, Any] = {}
+    fine_tune_errors: list[str] = []
 
     # Step 2.1: Dataset Generation
     if skip_dataset_gen:
@@ -369,7 +375,7 @@ def run_method2(
                 "Existing datasets not found in %s. "
                 "Run without --skip-dataset-gen first.", output_dir
             )
-            return {"error": "No existing datasets found"}
+            raise FileNotFoundError("No existing Method 2 datasets found")
 
         test_data_path = kg_test_path
         results["dataset_gen"] = {
@@ -386,6 +392,11 @@ def run_method2(
         graph, entities, triples = load_kg(kg_path)
         logger.info("Loaded KG: %d entities, %d triples",
                      len(entities), len(triples))
+        if not triples:
+            raise ValueError(
+                "KG contains no domain triples after excluding NEXT/PART_OF/MENTIONS. "
+                "Build it with relation extraction before running Method 2."
+            )
 
         # Generate KG-Managed QA pairs (Model B)
         qa_gen = QADatasetGenerator(
@@ -393,6 +404,9 @@ def run_method2(
             seed=common_config.get("seed", 42),
             max_hops=gen_config.get("max_hops", 3),
             test_split=gen_config.get("test_split", 0.2),
+            max_triples=gen_config.get("max_triples", 2000),
+            max_paths_per_start=gen_config.get("max_paths_per_start", 20),
+            max_pairs=gen_config.get("max_pairs", 10000),
         )
 
         kg_train_path, kg_test_path = qa_gen.generate_from_kg(
@@ -403,35 +417,25 @@ def run_method2(
             "kg_test": str(kg_test_path),
         }
 
-        # Count KG train pairs for token-volume matching
-        with open(kg_train_path) as f:
-            kg_train_count = sum(1 for _ in f)
-
         # Generate Raw-Text QA pairs (Model C) from source documents
-        # Find source documents from the triples' source_text fields
-        source_files = set()
-        for t in triples:
-            if len(t) > 3 and t[3]:
-                source_files.add(t[3])
-        source_paths = [Path(f) for f in source_files if Path(f).exists()]
+        # Prefer cleaned source chunks embedded in this exact KG export. This
+        # prevents Model C from silently reading unrelated files under data/.
+        raw_docs = load_raw_documents_from_kg(kg_path)
+        raw_paths = [Path(path) for path in gen_config.get("raw_document_paths", [])]
+        if not raw_docs and raw_paths:
+            raw_docs = load_raw_documents(raw_paths)
 
-        # Fallback: use the data directory
-        if not source_paths:
-            data_dir = Path("data")
-            if data_dir.exists():
-                source_paths = list(data_dir.rglob("*.txt"))
-            else:
-                # Use the sample data from config
-                source_paths = [Path("data/debugg_sample")]
-
-        if source_paths:
-            raw_docs = load_raw_documents(source_paths)
+        if raw_docs:
             raw_train_path, raw_test_path = qa_gen.generate_from_raw_text(
                 raw_docs, output_dir,
-                target_count=kg_train_count if gen_config.get("match_token_volume", True) else None,
             )
             results["dataset_gen"]["raw_train"] = str(raw_train_path)
             results["dataset_gen"]["raw_test"] = str(raw_test_path)
+
+            if gen_config.get("match_token_volume", True):
+                balance = balance_jsonl_token_volume(kg_train_path, raw_train_path)
+                results["dataset_gen"]["training_balance"] = balance
+                logger.info("Balanced KG/raw training token volume: %s", balance)
 
             # Use the KG test set for both models (fair comparison)
             test_data_path = kg_test_path
@@ -462,15 +466,11 @@ def run_method2(
                 "uv pip install -e '.[eval-model]'"
             )
             logger.error("Or re-run with --skip-finetune to skip this step.")
-            return {"error": "torch not installed — cannot fine-tune"}
+            raise RuntimeError("torch not installed — cannot fine-tune")
 
         lora_config = m2_config.get("lora", {})
         training_config = m2_config.get("training", {})
 
-        # Allow CLI override of the base model
-        base_model = model_override or m2_config.get(
-            "base_model", "Qwen/Qwen2.5-0.5B-Instruct"
-        )
         logger.info("Base model: %s", base_model)
         logger.info("Fine-tune target: %s", fine_tune_target)
 
@@ -485,8 +485,10 @@ def run_method2(
             per_device_train_batch_size=training_config.get("per_device_train_batch_size", 2),
             gradient_accumulation_steps=training_config.get("gradient_accumulation_steps", 4),
             learning_rate=training_config.get("learning_rate", 2.0e-4),
-            max_steps=training_config.get("max_steps", 300),
-            warmup_steps=training_config.get("warmup_steps", 30),
+            max_steps=training_config.get("max_steps", -1),
+            num_train_epochs=training_config.get("num_train_epochs", 3.0),
+            warmup_steps=training_config.get("warmup_steps", 0),
+            warmup_ratio=training_config.get("warmup_ratio", 0.05),
             logging_steps=training_config.get("logging_steps", 10),
             save_steps=training_config.get("save_steps", 100),
             weight_decay=training_config.get("weight_decay", 0.01),
@@ -504,13 +506,16 @@ def run_method2(
                 kg_adapter_path = finetuner.fine_tune(
                     train_data_path=kg_train_path,
                     adapter_name="model_b_kg",
-                    eval_data_path=kg_test_path,
+                    # Keep benchmark questions completely untouched by training
+                    # and checkpoint selection.
+                    eval_data_path=None,
                 )
                 results["finetune"]["kg_adapter"] = str(kg_adapter_path)
                 logger.info("Model B (KG-Managed) fine-tuned → %s", kg_adapter_path)
             except Exception as e:
                 logger.error("Model B fine-tuning failed: %s", e)
                 results["finetune"]["kg_adapter_error"] = str(e)
+                fine_tune_errors.append(f"Model B: {e}")
         else:
             # Look for existing adapter
             existing_kg = output_dir / "model_b_kg"
@@ -531,13 +536,14 @@ def run_method2(
                     raw_adapter_path = finetuner.fine_tune(
                         train_data_path=Path(raw_train),
                         adapter_name="model_c_raw",
-                        eval_data_path=Path(results["dataset_gen"].get("raw_test", "")),
+                        eval_data_path=None,
                     )
                     results["finetune"]["raw_adapter"] = str(raw_adapter_path)
                     logger.info("Model C (Raw-Text) fine-tuned → %s", raw_adapter_path)
                 except Exception as e:
                     logger.error("Model C fine-tuning failed: %s", e)
                     results["finetune"]["raw_adapter_error"] = str(e)
+                    fine_tune_errors.append(f"Model C: {e}")
             else:
                 logger.warning("No raw training data available for Model C")
         else:
@@ -556,16 +562,16 @@ def run_method2(
         logger.info("\n--- Step 2.3: Ablation Benchmark ---")
         if not _TORCH_AVAILABLE:
             logger.error(
-                "Benchmarking requires torch + GPU. Install with: "
+                "Benchmarking requires torch. Install with: "
                 "uv pip install -e '.[eval-model]'"
             )
             logger.error("Or re-run with --skip-benchmark to skip this step.")
-            return {"error": "torch not installed — cannot benchmark on CPU"}
+            raise RuntimeError("torch not installed — cannot benchmark")
 
         benchmark_config = m2_config.get("benchmark", {})
 
         benchmark = AblationBenchmark(
-            base_model=m2_config.get("base_model", "Qwen/Qwen2.5-0.5B-Instruct"),
+            base_model=base_model,
             max_test_samples=benchmark_config.get("max_test_samples", 200),
             seed=common_config.get("seed", 42),
         )
@@ -587,6 +593,9 @@ def run_method2(
     with open(combined_path, "w") as f:
         json.dump(results, f, indent=2, default=str)
     logger.info("Method 2 complete → %s", combined_path)
+
+    if fine_tune_errors:
+        raise RuntimeError("; ".join(fine_tune_errors))
 
     return results
 
@@ -802,11 +811,14 @@ Examples:
     logger.info("  Method:   %s", args.method)
     logger.info("  Output:   %s", output_base)
 
+    failed = False
+
     if args.method in ("1", "all"):
         try:
             run_method1(args.kg, config, output_base, neo4j=args.neo4j)
         except Exception as e:
             logger.error("Method 1 failed: %s", e, exc_info=True)
+            failed = True
 
     if args.method in ("2", "all"):
         try:
@@ -821,6 +833,7 @@ Examples:
             )
         except Exception as e:
             logger.error("Method 2 failed: %s", e, exc_info=True)
+            failed = True
 
     if args.method == "graphgen":
         try:
@@ -829,7 +842,11 @@ Examples:
             )
         except Exception as e:
             logger.error("GraphGen method failed: %s", e, exc_info=True)
+            failed = True
 
+    if failed:
+        logger.error("Evaluation pipeline completed with failures. Results in: %s", output_base)
+        sys.exit(1)
     logger.info("\n✅ Evaluation pipeline complete. Results in: %s", output_base)
 
 

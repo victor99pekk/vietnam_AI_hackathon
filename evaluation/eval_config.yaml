@@ -60,8 +60,8 @@ method2:
 
   # LoRA configuration
   lora:
-    r: 16
-    alpha: 32
+    r: 8
+    alpha: 16
     dropout: 0.05
     target_modules:
       - q_proj
@@ -74,12 +74,14 @@ method2:
 
   # Training hyperparameters
   training:
-    max_seq_length: 2048
+    max_seq_length: 1024
     per_device_train_batch_size: 2
-    gradient_accumulation_steps: 4
-    learning_rate: 2.0e-4
-    max_steps: 300          # Adjust based on dataset size
-    warmup_steps: 30
+    gradient_accumulation_steps: 8
+    learning_rate: 1.0e-4
+    max_steps: -1           # Epoch-based training; do not force unequal step counts
+    num_train_epochs: 3
+    warmup_steps: 0
+    warmup_ratio: 0.05
     logging_steps: 10
     save_steps: 100
     eval_steps: 100
@@ -95,7 +97,10 @@ method2:
     language: en
     test_split: 0.2
     max_hops: 3
-    # Token volume matching: cap raw-text dataset to KG dataset size
+    max_triples: 2000
+    max_paths_per_start: 20
+    max_pairs: 10000
+    # Match final B/C training files by estimated question+answer tokens.
     match_token_volume: true
 
   # Evaluation

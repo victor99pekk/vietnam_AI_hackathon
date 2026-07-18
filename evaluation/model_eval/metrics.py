@@ -9,14 +9,14 @@ Evaluates and compares three models on the same test set:
 Metrics:
   - Factual Accuracy (exact match / F1)
   - Multi-hop Reasoning Accuracy
-  - Hallucination Rate
-  - Consistency
-  - Perplexity on held-out text
+  - Hallucination proxy
+  - Response-length consistency proxy
 """
 
 import json
 import logging
 import re
+import gc
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -75,6 +75,7 @@ class AblationBenchmark:
         logger.info("Benchmarking on %d test pairs", len(test_pairs))
 
         results: dict[str, Any] = {
+            "base_model": self.base_model,
             "test_samples": len(test_pairs),
             "models": {},
             "comparison": {},
@@ -82,7 +83,7 @@ class AblationBenchmark:
 
         # Model A: Base model (no fine-tuning)
         metrics_a, preds_a = self._evaluate_model(
-            name="A_base (Qwen2.5 base)",
+            name=f"A_base ({self.base_model})",
             test_pairs=test_pairs,
             adapter_path=None,
         )
@@ -163,18 +164,25 @@ class AblationBenchmark:
 
         if HAS_MODEL_LIBS:
             model, tokenizer = self._load_model(adapter_path)
-            for pair in test_pairs:
-                question = pair.get("question", pair.get("instruction", ""))
-                expected = pair.get("answer", pair.get("response", ""))
-                pair_type = pair.get("type", "single_hop")
+            try:
+                for pair in test_pairs:
+                    question = pair.get("question", pair.get("instruction", ""))
+                    expected = pair.get("answer", pair.get("response", ""))
+                    pair_type = pair.get("type", "single_hop")
 
-                pred_answer = self._generate_answer(model, tokenizer, question)
-                predictions.append({
-                    "question": question,
-                    "expected": expected,
-                    "predicted": pred_answer,
-                    "type": pair_type,
-                })
+                    pred_answer = self._generate_answer(model, tokenizer, question)
+                    predictions.append({
+                        "question": question,
+                        "expected": expected,
+                        "predicted": pred_answer,
+                        "type": pair_type,
+                    })
+            finally:
+                del model
+                del tokenizer
+                gc.collect()
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
         else:
             # Heuristic mode: use the expected answer as a proxy
             # (no actual model inference — useful for pipeline testing)
@@ -462,7 +470,15 @@ class AblationBenchmark:
         """Generate an answer from the model for a given question."""
         import torch
 
-        prompt = f"<|im_start|>user\n{question}<|im_end|>\n<|im_start|>assistant\n"
+        messages = [{"role": "user", "content": question}]
+        if getattr(tokenizer, "chat_template", None):
+            prompt = tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
+            )
+        else:
+            prompt = f"<|im_start|>user\n{question}<|im_end|>\n<|im_start|>assistant\n"
 
         inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=2048)
 
@@ -484,20 +500,9 @@ class AblationBenchmark:
                 pad_token_id=tokenizer.pad_token_id,
             )
 
-        full_response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-
-        # Extract only the assistant's response
-        if "<|im_start|>assistant" in full_response:
-            response = full_response.split("<|im_start|>assistant")[-1].strip()
-            # Remove any trailing <|im_end|>
-            response = response.replace("<|im_end|>", "").strip()
-            return response
-
-        # Fallback: remove the prompt part
-        if prompt in full_response:
-            return full_response.replace(prompt, "").strip()
-
-        return full_response.strip()
+        prompt_length = inputs["input_ids"].shape[1]
+        generated = outputs[0][prompt_length:]
+        return tokenizer.decode(generated, skip_special_tokens=True).strip()
 
     # ── Report Generation ─────────────────────────────────────
 
@@ -508,7 +513,7 @@ class AblationBenchmark:
             "# KG → LLM Ablation Study Report",
             "",
             f"**Test samples**: {results.get('test_samples', 'N/A')}",
-            f"**Base model**: Qwen2.5-0.5B-Instruct",
+            f"**Base model**: {results.get('base_model', 'unknown')}",
             "",
             "---",
             "",

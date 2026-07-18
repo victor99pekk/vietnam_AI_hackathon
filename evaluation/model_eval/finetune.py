@@ -35,7 +35,6 @@ try:
         BitsAndBytesConfig,
         TrainingArguments,
         Trainer,
-        DataCollatorForLanguageModeling,
     )
     from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, TaskType
     _TORCH_AVAILABLE = True
@@ -91,13 +90,90 @@ class FineTuneConfig:
     per_device_train_batch_size: int = 4      # reduce to 1-2 for CPU
     gradient_accumulation_steps: int = 2
     learning_rate: float = 2.0e-4
-    max_steps: int = 200
-    warmup_steps: int = 20
+    max_steps: int = -1
+    num_train_epochs: float = 3.0
+    warmup_steps: int = 0
+    warmup_ratio: float = 0.05
     logging_steps: int = 10
     save_steps: int = 100
     weight_decay: float = 0.01
     seed: int = 42
     use_gradient_checkpointing: bool = True   # GPU only — ignored on CPU
+
+
+def _format_chat(tokenizer, instruction: str, response: str | None = None) -> str:
+    messages = [{"role": "user", "content": instruction}]
+    if response is not None:
+        messages.append({"role": "assistant", "content": response})
+    if getattr(tokenizer, "chat_template", None):
+        return tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=response is None,
+        )
+    prompt = f"<|im_start|>user\n{instruction}<|im_end|>\n<|im_start|>assistant\n"
+    return prompt if response is None else f"{prompt}{response}<|im_end|>"
+
+
+def _prepare_qa_dataset(tokenizer, examples: list[dict[str, str]], max_length: int):
+    """Tokenize QA records and mask user/system tokens from the SFT loss."""
+    records: list[dict[str, list[int]]] = []
+    for example in examples:
+        instruction = example.get("instruction", example.get("question", ""))
+        response = example.get("response", example.get("answer", ""))
+        prompt_text = _format_chat(tokenizer, instruction)
+        full_text = _format_chat(tokenizer, instruction, response)
+        encoded = tokenizer(
+            full_text,
+            truncation=True,
+            max_length=max_length,
+            add_special_tokens=False,
+        )
+        prompt_ids = tokenizer(
+            prompt_text,
+            truncation=True,
+            max_length=max_length,
+            add_special_tokens=False,
+        )["input_ids"]
+        labels = list(encoded["input_ids"])
+        prompt_length = min(len(prompt_ids), len(labels))
+        labels[:prompt_length] = [-100] * prompt_length
+        if not labels or all(label == -100 for label in labels):
+            continue
+        records.append({
+            "input_ids": list(encoded["input_ids"]),
+            "attention_mask": list(encoded["attention_mask"]),
+            "labels": labels,
+        })
+
+    if not records:
+        raise ValueError("No trainable assistant tokens remained after tokenization")
+
+    class QADataset(torch.utils.data.Dataset):
+        def __len__(self):
+            return len(records)
+
+        def __getitem__(self, index):
+            return records[index]
+
+    return QADataset()
+
+
+class _AssistantOnlyCollator:
+    def __init__(self, tokenizer) -> None:
+        self.tokenizer = tokenizer
+
+    def __call__(self, features):
+        labels = [feature["labels"] for feature in features]
+        inputs = [
+            {key: value for key, value in feature.items() if key != "labels"}
+            for feature in features
+        ]
+        batch = self.tokenizer.pad(inputs, padding=True, return_tensors="pt")
+        max_length = batch["input_ids"].shape[1]
+        padded_labels = [label + [-100] * (max_length - len(label)) for label in labels]
+        batch["labels"] = torch.tensor(padded_labels, dtype=torch.long)
+        return batch
 
 
 class FineTuner:
@@ -187,6 +263,7 @@ class FineTuner:
         tokenizer = AutoTokenizer.from_pretrained(cfg.base_model, trust_remote_code=True)
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
+        tokenizer.padding_side = "right"
 
         lora_config = LoraConfig(
             r=cfg.lora_r,
@@ -199,37 +276,12 @@ class FineTuner:
         model = get_peft_model(model, lora_config)
         model.print_trainable_parameters()
 
-        # Tokenize
-        def format_prompt(ex: dict[str, str]) -> str:
-            instruction = ex.get("instruction", ex.get("question", ""))
-            response = ex.get("response", ex.get("answer", ""))
-            return (
-                f"<|im_start|>user\n{instruction}<|im_end|>\n"
-                f"<|im_start|>assistant\n{response}<|im_end|>"
-            )
-
-        train_texts = [format_prompt(ex) for ex in train_dataset]
-        eval_texts = [format_prompt(ex) for ex in eval_dataset] if eval_dataset else None
-
-        train_enc = tokenizer(
-            train_texts, truncation=True, padding=True,
-            max_length=cfg.max_seq_length, return_tensors="pt",
+        train_ds = _prepare_qa_dataset(tokenizer, train_dataset, cfg.max_seq_length)
+        eval_ds = (
+            _prepare_qa_dataset(tokenizer, eval_dataset, cfg.max_seq_length)
+            if eval_dataset else None
         )
-        eval_enc = tokenizer(
-            eval_texts, truncation=True, padding=True,
-            max_length=cfg.max_seq_length, return_tensors="pt",
-        ) if eval_texts else None
-
-        class QADataset(torch.utils.data.Dataset):
-            def __init__(self, encodings):
-                self.encodings = encodings
-            def __getitem__(self, idx):
-                return {k: v[idx] for k, v in self.encodings.items()}
-            def __len__(self):
-                return len(self.encodings["input_ids"])
-
-        train_ds = QADataset(train_enc)
-        eval_ds = QADataset(eval_enc) if eval_enc else None
+        use_bf16 = torch.cuda.is_bf16_supported()
 
         training_args = TrainingArguments(
             output_dir=str(adapter_dir),
@@ -237,18 +289,24 @@ class FineTuner:
             gradient_accumulation_steps=cfg.gradient_accumulation_steps,
             learning_rate=cfg.learning_rate,
             max_steps=cfg.max_steps,
+            num_train_epochs=cfg.num_train_epochs,
             warmup_steps=cfg.warmup_steps,
+            warmup_ratio=cfg.warmup_ratio,
             logging_steps=cfg.logging_steps,
-            save_strategy="no",             # skip checkpoints — only save final adapter
+            save_strategy="epoch",
+            eval_strategy="epoch" if eval_ds else "no",
             weight_decay=cfg.weight_decay,
             lr_scheduler_type="cosine",
             optim="adamw_8bit",
             seed=cfg.seed,
-            fp16=True,
-            bf16=torch.cuda.is_bf16_supported(),
+            fp16=not use_bf16,
+            bf16=use_bf16,
             report_to="none",
             save_total_limit=1,
             gradient_checkpointing=cfg.use_gradient_checkpointing,
+            load_best_model_at_end=bool(eval_ds),
+            metric_for_best_model="eval_loss" if eval_ds else None,
+            greater_is_better=False if eval_ds else None,
         )
 
         trainer = Trainer(
@@ -256,11 +314,12 @@ class FineTuner:
             args=training_args,
             train_dataset=train_ds,
             eval_dataset=eval_ds,
-            data_collator=DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False),
+            data_collator=_AssistantOnlyCollator(tokenizer),
         )
 
-        logger.info("Starting training: %d steps on %s",
-                     cfg.max_steps, torch.cuda.get_device_name(0) if CUDA_AVAILABLE else "CPU")
+        logger.info("Starting training: %.1f epochs (max_steps=%d) on %s",
+                     cfg.num_train_epochs, cfg.max_steps,
+                     torch.cuda.get_device_name(0) if CUDA_AVAILABLE else "CPU")
         trainer.train()
 
         model.save_pretrained(str(adapter_dir))
@@ -294,6 +353,7 @@ class FineTuner:
         tokenizer = AutoTokenizer.from_pretrained(cfg.base_model, trust_remote_code=True)
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
+        tokenizer.padding_side = "right"
 
         lora_config = LoraConfig(
             r=cfg.lora_r,
@@ -306,39 +366,13 @@ class FineTuner:
         model = get_peft_model(model, lora_config)
         model.print_trainable_parameters()
 
-        # Tokenize
-        def format_prompt(ex: dict[str, str]) -> str:
-            instruction = ex.get("instruction", ex.get("question", ""))
-            response = ex.get("response", ex.get("answer", ""))
-            return (
-                f"<|im_start|>user\n{instruction}<|im_end|>\n"
-                f"<|im_start|>assistant\n{response}<|im_end|>"
-            )
-
-        train_texts = [format_prompt(ex) for ex in train_dataset]
-        eval_texts = [format_prompt(ex) for ex in eval_dataset] if eval_dataset else None
-
-        train_enc = tokenizer(
-            train_texts, truncation=True, padding=True,
-            max_length=cfg.max_seq_length, return_tensors="pt",
+        train_ds = _prepare_qa_dataset(tokenizer, train_dataset, cfg.max_seq_length)
+        eval_ds = (
+            _prepare_qa_dataset(tokenizer, eval_dataset, cfg.max_seq_length)
+            if eval_dataset else None
         )
-        eval_enc = tokenizer(
-            eval_texts, truncation=True, padding=True,
-            max_length=cfg.max_seq_length, return_tensors="pt",
-        ) if eval_texts else None
 
-        class QADataset(torch.utils.data.Dataset):
-            def __init__(self, encodings):
-                self.encodings = encodings
-            def __getitem__(self, idx):
-                return {k: v[idx] for k, v in self.encodings.items()}
-            def __len__(self):
-                return len(self.encodings["input_ids"])
-
-        train_ds = QADataset(train_enc)
-        eval_ds = QADataset(eval_enc) if eval_enc else None
-
-        # CPU-friendly training args (no fp16, no 8bit adam, no gradient ckpt, no checkpoints)
+        # CPU-friendly training args (no fp16, no 8bit optimizer or gradient checkpointing)
         cpu_batch_size = min(cfg.per_device_train_batch_size, 2)
         training_args = TrainingArguments(
             output_dir=str(adapter_dir),
@@ -346,9 +380,12 @@ class FineTuner:
             gradient_accumulation_steps=cfg.gradient_accumulation_steps,
             learning_rate=cfg.learning_rate,
             max_steps=cfg.max_steps,
+            num_train_epochs=cfg.num_train_epochs,
             warmup_steps=cfg.warmup_steps,
+            warmup_ratio=cfg.warmup_ratio,
             logging_steps=cfg.logging_steps,
-            save_strategy="no",             # skip checkpoints — only save final adapter
+            save_strategy="epoch",
+            eval_strategy="epoch" if eval_ds else "no",
             weight_decay=cfg.weight_decay,
             lr_scheduler_type="cosine",
             optim="adamw_torch",
@@ -359,6 +396,9 @@ class FineTuner:
             save_total_limit=1,
             gradient_checkpointing=False,
             dataloader_num_workers=0,
+            load_best_model_at_end=bool(eval_ds),
+            metric_for_best_model="eval_loss" if eval_ds else None,
+            greater_is_better=False if eval_ds else None,
         )
 
         trainer = Trainer(
@@ -366,10 +406,13 @@ class FineTuner:
             args=training_args,
             train_dataset=train_ds,
             eval_dataset=eval_ds,
-            data_collator=DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False),
+            data_collator=_AssistantOnlyCollator(tokenizer),
         )
 
-        logger.info("Starting CPU training: %d steps", cfg.max_steps)
+        logger.info(
+            "Starting CPU training: %.1f epochs (max_steps=%d)",
+            cfg.num_train_epochs, cfg.max_steps,
+        )
         trainer.train()
 
         model.save_pretrained(str(adapter_dir))
@@ -406,37 +449,16 @@ class FineTuner:
             use_gradient_checkpointing="unsloth",
             random_state=cfg.seed,
         )
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+        tokenizer.padding_side = "right"
 
-        def format_prompt(ex: dict[str, str]) -> str:
-            instruction = ex.get("instruction", ex.get("question", ""))
-            response = ex.get("response", ex.get("answer", ""))
-            return (
-                f"<|im_start|>user\n{instruction}<|im_end|>\n"
-                f"<|im_start|>assistant\n{response}<|im_end|>"
-            )
-
-        train_texts = [format_prompt(ex) for ex in train_dataset]
-        eval_texts = [format_prompt(ex) for ex in eval_dataset] if eval_dataset else None
-
-        train_enc = tokenizer(
-            train_texts, truncation=True, padding=True,
-            max_length=cfg.max_seq_length, return_tensors="pt",
+        train_ds = _prepare_qa_dataset(tokenizer, train_dataset, cfg.max_seq_length)
+        eval_ds = (
+            _prepare_qa_dataset(tokenizer, eval_dataset, cfg.max_seq_length)
+            if eval_dataset else None
         )
-        eval_enc = tokenizer(
-            eval_texts, truncation=True, padding=True,
-            max_length=cfg.max_seq_length, return_tensors="pt",
-        ) if eval_texts else None
-
-        class QADataset(torch.utils.data.Dataset):
-            def __init__(self, encodings):
-                self.encodings = encodings
-            def __getitem__(self, idx):
-                return {k: v[idx] for k, v in self.encodings.items()}
-            def __len__(self):
-                return len(self.encodings["input_ids"])
-
-        train_ds = QADataset(train_enc)
-        eval_ds = QADataset(eval_enc) if eval_enc else None
+        use_bf16 = torch.cuda.is_bf16_supported()
 
         training_args = TrainingArguments(
             output_dir=str(adapter_dir),
@@ -444,17 +466,23 @@ class FineTuner:
             gradient_accumulation_steps=cfg.gradient_accumulation_steps,
             learning_rate=cfg.learning_rate,
             max_steps=cfg.max_steps,
+            num_train_epochs=cfg.num_train_epochs,
             warmup_steps=cfg.warmup_steps,
+            warmup_ratio=cfg.warmup_ratio,
             logging_steps=cfg.logging_steps,
-            save_strategy="no",             # skip checkpoints — only save final adapter
+            save_strategy="epoch",
+            eval_strategy="epoch" if eval_ds else "no",
             weight_decay=cfg.weight_decay,
             lr_scheduler_type="cosine",
             optim="adamw_8bit",
             seed=cfg.seed,
-            fp16=True,
-            bf16=torch.cuda.is_bf16_supported(),
+            fp16=not use_bf16,
+            bf16=use_bf16,
             report_to="none",
             save_total_limit=1,
+            load_best_model_at_end=bool(eval_ds),
+            metric_for_best_model="eval_loss" if eval_ds else None,
+            greater_is_better=False if eval_ds else None,
         )
 
         trainer = Trainer(
@@ -462,11 +490,12 @@ class FineTuner:
             args=training_args,
             train_dataset=train_ds,
             eval_dataset=eval_ds,
-            data_collator=DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False),
+            data_collator=_AssistantOnlyCollator(tokenizer),
         )
 
-        logger.info("Starting Unsloth training: %d steps on %s",
-                     cfg.max_steps, torch.cuda.get_device_name(0) if CUDA_AVAILABLE else "CPU")
+        logger.info("Starting Unsloth training: %.1f epochs (max_steps=%d) on %s",
+                     cfg.num_train_epochs, cfg.max_steps,
+                     torch.cuda.get_device_name(0) if CUDA_AVAILABLE else "CPU")
         trainer.train()
 
         model.save_pretrained(str(adapter_dir))
@@ -499,8 +528,14 @@ class FineTuner:
             "train_samples": n_train,
             "eval_samples": n_eval,
             "max_steps": self.config.max_steps,
+            "num_train_epochs": self.config.num_train_epochs,
+            "effective_batch_size": (
+                self.config.per_device_train_batch_size
+                * self.config.gradient_accumulation_steps
+            ),
             "lora_r": self.config.lora_r,
             "lora_alpha": self.config.lora_alpha,
+            "assistant_only_loss": True,
             "load_in_4bit": self.config.load_in_4bit,
             "gpu": torch.cuda.get_device_name(0) if self._device == "cuda" else self._device,
         }
