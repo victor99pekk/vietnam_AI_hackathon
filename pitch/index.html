@@ -19,7 +19,7 @@
     <!-- ===== SLIDE 0: TITLE ===== -->
     <section class="slide active" data-slide="0">
       <div class="slide-inner">
-        <h1 class="title-main">Standardization of knowledge graphs generation for Vietnamese LLM training</h1>
+        <h1 class="title-main">Data management for LLM training</h1>
         <p class="title-sub">A clean, evidence-first pipeline for Vietnamese dataset curation.</p>
         <p class="title-small">← → arrows or scroll to navigate</p>
       </div>
@@ -29,15 +29,13 @@
     <section class="slide" data-slide="1">
       <div class="slide-inner">
         <p class="slide-subhead">Why LLMs + Vietnamese</p>
-        <h2 class="slide-headline">Powerful Models Need Native Vietnamese Understanding</h2>
+        <h2 class="slide-headline">Vietnam needs LLMs that speak Vietnamese to preserve meaning, culture, and local trust</h2>
         <ul class="bullet-list">
-          <li>The Power of LLMs: They serve as an adaptable operating system for human knowledge, scaling the ability to analyze, reason, and communicate instantly.</li>
-          <li>Cultural Precision: Native models naturally master Vietnam's complex tonal language and cultural nuances without losing meaning in translation.</li>
-          <li>Data Sovereignty: Keeping AI infrastructure local ensures sensitive citizen, corporate, and government data never leaves national borders.</li>
-          <li>Tech Autonomy: Owning the technology eliminates risky dependencies on foreign tech giants, pricing spikes, and geopolitical shifts.</li>
-          <li>Economic Boost: Tailored models can be directly optimized to accelerate local industries and power highly efficient public administration tools.</li>
+          <li><strong>The Power of LLMs:</strong> Vietnamese AI can scale local reasoning, language understanding, and real-time knowledge work.</li>
+          <li><strong>Cultural Precision:</strong> Native models preserve tone, idioms, and cultural meaning without mistranslation.</li>
+          <li><strong>Data Sovereignty:</strong> Keeping AI infrastructure local protects citizen, corporate, and government data.</li>
+          <li><strong>Local impact:</strong> Tailored models accelerate healthcare, education, legal services, and public administration.</li>
         </ul>
-        <p class="slide-body">Conclusion: LLMs are powerful, but to make them truly useful for Vietnamese users, they must be trained on Vietnamese language and cultural data — that’s the motivation for our project.</p>
       </div>
     </section>
 
@@ -45,78 +43,270 @@
     <section class="slide" data-slide="2">
       <div class="slide-inner">
         <p class="slide-subhead">Data Necessity</p>
-        <h2 class="slide-headline">Vietnamese Data: An Urgent Need</h2>
+        <h2 class="slide-headline">Why Vietnam lags behind the US in LLM training data</h2>
         <ul class="bullet-list">
-          <li>Language fidelity: Only native Vietnamese corpora capture idioms, dialects, and cultural references accurately.</li>
-          <li>Cultural competence: Models trained on other languages miss local norms, values, and contextual meaning.</li>
-          <li>Equity & inclusion: People in smaller-language countries deserve models optimized for their language and experiences.</li>
-          <li>Practical impact: Healthcare, legal, education and public services perform better with localized knowledge.</li>
-          <li>Research sovereignty: Building local datasets reduces dependence on externally curated data and biased sources.</li>
+          <li><strong>Low-resource gap:</strong> Vietnam has far less digitized, labeled, and open Vietnamese text than the US.</li>
+          <li><strong>Hidden content:</strong> Valuable local sources are often private, government-owned, or not prepared for AI ingestion.</li>
+          <li><strong>Infrastructure gap:</strong> Vietnam needs local pipelines, curation standards, and shared datasets to build native models.</li>
         </ul>
-        <p class="slide-body"><strong>Why we built this:</strong> We thought this project was both fun and crucial — creating a high-quality Vietnamese knowledge base enables fairer, more accurate LLMs that truly serve Vietnamese speakers rather than forcing them to rely on systems optimized for other languages.</p>
+        <p class="slide-body"><strong>What must change:</strong> collect and curate Vietnamese corpora, standardize local data formats, and build provenance-rich pipelines so native models can learn from real language, culture, and public-domain knowledge.</p>
       </div>
     </section>
 
-    <!-- ===== SLIDE 4: TRAINING STAGES ===== -->
-    <section class="slide" data-slide="4">
+    <!-- ===== SLIDE 3: TRAINING STAGES ===== -->
+    <section class="slide" data-slide="3">
       <div class="slide-inner">
         <p class="slide-subhead">Training Stages</p>
         <h2 class="slide-headline">What data is needed in LLM training?</h2>
-        <ul class="bullet-list">
-          <li><strong>Pretraining:</strong> Massive, diverse, mostly unlabelled corpora — web text, books, articles, multilingual content to learn general language patterns.</li>
-          <li><strong>Fine-tuning:</strong> Curated, high-quality Vietnamese datasets — instruction-following examples, aligned QA pairs, domain-specific documents, and safety-aligned samples.</li>
-        </ul>
-        <p class="slide-body">Both stages require different mixes of scale and quality — pretraining needs breadth, fine-tuning needs depth and correctness. That means a training pipeline must supply large volumes of Vietnamese text plus smaller, verified, high-quality datasets with provenance.</p>
+        <div class="img-row-2">
+          <div class="img-col">
+            <img src="images/1.png" alt="Data management pipeline in the pretraining stage of LLMs: domain composition, quantity control, quality filtering, deduplication, toxicity filtering, diversity and age" />
+            <p class="img-caption">Pretraining data pipeline</p>
+          </div>
+          <div class="img-col">
+            <img src="images/2.png" alt="Data management pipeline in the supervised fine-tuning stage of LLMs: task composition, quality control, quantity control, dynamic data-efficient learning" />
+            <p class="img-caption">Fine-tuning data pipeline</p>
+          </div>
+        </div>
+        <p class="slide-body">All data must be cleaned, deduplicated, and filtered to remove bad, noisy, or irrelevant content before it enters the pipeline.</p>
       </div>
     </section>
 
-    <!-- ===== SLIDE 5: OUR APPROACH ===== -->
-    <section class="slide" data-slide="5">
+    <!-- ===== SLIDE 4: OUR SOLUTION ===== -->
+    <section class="slide" data-slide="4">
       <div class="slide-inner">
-        <p class="slide-subhead">Our Approach</p>
-        <h2 class="slide-headline">Knowledge Graphs as a Foundation</h2>
+        <p class="slide-subhead">Our Solution</p>
+        <h2 class="slide-headline">Why knowledge graphs make Vietnamese LLM training more efficient</h2>
+        <div class="graph-image">
+          <img src="images/kg.png" alt="Example Vietnamese knowledge graph" />
+        </div>
         <ul class="bullet-list">
-          <li>Structured facts with provenance: Triples link entities to evidence sentences and source documents.</li>
-          <li>High-quality curated data: KG triples produce verified, de-duplicated records ideal for fine-tuning and evaluation.</li>
-          <li>Augmentation for pretraining: Serialized KG content and generated narratives increase high-quality Vietnamese coverage.</li>
-          <li>RAG-ready exports: KG-backed retrieval provides grounded context during inference, improving factuality and cultural sensitivity.</li>
-          <li>Interoperability: Exports to JSONL, GraphML, Neo4j CSV let teams plug KG data directly into training and evaluation pipelines.</li>
+          <li>Knowledge graphs capture entities, relationships, and provenance in a structured form.</li>
+          <li>That structure gives LLMs clearer, higher-value training signals than raw text alone.</li>
+          <li>Graphs make it easier to generate grounded fine-tuning examples and support retrieval-based reasoning.</li>
+          <li>They also help reuse knowledge across tasks while preserving accuracy and explainability.</li>
         </ul>
-        <p class="slide-body">In short: Knowledge graphs give us provenance-rich, high-precision Vietnamese data for fine-tuning and evaluation, while also enabling augmentation and retrieval strategies that improve pretraining coverage and runtime accuracy.</p>
       </div>
     </section>
 
-    <!-- ===== SLIDE 6: KG CHARACTERISTICS ===== -->
-    <section class="slide" data-slide="6">
+    <!-- ===== SLIDE 5: KG CHARACTERISTICS ===== -->
+    <section class="slide" data-slide="5">
       <div class="slide-inner">
         <p class="slide-subhead">KG Characteristics</p>
         <h2 class="slide-headline">What We Focused On</h2>
         <ul class="bullet-list">
-          <li><strong>Scalability:</strong> We store the graph in a graph database (Neo4j) to support growing nodes and relations.</li>
-          <li><strong>High-quality data:</strong> We evaluate with metrics (completeness, consistency, duplication rate, factual grounding) and compare fine-tuning LLMs with KG data vs without KG vs no fine-tuning.</li>
-          <li><strong>Data preservation:</strong> We keep historical versions of source documents while evolving the KG by iteratively adding nodes and evidence.</li>
-          <li><strong>Continuous expansion:</strong> We built a legal domain scraper to feed more domain-specific text — LLMs are data-hungry and benefit from continuous ingestion.</li>
+          <li><strong>Scalability:</strong> LLMs require vast amounts of data to perform well, and new data is constantly being generated. We therefore store the graph in a graph database (Neo4j) to support growing number of nodes and relations. And we implement a legal web scraper to continuously feed new data since the LLMs can never get enough data.</li>
+          <li><strong>High-quality data:</strong> LLMs need high quality data to perform well, and to ensure the data is accurate and reliable with no hallucintaions. We evaluate with metrics (completeness, consistency, duplication rate, factual grounding) and compare fine-tuning LLMs with KG data vs without KG vs no fine-tuning.</li>
+          <li><strong>Support for evolving knowledge:</strong> We want to be able to update the knowledge graph as new information becomes available. When this happens, we might get a new version of an existing document, we then delete that document from the knowldege graph, but store it in a separate Database. keep historical versions of source documents while evolving the KG by iteratively adding nodes and evidence.</li>
         </ul>
         <p class="slide-body">These characteristics ensure the KG is robust, auditable, and ready to drive both model training and runtime retrieval strategies.</p>
       </div>
     </section>
 
-    <!-- ===== SLIDE 7: PIPELINE ARCHITECTURE ===== -->
+    <!-- ===== SLIDE 6: PIPELINE ARCHITECTURE ===== -->
+    <section class="slide" data-slide="6">
+      <div class="slide-inner">
+        <p class="slide-subhead">Pipeline Architecture</p>
+        <h2 class="slide-headline">How our Vietnamese KG pipeline flows</h2>
+        <div class="arch-figure">
+          <svg viewBox="0 0 720 280" role="img" aria-label="Pipeline architecture: machine processes files through pipeline stages, archives to MongoDB, then checks and updates Neo4j">
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#555" />
+              </marker>
+              <marker id="arrowhead-accent" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#1a1a1a" />
+              </marker>
+            </defs>
+
+            <!-- ===== PIPELINE MACHINE ===== -->
+            <rect x="10" y="40" width="310" height="210" rx="10" fill="#fafafa" stroke="#333" stroke-width="2" />
+            <text x="165" y="65" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#1a1a1a">Pipeline Machine</text>
+
+            <!-- File icon -->
+            <rect x="25" y="80" width="22" height="26" rx="2" fill="#fff" stroke="#888" stroke-width="1.2" />
+            <line x1="30" y1="88" x2="42" y2="88" stroke="#aaa" stroke-width="1" />
+            <line x1="30" y1="93" x2="40" y2="93" stroke="#aaa" stroke-width="1" />
+            <line x1="30" y1="98" x2="38" y2="98" stroke="#aaa" stroke-width="1" />
+            <text x="55" y="97" font-family="Inter, sans-serif" font-size="10" fill="#555">Input files</text>
+
+            <!-- Pipeline steps inside the machine -->
+            <rect x="25" y="118" width="280" height="24" rx="4" fill="#fff" stroke="#ccc" stroke-width="1" />
+            <text x="165" y="135" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#444">Ingest &nbsp;→&nbsp; Clean &nbsp;→&nbsp; Chunk &nbsp;→&nbsp; Dedup &nbsp;→&nbsp; Extract &nbsp;→&nbsp; Build Graph &nbsp;→&nbsp; Export</text>
+
+            <!-- Provenance badge -->
+            <rect x="100" y="155" width="130" height="18" rx="9" fill="#eee" stroke="#ccc" stroke-width="1" />
+            <text x="165" y="168" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.5" fill="#666">provenance &amp; metadata tracked</text>
+
+            <!-- Mongo store mini box inside machine -->
+            <rect x="70" y="185" width="190" height="50" rx="6" fill="#fff" stroke="#999" stroke-width="1" stroke-dasharray="4 2" />
+            <text x="165" y="205" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#444">Archive all documents</text>
+            <text x="165" y="222" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.5" fill="#888">canonical_id + content_hash</text>
+
+            <!-- ===== ARROW: Machine → MongoDB ===== -->
+            <line x1="320" y1="145" x2="380" y2="145" stroke="#555" stroke-width="1.8" marker-end="url(#arrowhead)" />
+            <text x="350" y="138" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#777">store</text>
+
+            <!-- ===== MONGODB ===== -->
+            <rect x="385" y="42" width="140" height="206" rx="8" fill="#f5fdf5" stroke="#2e7d32" stroke-width="2" />
+            <text x="455" y="65" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#2e7d32">MongoDB</text>
+            <text x="455" y="82" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#555">Document Archive</text>
+
+            <!-- Mongo collections -->
+            <rect x="400" y="98" width="110" height="30" rx="4" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1" />
+            <text x="455" y="118" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#2e7d32">documents</text>
+            <rect x="400" y="138" width="110" height="30" rx="4" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1" />
+            <text x="455" y="158" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#2e7d32">archived_chunks</text>
+            <rect x="400" y="178" width="110" height="30" rx="4" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1" />
+            <text x="455" y="198" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#2e7d32">ingestion_runs</text>
+            <text x="455" y="238" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#888">ground truth source</text>
+
+            <!-- ===== ARROW: MongoDB → Neo4j (check + delete flow) ===== -->
+            <line x1="525" y1="145" x2="585" y2="145" stroke="#555" stroke-width="1.8" marker-end="url(#arrowhead)" />
+            <text x="555" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#777">check if</text>
+            <text x="555" y="140" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#777">exists →</text>
+            <text x="555" y="162" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#c62828">delete old</text>
+
+            <!-- ===== NEO4J ===== -->
+            <rect x="590" y="42" width="120" height="206" rx="8" fill="#f5f5ff" stroke="#1565c0" stroke-width="2" />
+            <text x="650" y="65" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#1565c0">Neo4j</text>
+            <text x="650" y="82" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#555">Knowledge Graph</text>
+
+            <!-- Graph nodes icon -->
+            <circle cx="620" cy="115" r="7" fill="#fff" stroke="#1565c0" stroke-width="1.8" />
+            <circle cx="650" cy="100" r="9" fill="#fff" stroke="#1565c0" stroke-width="1.8" />
+            <circle cx="680" cy="115" r="7" fill="#fff" stroke="#1565c0" stroke-width="1.8" />
+            <line x1="626" y1="110" x2="642" y2="104" stroke="#90caf9" stroke-width="1.2" />
+            <line x1="656" y1="104" x2="674" y2="110" stroke="#90caf9" stroke-width="1.2" />
+            <line x1="620" y1="122" x2="650" y2="109" stroke="#90caf9" stroke-width="1.2" />
+            <line x1="650" y1="109" x2="680" y2="122" stroke="#90caf9" stroke-width="1.2" />
+
+            <text x="650" y="148" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.5" fill="#1565c0">Chunk :PART_OF :Document</text>
+            <text x="650" y="162" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.5" fill="#1565c0">:MENTIONS :Entity</text>
+            <text x="650" y="176" text-anchor="middle" font-family="Inter, sans-serif" font-size="8.5" fill="#1565c0">:NEXT edges</text>
+
+            <text x="650" y="208" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#1a1a1a">MERGE new data</text>
+            <text x="650" y="238" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#888">atomic transaction</text>
+          </svg>
+        </div>
+        <p class="slide-body">Documents flow through the pipeline, are archived to MongoDB as ground truth, then checked against Neo4j — old chunks are deleted and new data is merged atomically.</p>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 7: PIPELINE PART 1 (INGEST → DEDUP) ===== -->
     <section class="slide" data-slide="7">
       <div class="slide-inner">
-        <p class="slide-subhead">Pipeline</p>
-        <h2 class="slide-headline">Overall Pipeline Architecture</h2>
-        <ul class="bullet-list">
-          <li><strong>Ingest:</strong> Collect TXT/JSON/JSONL/HTML, normalize encoding and whitespace.</li>
-          <li><strong>Chunk & Clean:</strong> Sentence or semantic chunking, noise removal, language detection.</li>
-          <li><strong>Deduplication & QA:</strong> Exact, MinHash/SimHash, semantic layers; quality scoring per chunk.</li>
-          <li><strong>Extraction:</strong> NER + relation extraction (spaCy rules or LLM prompts) to produce triples.</li>
-          <li><strong>Entity Resolution:</strong> Embedding similarity and canonicalization across documents.</li>
-          <li><strong>Graph Build & Validation:</strong> Construct triples, validate against ontology, attach provenance.</li>
-          <li><strong>Evaluate & Export:</strong> Compute quality metrics, export JSONL/GraphML/Neo4j CSV, and prepare RAG indexes.</li>
-          <li><strong>Continuous Loop:</strong> Scrapers and manual curation feed new data; versioning preserves history while KG grows.</li>
+        <p class="slide-subhead">Pipeline — Data Preparation</p>
+        <h2 class="slide-headline">Ingest, clean, chunk, and deduplicate</h2>
+        <ul class="bullet-list ordered">
+          <li><strong>Ingest:</strong> Load Vietnamese text from web scrapes, Wikipedia dumps, and curated JSONL sources — normalize into a unified document model with metadata.</li>
+          <li><strong>Clean:</strong> Strip HTML, normalize Unicode (Vietnamese tone marks), remove boilerplate, and filter non-Vietnamese or low-quality content.</li>
+          <li><strong>Chunk:</strong> Segment documents into semantic chunks (sentence, paragraph, or fixed-size) with stable chunk IDs for traceability.</li>
+          <li><strong>Deduplicate &amp; QA:</strong> Near-deduplicate at document and chunk level; apply heuristic quality filters to remove noise before extraction.</li>
         </ul>
-        <p class="slide-body">This modular pipeline supports both large-scale pretraining augmentation and fine-grained curated datasets for fine-tuning and evaluation.</p>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 8: PIPELINE PART 2 (EXTRACT → EXPAND) ===== -->
+    <section class="slide" data-slide="8">
+      <div class="slide-inner">
+        <p class="slide-subhead">Pipeline — Knowledge Extraction</p>
+        <h2 class="slide-headline">Extract, resolve, build, and expand the graph</h2>
+        <ul class="bullet-list ordered">
+          <li><strong>Extract entities &amp; relations:</strong> Identify people, places, organizations, and facts from cleaned Vietnamese text using ML extractors (with optional LLM fallback).</li>
+          <li><strong>Entity resolution:</strong> Merge mentions of the same real-world entity across documents using embedding similarity and rule-based linking.</li>
+          <li><strong>Build &amp; validate graph:</strong> Assemble entities and triples into Neo4j with ontology-constrained node types (:Chunk, :Document, :Entity) and relationships (:PART_OF, :MENTIONS, :NEXT).</li>
+          <li><strong>Export &amp; expand:</strong> Produce JSON, GraphML, Neo4j CSV, and RDF exports; continuously ingest new sources and refresh the graph with full provenance tracking.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 9: METRIC EVALUATION ===== -->
+    <section class="slide" data-slide="9">
+      <div class="slide-inner">
+        <p class="slide-subhead">Evaluation Results</p>
+        <h2 class="slide-headline">Metric-driven results</h2>
+        <ul class="bullet-list">
+          <li>Coverage: improved Vietnamese content breadth and topic coverage.</li>
+          <li>Quality: reduced duplication, noise, and factual errors.</li>
+          <li>Trust: stronger provenance and validation for model-ready data.</li>
+          <li>Readiness: outputs that support fine-tuning, retrieval, and evaluation.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 10: AI SAFETY & TRUST ===== -->
+    <section class="slide" data-slide="10">
+      <div class="slide-inner">
+        <p class="slide-subhead">AI Safety &amp; Trust</p>
+        <h2 class="slide-headline">Built-in safeguards against hallucination and data risk</h2>
+        <ul class="bullet-list">
+          <li><strong>Provenance-backed facts:</strong> Every entity and relationship is traced to its source document via content hash and ingestion run ID — nothing is invented.</li>
+          <li><strong>Ontology-constrained extraction:</strong> Entities and relations are validated against a structured ontology, not free-form generation, reducing hallucination risk.</li>
+          <li><strong>Full audit trail:</strong> MongoDB archives every document version permanently; Neo4j deletions are logged in <code>archived_chunks</code> — the graph can be rebuilt from ground truth at any time.</li>
+          <li><strong>Privacy-first design:</strong> Scraper respects robots.txt; MongoDB stores canonical IDs without personal identifying information; no user data is collected.</li>
+          <li><strong>Transparent limitations:</strong> Vietnamese NLP model gaps are documented; domain coverage is tracked per ingestion run; outputs include confidence signals where available.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 11: PRODUCT UX ===== -->
+    <section class="slide" data-slide="11">
+      <div class="slide-inner">
+        <p class="slide-subhead">Product &amp; User Experience</p>
+        <h2 class="slide-headline">From raw text to training data — a clean, guided workflow</h2>
+        <ul class="bullet-list">
+          <li><strong>Web dashboard:</strong> Upload sources, configure pipeline parameters, and trigger KG generation from a single interface — no CLI required for day-to-day use.</li>
+          <li><strong>Live graph explorer:</strong> Browse the resulting knowledge graph interactively — search entities, trace relationships, and inspect provenance per node.</li>
+          <li><strong>One-click export:</strong> Download training-ready data in JSON, GraphML, or Neo4j CSV format for direct consumption by fine-tuning and RAG pipelines.</li>
+          <li><strong>Decision-support focus:</strong> ML teams can assess data coverage, spot gaps, and verify factual grounding before committing to expensive training runs.</li>
+          <li><strong>Vietnamese-first interface:</strong> All labels and workflows support Vietnamese language; the system is designed for local AI practitioners, not just English-speaking researchers.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 12: AI-NATIVE INNOVATION ===== -->
+    <section class="slide" data-slide="12">
+      <div class="slide-inner">
+        <p class="slide-subhead">AI-Native Innovation</p>
+        <h2 class="slide-headline">AI isn't a feature — it's the engine</h2>
+        <ul class="bullet-list">
+          <li><strong>ML-powered extraction:</strong> Entity and relation extraction uses transformer models fine-tuned for Vietnamese, with LLM fallback for low-confidence spans — not regex or keyword matching.</li>
+          <li><strong>Semantic deduplication:</strong> Near-duplicate detection uses embedding similarity, not just hash collisions, catching paraphrased content that traditional dedup misses.</li>
+          <li><strong>Graph RAG ready:</strong> The Neo4j knowledge graph directly powers retrieval-augmented generation — entities and relationships serve as structured context for LLM queries.</li>
+          <li><strong>Agentic pipeline design:</strong> Each stage (ingest, extract, resolve, build) runs as an independent, testable module — enabling future agent-orchestrated workflows for continuous data curation.</li>
+          <li><strong>Vietnamese-first, not translated:</strong> Ontology, extractors, and quality filters are built for Vietnamese from the ground up — not repurposed from English tooling with a language flag.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 13: BUSINESS MODEL & PILOT ===== -->
+    <section class="slide" data-slide="13">
+      <div class="slide-inner">
+        <p class="slide-subhead">Business Model &amp; Pilot Pathway</p>
+        <h2 class="slide-headline">From hackathon prototype to real-world adoption</h2>
+        <ul class="bullet-list">
+          <li><strong>Target users:</strong> Vietnamese AI labs building local LLMs, government digitization teams, university research groups, and enterprises needing structured Vietnamese knowledge.</li>
+          <li><strong>Value proposition:</strong> Turn months of manual data curation into hours of automated pipeline execution — produce model-ready structured data at a fraction of the cost.</li>
+          <li><strong>Pilot pathway:</strong> Partner with one Vietnamese university or government agency → run the pipeline on their existing corpus → measure fine-tuning improvement → publish results → expand.</li>
+          <li><strong>Open-core model:</strong> Core pipeline is open source (Apache 2.0); managed cloud hosting, dedicated Neo4j instances, and enterprise support are paid tiers.</li>
+          <li><strong>Strategic roadmap:</strong> Q1 pilot → Q2 multi-tenant SaaS → Q3 domain-specific ontologies (legal, medical) → Q4 continuous ingestion service with live KG updates.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== SLIDE 14: COMPETITIVE ADVANTAGE ===== -->
+    <section class="slide" data-slide="14">
+      <div class="slide-inner">
+        <p class="slide-subhead">Competitive Advantage</p>
+        <h2 class="slide-headline">Why our approach wins</h2>
+        <ul class="bullet-list">
+          <li><strong>KG beats raw text:</strong> Structured entities and relationships provide higher-density training signals — models learn facts, not just token patterns.</li>
+          <li><strong>KG beats vector DB alone:</strong> Vectors capture similarity but lose explicit relationships; our graph preserves who-connected-to-whom, with evidence provenance.</li>
+          <li><strong>Dual-store architecture:</strong> MongoDB as permanent ground truth + Neo4j as queryable knowledge graph — no other Vietnamese data pipeline offers this level of auditability.</li>
+          <li><strong>Continuous update loop:</strong> New documents are ingested, old chunks are atomically replaced, and provenance is preserved — the graph stays current without rebuilds.</li>
+          <li><strong>Vietnamese moat:</strong> Purpose-built for Vietnamese language, culture, and data sources — not a generic tool with a language flag. Scrapers, extractors, and ontologies are all Vietnam-native.</li>
+        </ul>
       </div>
     </section>
 

@@ -156,6 +156,16 @@ body {
   max-width: 600px;
   margin: 20px auto 0;
 }
+.bullet-list.ordered {
+  list-style: decimal inside;
+  padding-left: 0;
+}
+.bullet-list.ordered li {
+  padding: 8px 0 8px 0;
+}
+.bullet-list.ordered li::before {
+  content: none;
+}
 .bullet-list li {
   font-size: 16px;
   color: var(--muted);
@@ -172,6 +182,95 @@ body {
   height: 8px;
   border-radius: 50%;
   background: var(--accent);
+}
+
+.graph-animation,
+.graph-image,
+.arch-figure {
+  margin: 28px auto 18px;
+  max-width: 460px;
+}
+.arch-figure {
+  max-width: 700px;
+}
+.arch-figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.graph-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.06);
+}
+.graph-animation svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.graph-animation .edge line {
+  stroke: var(--accent-light);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.45;
+  stroke-dasharray: 120 180;
+  animation: draw-edge 3.4s ease-in-out infinite;
+}
+.graph-animation .node circle {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 3;
+  opacity: 0.95;
+  transform-origin: center;
+  animation: pulse-node 3.6s ease-in-out infinite;
+}
+.graph-animation .node-large circle { animation-delay: 0s; }
+.graph-animation .node-small circle { animation-delay: 0.7s; }
+.graph-animation .glow {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  opacity: 0.18;
+  animation: glow-ring 2.8s ease-in-out infinite;
+}
+@keyframes pulse-node {
+  0%, 100% { transform: scale(1); opacity: 0.95; }
+  50% { transform: scale(1.12); opacity: 0.65; }
+}
+@keyframes draw-edge {
+  0% { stroke-dashoffset: 160; opacity: 0; }
+  40% { opacity: 0.3; }
+  100% { stroke-dashoffset: 0; opacity: 0.45; }
+}
+@keyframes glow-ring {
+  0% { transform: scale(0.92); opacity: 0.18; }
+  50% { transform: scale(1.2); opacity: 0.06; }
+  100% { transform: scale(0.92); opacity: 0.18; }
+}
+
+/* ---- two-column image row ---- */
+.img-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 780px;
+  margin: 20px auto 0;
+}
+.img-col img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+.img-caption {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #888;
+  text-align: center;
 }
 
 /* ---- inline accent ---- */
