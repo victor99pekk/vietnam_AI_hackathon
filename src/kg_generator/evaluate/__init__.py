@@ -22,7 +22,6 @@ try:
         StructuralAuditor,
         load_kg_for_audit,
         SFTGenerator,
-        TemplateSFTGenerator,
         SFTEvaluator,
     )
     from evaluation.model_eval import (                               # noqa: E402
@@ -40,7 +39,7 @@ except ImportError:
         StructuralAuditor,
         load_kg_for_audit,
     )
-    from .sft_generator import SFTGenerator, TemplateSFTGenerator    # noqa: E402
+    from .sft_generator import SFTGenerator                          # noqa: E402
     from .sft_evaluator import SFTEvaluator                          # noqa: E402
     from .dataset_gen import (                                       # noqa: E402
         QADatasetGenerator,
@@ -55,7 +54,6 @@ __all__ = [
     "StructuralAuditor",
     "load_kg_for_audit",
     "SFTGenerator",
-    "TemplateSFTGenerator",
     "SFTEvaluator",
     "QADatasetGenerator",
     "load_kg",

@@ -145,6 +145,35 @@ scrape:
 ## scrape-standalone: Run scraper directly (alias for scrape — same behavior)
 scrape-standalone: scrape
 
+## scrape-llm-discover: Use LLM to extract article URLs from listing pages  [scrape_count=50]
+scrape-llm-discover:
+	$(VENV) && python data/download_data/llm_cleaner.py discover \
+		data/scraped/vn_web_$(scrape_count)/vn_web_$(scrape_count).jsonl \
+		-o data/download_data/seeds/discovered_urls.txt
+
+## scrape-llm-clean: Score, filter, and LLM-clean scraped pages  [scrape_count=50] [llm_min_score=5]
+llm_min_score ?= 5
+scrape-llm-clean:
+	$(VENV) && python data/download_data/llm_cleaner.py clean \
+		data/scraped/vn_web_$(scrape_count)/vn_web_$(scrape_count).jsonl \
+		-o data/scraped/vn_web_$(scrape_count)/vn_web_$(scrape_count)_clean.jsonl \
+		--min-score $(llm_min_score)
+
+## scrape-full: Scrape + LLM discover article URLs + re-scrape articles + LLM clean
+scrape-full: scrape scrape-llm-discover
+	$(VENV) && python data/download_data/scraper.py \
+		--seed-file data/download_data/seeds/discovered_urls.txt \
+		--max-pages $$(wc -l < data/download_data/seeds/discovered_urls.txt) \
+		--language $(scrape_lang) \
+		--max-time 0 \
+		--depth 0 \
+		--discovery exact \
+		--output data/scraped/vn_web_articles/ && \
+	$(VENV) && python data/download_data/llm_cleaner.py clean \
+		data/scraped/vn_web_articles/vn_web_articles.jsonl \
+		-o data/scraped/vn_web_articles/vn_web_articles_clean.jsonl \
+		--min-score 3
+
 ## download-wikipedia: Download Wikipedia articles as JSONL  [wiki_count=100] [wiki_lang=en]
 download-wikipedia:
 	$(VENV) && python data/download_data/wikipedia.py \

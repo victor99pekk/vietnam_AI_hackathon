@@ -9110,7 +9110,7 @@
         "data/debugg_sample/alan_turing.jsonl"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.059658+00:00",
+      "updatedAt": "2026-07-18T09:51:10.659224+00:00",
       "text": "Alan Turing was born in London, England in 1912. He studied at King's College, Cambridge and later earned his PhD from Princeton University.\n\nDuring World War II, Turing worked at Bletchley Park, where he played a crucial role in breaking the German Enigma code. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.",
       "tokenCount": 56,
       "index": 0,
@@ -9129,7 +9129,7 @@
         "data/debugg_sample/alan_turing.jsonl"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.059688+00:00",
+      "updatedAt": "2026-07-18T09:51:10.659260+00:00",
       "text": "ode. He developed the Bombe, an electromechanical device used to decipher Enigma-encrypted messages.\n\nAfter the war, Turing worked at the National Physical Laboratory and later at the University of Manchester. He is widely considered the father of theoretical computer science and artificial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.",
       "tokenCount": 54,
       "index": 1,
@@ -9148,7 +9148,7 @@
         "data/debugg_sample/alan_turing.jsonl"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.059709+00:00",
+      "updatedAt": "2026-07-18T09:51:10.659285+00:00",
       "text": "cial intelligence. His 1950 paper \"Computing Machinery and Intelligence\" introduced the Turing Test.\n\nTuring also made significant contributions to mathematical biology, publishing work on morphogenesis. He died in 1954 in Wilmslow, England.",
       "tokenCount": 32,
       "index": 2,
@@ -9167,7 +9167,7 @@
         "data/debugg_sample/marie_curie.jsonl"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.059729+00:00",
+      "updatedAt": "2026-07-18T09:51:10.659308+00:00",
       "text": "Marie Curie was born in Warsaw, Poland in 1867. She is best known for her pioneering research on radioactivity. She discovered the elements polonium and radium.\n\nCurie worked at the University of Paris, where she became the first female professor. In 1903, she received the Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.",
       "tokenCount": 61,
       "index": 0,
@@ -9186,7 +9186,7 @@
         "data/debugg_sample/marie_curie.jsonl"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.059749+00:00",
+      "updatedAt": "2026-07-18T09:51:10.659331+00:00",
       "text": "Nobel Prize in Physics along with Pierre Curie and Henri Becquerel for their work on radioactivity.\n\nIn 1911, she won a second Nobel Prize, this time in Chemistry, for her discovery of radium and polonium. She founded the Curie Institutes in Paris and Warsaw, which remain major medical research centers today.\n\nMarie Curie died in 1934 in Passy, France from aplastic anemia, likely caused by her long-term exposure to radiation.",
       "tokenCount": 70,
       "index": 1,
@@ -9207,7 +9207,7 @@
         "data/debugg_sample/alan_turing.jsonl"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.059774+00:00",
+      "updatedAt": "2026-07-18T09:51:10.659360+00:00",
       "chunk_count": 3,
       "title": "Alan Turing",
       "url": "file:///home/victorpekkari/vietnam_AI_hackathon/data/debugg_sample/alan_turing.txt"
@@ -9226,7 +9226,7 @@
         "data/debugg_sample/marie_curie.jsonl"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.059807+00:00",
+      "updatedAt": "2026-07-18T09:51:10.659398+00:00",
       "chunk_count": 2,
       "title": "Marie Curie",
       "url": "file:///home/victorpekkari/vietnam_AI_hackathon/data/debugg_sample/marie_curie.txt"
@@ -9245,7 +9245,7 @@
         "chunk:f409c7a7896517577ff3"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705823+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337740+00:00"
     },
     {
       "id": "entity:63de2815b419dc68278e",
@@ -9261,7 +9261,7 @@
         "chunk:f409c7a7896517577ff3"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705837+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337753+00:00"
     },
     {
       "id": "entity:3af113c3510a84bc092a",
@@ -9279,7 +9279,7 @@
         "chunk:e0ea2f7b6bdb7e55a31b"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705842+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337759+00:00"
     },
     {
       "id": "entity:fb4c570edce747778471",
@@ -9295,7 +9295,7 @@
         "chunk:f409c7a7896517577ff3"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705847+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337764+00:00"
     },
     {
       "id": "entity:df2ec3158b44e32d9738",
@@ -9311,7 +9311,7 @@
         "chunk:f409c7a7896517577ff3"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705851+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337769+00:00"
     },
     {
       "id": "entity:6325873666b7e63011fb",
@@ -9327,7 +9327,7 @@
         "chunk:f409c7a7896517577ff3"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705856+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337774+00:00"
     },
     {
       "id": "entity:a1de7741cdf89a1ebe78",
@@ -9343,7 +9343,7 @@
         "chunk:f409c7a7896517577ff3"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705860+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337778+00:00"
     },
     {
       "id": "entity:c350febc8aabf86bf9af",
@@ -9359,7 +9359,7 @@
         "chunk:f409c7a7896517577ff3"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705864+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337783+00:00"
     },
     {
       "id": "entity:adeae57afbb4f24d26d3",
@@ -9375,7 +9375,7 @@
         "chunk:f409c7a7896517577ff3"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705869+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337788+00:00"
     },
     {
       "id": "entity:0b5bfa7688b43b5ab818",
@@ -9391,7 +9391,7 @@
         "chunk:f409c7a7896517577ff3"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705873+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337793+00:00"
     },
     {
       "id": "entity:7bcab56922fa153c3d90",
@@ -9407,7 +9407,7 @@
         "chunk:f409c7a7896517577ff3"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705878+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337798+00:00"
     },
     {
       "id": "entity:caea022f591e90c87008",
@@ -9425,7 +9425,7 @@
         "chunk:967f21d0515276f22a42"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705882+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337802+00:00"
     },
     {
       "id": "entity:8c90ea1c9edf61fa1603",
@@ -9443,7 +9443,7 @@
         "chunk:967f21d0515276f22a42"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705886+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337807+00:00"
     },
     {
       "id": "entity:181a95ed6cafb209fd8e",
@@ -9459,7 +9459,7 @@
         "chunk:f409c7a7896517577ff3"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705890+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337812+00:00"
     },
     {
       "id": "entity:0057510c35a2b988027e",
@@ -9475,7 +9475,7 @@
         "chunk:f409c7a7896517577ff3"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705894+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337816+00:00"
     },
     {
       "id": "entity:9d6df20846359d44cbc1",
@@ -9491,7 +9491,7 @@
         "chunk:f409c7a7896517577ff3"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705898+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337821+00:00"
     },
     {
       "id": "entity:b336381cff9c9d1436ab",
@@ -9509,7 +9509,7 @@
         "chunk:967f21d0515276f22a42"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705902+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337826+00:00"
     },
     {
       "id": "entity:444db4a37d6b4b82a193",
@@ -9526,7 +9526,7 @@
         "chunk:967f21d0515276f22a42"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705907+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337830+00:00"
     },
     {
       "id": "entity:7c8b935ef378c2344915",
@@ -9544,7 +9544,7 @@
         "chunk:967f21d0515276f22a42"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.705911+00:00"
+      "updatedAt": "2026-07-18T09:51:11.337835+00:00"
     },
     {
       "id": "entity:bf2ea5fdf027f5c075d7",
@@ -9560,7 +9560,7 @@
         "chunk:967f21d0515276f22a42"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717445+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350639+00:00"
     },
     {
       "id": "entity:93e98b16986da57c4b4f",
@@ -9576,7 +9576,7 @@
         "chunk:967f21d0515276f22a42"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717449+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350645+00:00"
     },
     {
       "id": "entity:ff32a994760dd68fa6b3",
@@ -9593,7 +9593,7 @@
         "chunk:e0ea2f7b6bdb7e55a31b"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717453+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350649+00:00"
     },
     {
       "id": "entity:ff2acff034bc635c3259",
@@ -9611,7 +9611,7 @@
         "chunk:e0ea2f7b6bdb7e55a31b"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717458+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350654+00:00"
     },
     {
       "id": "entity:0fd88f581626ae672996",
@@ -9629,7 +9629,7 @@
         "chunk:e0ea2f7b6bdb7e55a31b"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717462+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350658+00:00"
     },
     {
       "id": "entity:b273e6cdd00daf370635",
@@ -9647,7 +9647,7 @@
         "chunk:e0ea2f7b6bdb7e55a31b"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717466+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350663+00:00"
     },
     {
       "id": "entity:b7ac89cfcea66f67787a",
@@ -9663,7 +9663,7 @@
         "chunk:967f21d0515276f22a42"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717470+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350668+00:00"
     },
     {
       "id": "entity:3c7158a7ce396f56bf98",
@@ -9679,7 +9679,7 @@
         "chunk:967f21d0515276f22a42"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717488+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350687+00:00"
     },
     {
       "id": "entity:abd2345b0b6f1ff50bcd",
@@ -9697,7 +9697,7 @@
         "chunk:981720eb52cecf7f80a8"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717492+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350692+00:00"
     },
     {
       "id": "entity:caecc58ec7341084b846",
@@ -9713,7 +9713,7 @@
         "chunk:967f21d0515276f22a42"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717496+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350696+00:00"
     },
     {
       "id": "entity:8a3b74330c1fdb9b8d29",
@@ -9729,7 +9729,7 @@
         "chunk:967f21d0515276f22a42"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717500+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350700+00:00"
     },
     {
       "id": "entity:b4b0505100219ef15afe",
@@ -9745,7 +9745,7 @@
         "chunk:967f21d0515276f22a42"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717504+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350705+00:00"
     },
     {
       "id": "entity:dd5d0ba9d265e3595bd6",
@@ -9761,7 +9761,7 @@
         "chunk:967f21d0515276f22a42"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717509+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350710+00:00"
     },
     {
       "id": "entity:58419b97cc04ce64dd7e",
@@ -9779,7 +9779,7 @@
         "chunk:e0ea2f7b6bdb7e55a31b"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.717513+00:00"
+      "updatedAt": "2026-07-18T09:51:11.350715+00:00"
     },
     {
       "id": "entity:1d9155a50045a14aef4f",
@@ -9795,7 +9795,7 @@
         "chunk:e0ea2f7b6bdb7e55a31b"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.725121+00:00"
+      "updatedAt": "2026-07-18T09:51:11.358653+00:00"
     },
     {
       "id": "entity:c7506740bcfddd74547b",
@@ -9811,7 +9811,7 @@
         "chunk:e0ea2f7b6bdb7e55a31b"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.725125+00:00"
+      "updatedAt": "2026-07-18T09:51:11.358657+00:00"
     },
     {
       "id": "entity:99e9f1022ac1eca158b9",
@@ -9827,7 +9827,7 @@
         "chunk:e0ea2f7b6bdb7e55a31b"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.725134+00:00"
+      "updatedAt": "2026-07-18T09:51:11.358668+00:00"
     },
     {
       "id": "entity:24e485909887935c6597",
@@ -9843,7 +9843,7 @@
         "chunk:e0ea2f7b6bdb7e55a31b"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.725142+00:00"
+      "updatedAt": "2026-07-18T09:51:11.358677+00:00"
     },
     {
       "id": "entity:3cea25187ed1696658ee",
@@ -9859,7 +9859,7 @@
         "chunk:e0ea2f7b6bdb7e55a31b"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.725147+00:00"
+      "updatedAt": "2026-07-18T09:51:11.358682+00:00"
     },
     {
       "id": "entity:833d4d42f195fb21d411",
@@ -9875,7 +9875,7 @@
         "chunk:e0ea2f7b6bdb7e55a31b"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.725151+00:00"
+      "updatedAt": "2026-07-18T09:51:11.358686+00:00"
     },
     {
       "id": "entity:48d7f2361ef161a49d1b",
@@ -9891,7 +9891,7 @@
         "chunk:e0ea2f7b6bdb7e55a31b"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.725155+00:00"
+      "updatedAt": "2026-07-18T09:51:11.358691+00:00"
     },
     {
       "id": "entity:360a2e1386408097d3d5",
@@ -9909,7 +9909,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.736992+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371232+00:00"
     },
     {
       "id": "entity:12c76a94d645dc82c37e",
@@ -9927,7 +9927,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.736999+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371239+00:00"
     },
     {
       "id": "entity:59b402ea1ad2f1c515f2",
@@ -9943,7 +9943,7 @@
         "chunk:981720eb52cecf7f80a8"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737003+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371244+00:00"
     },
     {
       "id": "entity:efda500bef12d027bed2",
@@ -9959,7 +9959,7 @@
         "chunk:981720eb52cecf7f80a8"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737008+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371249+00:00"
     },
     {
       "id": "entity:c490a317340ae3a9cd2c",
@@ -9975,7 +9975,7 @@
         "chunk:981720eb52cecf7f80a8"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737012+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371254+00:00"
     },
     {
       "id": "entity:a915acfdb7aa9fb6e921",
@@ -9991,7 +9991,7 @@
         "chunk:981720eb52cecf7f80a8"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737017+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371259+00:00"
     },
     {
       "id": "entity:58fafff652f3eb99104d",
@@ -10007,7 +10007,7 @@
         "chunk:981720eb52cecf7f80a8"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737021+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371264+00:00"
     },
     {
       "id": "entity:22d9b9b89e9481d9f666",
@@ -10023,7 +10023,7 @@
         "chunk:981720eb52cecf7f80a8"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737025+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371270+00:00"
     },
     {
       "id": "entity:61128158fee7f4925066",
@@ -10039,7 +10039,7 @@
         "chunk:981720eb52cecf7f80a8"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737030+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371277+00:00"
     },
     {
       "id": "entity:731c828e503c64269c56",
@@ -10057,7 +10057,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737034+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371282+00:00"
     },
     {
       "id": "entity:e27165f1ae951a05643c",
@@ -10075,7 +10075,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737038+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371287+00:00"
     },
     {
       "id": "entity:ee29d5bf5afd39daff1a",
@@ -10092,7 +10092,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737042+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371291+00:00"
     },
     {
       "id": "entity:cd0f7641cae9303617a7",
@@ -10108,7 +10108,7 @@
         "chunk:981720eb52cecf7f80a8"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737046+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371296+00:00"
     },
     {
       "id": "entity:7d4103bf26d22be8e9a2",
@@ -10125,7 +10125,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737050+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371300+00:00"
     },
     {
       "id": "entity:a21e56ad491ea18de035",
@@ -10141,7 +10141,7 @@
         "chunk:981720eb52cecf7f80a8"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737055+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371305+00:00"
     },
     {
       "id": "entity:5722db46c0e1e1753124",
@@ -10158,7 +10158,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737059+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371309+00:00"
     },
     {
       "id": "entity:af2c1cc871b55820fa41",
@@ -10175,7 +10175,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737063+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371313+00:00"
     },
     {
       "id": "entity:944cf948d739fdc6b830",
@@ -10191,7 +10191,7 @@
         "chunk:981720eb52cecf7f80a8"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737072+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371322+00:00"
     },
     {
       "id": "entity:0a1a8349b7000da138e7",
@@ -10207,7 +10207,7 @@
         "chunk:981720eb52cecf7f80a8"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737076+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371327+00:00"
     },
     {
       "id": "entity:76d749c1ef399ccda2c4",
@@ -10223,7 +10223,7 @@
         "chunk:981720eb52cecf7f80a8"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737081+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371331+00:00"
     },
     {
       "id": "entity:67203f6474c172c5e1a0",
@@ -10241,7 +10241,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737085+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371336+00:00"
     },
     {
       "id": "entity:5c497701d556d56e5138",
@@ -10258,7 +10258,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.737089+00:00"
+      "updatedAt": "2026-07-18T09:51:11.371340+00:00"
     },
     {
       "id": "entity:09210f367fe83a94f7cb",
@@ -10274,7 +10274,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750606+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385680+00:00"
     },
     {
       "id": "entity:a1941c9876d0c907aaa8",
@@ -10290,7 +10290,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750622+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385696+00:00"
     },
     {
       "id": "entity:0a52f8b17f3d2f92e2ef",
@@ -10306,7 +10306,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750626+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385701+00:00"
     },
     {
       "id": "entity:32f2e3fa7067b2d2642c",
@@ -10322,7 +10322,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750631+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385705+00:00"
     },
     {
       "id": "entity:72a0a571425c1f7be262",
@@ -10338,7 +10338,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750635+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385710+00:00"
     },
     {
       "id": "entity:b321156e389be4561c9e",
@@ -10354,7 +10354,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750639+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385714+00:00"
     },
     {
       "id": "entity:a110d70a332aa50aa379",
@@ -10370,7 +10370,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750643+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385719+00:00"
     },
     {
       "id": "entity:bb68263ad8a1631842bb",
@@ -10386,7 +10386,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750652+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385727+00:00"
     },
     {
       "id": "entity:9a94dd09af8a6d1965ae",
@@ -10402,7 +10402,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750660+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385736+00:00"
     },
     {
       "id": "entity:e2a0f041a059c42052e6",
@@ -10418,7 +10418,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750664+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385741+00:00"
     },
     {
       "id": "entity:75148d6ccc8dcb480252",
@@ -10434,7 +10434,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750668+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385745+00:00"
     },
     {
       "id": "entity:29432d80e78005ebe805",
@@ -10450,7 +10450,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750689+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385767+00:00"
     },
     {
       "id": "entity:d0965dc24ac3b52f317c",
@@ -10466,7 +10466,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750693+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385772+00:00"
     },
     {
       "id": "entity:09e2822d80fb88a5b7f1",
@@ -10482,7 +10482,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750697+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385776+00:00"
     },
     {
       "id": "entity:7781e27f1a10b191c7e1",
@@ -10498,7 +10498,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750709+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385789+00:00"
     },
     {
       "id": "entity:d545980c4227ec558676",
@@ -10514,7 +10514,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750714+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385794+00:00"
     },
     {
       "id": "entity:b01ca301e22a5fb687a0",
@@ -10530,7 +10530,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750718+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385798+00:00"
     },
     {
       "id": "entity:d47b081bf1b5ed2b88ab",
@@ -10546,7 +10546,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750722+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385803+00:00"
     },
     {
       "id": "entity:0325bbe6b6e3643cb13c",
@@ -10562,7 +10562,7 @@
         "chunk:3a298cc444d403faae22"
       ],
       "embedding": null,
-      "updatedAt": "2026-07-18T09:42:34.750726+00:00"
+      "updatedAt": "2026-07-18T09:51:11.385807+00:00"
     }
   ],
   "triples": [

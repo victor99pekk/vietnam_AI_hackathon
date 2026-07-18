@@ -1,0 +1,68 @@
+{
+  "num_nodes": 669,
+  "num_edges": 1188,
+  "num_triples": 1188,
+  "completeness": 0.6915794718485301,
+  "completeness_breakdown": {
+    "has_name": 1.0,
+    "has_aliases": 0.07473841554559044,
+    "has_type": 1.0
+  },
+  "consistency": 1.0,
+  "duplication_level": 0.3968609865470852,
+  "entity_duplication_rate": 0.7937219730941704,
+  "triple_duplication_rate": 0.0,
+  "missing_information": 0.9252615844544095,
+  "format_errors": 0.0,
+  "labeling_quality": 1.0,
+  "reusability": 0.6266068759342303,
+  "overall_score": 0.713723396683038,
+  "extraction": {
+    "language": "en",
+    "method": "baseline",
+    "backend": "spacy",
+    "model": null,
+    "backend_version": "3.8.14",
+    "prompt_version": null,
+    "max_gleanings": 0
+  },
+  "pipeline": {
+    "chunking": {
+      "method": "sentence",
+      "size_chars": null,
+      "overlap_chars": null,
+      "target_tokens": 450,
+      "overlap_tokens": 60,
+      "semantic_threshold": null,
+      "embedding_model": null
+    },
+    "quality": {
+      "method": "heuristic"
+    },
+    "deduplication": {
+      "document_method": "minhash",
+      "document_threshold": 0.85,
+      "chunk_method": "minhash",
+      "chunk_threshold": 0.85,
+      "semantic_threshold": 0.92,
+      "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2"
+    },
+    "extraction": {
+      "method": "offline"
+    },
+    "resolution": {
+      "method": "string",
+      "threshold": 0.85,
+      "embedding_model": null
+    }
+  },
+  "processing": {
+    "loaded_documents": 50,
+    "cleaned_documents": 50,
+    "documents_after_quality": 50,
+    "documents_after_dedup": 50,
+    "chunks_created": 619,
+    "chunks_after_quality": 619,
+    "chunks_after_dedup": 619
+  }
+}

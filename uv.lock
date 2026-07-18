@@ -1394,6 +1394,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
+    { name = "datasets" },
     { name = "datasketch" },
     { name = "fastapi" },
     { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
@@ -1413,7 +1414,6 @@ all = [
     { name = "accelerate" },
     { name = "beautifulsoup4" },
     { name = "bitsandbytes" },
-    { name = "datasets" },
     { name = "deepeval" },
     { name = "faiss-cpu" },
     { name = "ftfy" },
@@ -1436,9 +1436,6 @@ curation = [
     { name = "sentence-transformers" },
     { name = "transformers" },
     { name = "underthesea" },
-]
-data = [
-    { name = "datasets" },
 ]
 dev = [
     { name = "pytest" },
@@ -1485,13 +1482,13 @@ requires-dist = [
     { name = "beautifulsoup4", marker = "extra == 'scraper'", specifier = ">=4.12" },
     { name = "bitsandbytes", marker = "extra == 'eval-model'", specifier = ">=0.44" },
     { name = "click", specifier = ">=8.1" },
-    { name = "datasets", marker = "extra == 'data'", specifier = ">=3.0" },
+    { name = "datasets", specifier = ">=3.0" },
     { name = "datasketch", specifier = ">=1.6" },
     { name = "deepeval", marker = "extra == 'eval-data'", specifier = ">=2.0" },
     { name = "faiss-cpu", marker = "extra == 'curation'", specifier = ">=1.8" },
     { name = "fastapi", specifier = ">=0.115" },
     { name = "ftfy", marker = "extra == 'curation'", specifier = ">=6.2" },
-    { name = "kg-generator", extras = ["embeddings", "curation", "vi", "data", "scraper", "neo4j", "llm", "dev", "eval-data", "eval-model"], marker = "extra == 'all'" },
+    { name = "kg-generator", extras = ["embeddings", "curation", "vi", "scraper", "neo4j", "llm", "dev", "eval-data", "eval-model"], marker = "extra == 'all'" },
     { name = "kg-generator", extras = ["eval-data"], marker = "extra == 'eval-model'" },
     { name = "langchain", marker = "extra == 'llm'", specifier = ">=0.1" },
     { name = "lxml", marker = "extra == 'scraper'", specifier = ">=5.0" },
@@ -1519,7 +1516,7 @@ requires-dist = [
     { name = "underthesea", marker = "extra == 'vi'", specifier = ">=9.5,<10" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.30" },
 ]
-provides-extras = ["embeddings", "curation", "dev", "vi", "data", "scraper", "mongo", "neo4j", "llm", "all", "eval-data", "eval-model"]
+provides-extras = ["embeddings", "curation", "dev", "vi", "scraper", "mongo", "neo4j", "llm", "all", "eval-data", "eval-model"]
 
 [[package]]
 name = "langchain"

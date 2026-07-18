@@ -1,0 +1,6 @@
+dataset_name: wikimedia-wikipedia-vi-sample
+version: 20231101-vi-50
+license: CC-BY-SA-3.0 AND GFDL
+source: https://huggingface.co/datasets/wikimedia/wikipedia
+language: vi
+collection_date: '2023-11-01'
