@@ -344,26 +344,76 @@ def _persist_interactive(payload: dict[str, Any]) -> dict[str, Any]:
     config = _neo4j_config("interactive")
     if not all(config.values()):
         return {"status": "skipped", "reason": "interactive Neo4j is not configured"}
+    driver = None
     try:
         from kg_generator.export.neo4j_upload import replace_documents_atomic
         graph = payload.get("graph", {})
         nodes, edges = graph.get("nodes", []), graph.get("links", graph.get("edges", []))
         document_ids = [n.get("id", "") for n in nodes if n.get("type") == "Document"]
         driver = _neo4j_driver(config)
+        # Fail before opening the replacement transaction when Aura rejects the
+        # secret version or target. This makes authentication/configuration
+        # failures distinguishable from an atomic graph-write rollback.
+        driver.verify_connectivity()
         with driver.session(database=config["database"]) as session:
             def writer(tx):
                 for node in nodes:
                     label = "Document" if node.get("type") == "Document" else ("Chunk" if node.get("type") == "Chunk" else "Entity")
                     tx.run(f"MERGE (n:{label} {{id:$id}}) SET n.name=$name, n.type=$type, n.description=$description", id=node.get("id", ""), name=node.get("name", ""), type=node.get("type", "Entity"), description=node.get("description", ""))
                 for edge in edges:
-                    for predicate in edge.get("predicates", [edge.get("label", "related_to")]):
-                        tx.run("MATCH (a {id:$source}), (b {id:$target}) MERGE (a)-[r:RELATION {predicate:$predicate}]->(b)", source=edge.get("source"), target=edge.get("target"), predicate=predicate)
+                    predicates = edge.get("predicates", [edge.get("label", "related_to")])
+                    relations = edge.get("relations", [])
+                    for index, predicate in enumerate(predicates):
+                        relation = relations[index] if index < len(relations) else (relations[0] if relations else {})
+                        evidence = (
+                            relation.get("evidence_sentence")
+                            or edge.get("evidence_sentence")
+                            or edge.get("evidence")
+                            or edge.get("description")
+                            or ""
+                        )
+                        source_chunk_id = relation.get("source_chunk_id") or edge.get("source_chunk_id") or ""
+                        tx.run(
+                            "MATCH (a {id:$source}), (b {id:$target}) "
+                            "MERGE (a)-[r:RELATION {predicate:$predicate}]->(b) "
+                            "SET r.evidenceSentence=$evidence, r.sourceChunkId=$source_chunk_id",
+                            source=edge.get("source"),
+                            target=edge.get("target"),
+                            predicate=predicate,
+                            evidence=evidence,
+                            source_chunk_id=source_chunk_id,
+                        )
             replace_documents_atomic(session, document_ids, writer, clear_all=True)
-        driver.close()
         return {"status": "persisted", "database": config["database"]}
     except Exception as error:
-        LOGGER.warning("Interactive Neo4j persistence failed: %s", type(error).__name__)
-        return {"status": "failed", "reason": "Neo4j write failed; graph preview remains available"}
+        error_name = type(error).__name__
+        error_code = str(getattr(error, "code", ""))
+        LOGGER.warning(
+            "Interactive Neo4j persistence failed: %s code=%s database=%s",
+            error_name,
+            error_code or "none",
+            config["database"],
+        )
+        if error_name == "AuthError" or "Unauthorized" in error_code:
+            return {
+                "status": "failed",
+                "code": "neo4j_auth_failed",
+                "reason": "Neo4j rejected the interactive credential version; the previous graph was preserved",
+            }
+        if error_name in {"DatabaseNotFound", "ClientError"}:
+            return {
+                "status": "failed",
+                "code": "neo4j_database_failed",
+                "reason": "Neo4j could not access the configured interactive database; the previous graph was preserved",
+            }
+        return {
+            "status": "failed",
+            "code": "neo4j_write_failed",
+            "reason": "Neo4j replacement rolled back; the previous graph was preserved",
+        }
+    finally:
+        if driver is not None:
+            driver.close()
 
 
 @app.post("/api/pipeline/run")
@@ -403,6 +453,7 @@ def _neo4j_graph(*, scope: Literal["global", "interactive"],
     config = _neo4j_config(scope)
     if not all(config.values()):
         return None
+    driver = None
     try:
         driver = _neo4j_driver(config)
         with driver.session(database=config["database"]) as session:
@@ -411,7 +462,9 @@ def _neo4j_graph(*, scope: Literal["global", "interactive"],
                     "MATCH (n {id:$id}) OPTIONAL MATCH (n)-[r]-(m) "
                     "RETURN collect(DISTINCT n) AS nodes, collect(DISTINCT m) AS neighbors, "
                     "collect(DISTINCT {source:startNode(r).id,target:endNode(r).id,"
-                    "predicates:[coalesce(r.predicate,type(r))]}) AS links", id=node_id,
+                    "predicates:[coalesce(r.predicate,type(r))],"
+                    "evidence_sentence:coalesce(r.evidenceSentence,r.description,''),"
+                    "source_chunk_id:coalesce(r.sourceChunkId,'')}) AS links", id=node_id,
                 ).single()
                 nodes = (list(record["nodes"] or []) + list(record["neighbors"] or [])) if record else []
                 links = list(record["links"] or []) if record else []
@@ -423,9 +476,10 @@ def _neo4j_graph(*, scope: Literal["global", "interactive"],
                 ids = [str(dict(node).get("id", "")) for node in nodes]
                 links = [dict(row) for row in session.run(
                     "MATCH (a)-[r]->(b) WHERE a.id IN $ids AND b.id IN $ids "
-                    "RETURN a.id AS source,b.id AS target,[coalesce(r.predicate,type(r))] AS predicates", ids=ids,
+                    "RETURN a.id AS source,b.id AS target,[coalesce(r.predicate,type(r))] AS predicates,"
+                    "coalesce(r.evidenceSentence,r.description,'') AS evidence_sentence,"
+                    "coalesce(r.sourceChunkId,'') AS source_chunk_id", ids=ids,
                 )]
-        driver.close()
         unique_nodes = {str(dict(node).get("id", "")): dict(node) for node in nodes if node}
         serial_nodes = list(unique_nodes.values())
         return {"metadata": {"source": "live", "read_only": scope == "global", "scope": scope},
@@ -434,6 +488,9 @@ def _neo4j_graph(*, scope: Literal["global", "interactive"],
     except Exception as error:
         LOGGER.warning("%s Neo4j graph read failed: %s", scope, type(error).__name__)
         return None
+    finally:
+        if driver is not None:
+            driver.close()
 
 
 @app.get("/api/graph/global")

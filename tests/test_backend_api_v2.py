@@ -1,5 +1,6 @@
 import threading
 
+import kg_generator.api as api_module
 from kg_generator.api import (
     RUN_LOCK,
     RunOptions,
@@ -9,6 +10,7 @@ from kg_generator.api import (
     create_run,
     global_graph,
     options,
+    _persist_interactive,
 )
 
 
@@ -48,3 +50,30 @@ def test_run_lock_is_nonblocking(monkeypatch):
             raise AssertionError("concurrent run should be rejected")
     finally:
         RUN_LOCK.release()
+
+
+def test_interactive_auth_failure_is_specific_and_closes_driver(monkeypatch):
+    class AuthError(Exception):
+        code = "Neo.ClientError.Security.Unauthorized"
+
+    class Driver:
+        closed = False
+
+        def verify_connectivity(self):
+            raise AuthError("rejected")
+
+        def close(self):
+            self.closed = True
+
+    driver = Driver()
+    monkeypatch.setattr(api_module, "_neo4j_config", lambda _scope: {
+        "uri": "neo4j+s://example", "user": "writer", "password": "secret", "database": "interactive",
+    })
+    monkeypatch.setattr(api_module, "_neo4j_driver", lambda _config: driver)
+
+    result = _persist_interactive({"graph": {"nodes": [], "links": []}})
+
+    assert result["status"] == "failed"
+    assert result["code"] == "neo4j_auth_failed"
+    assert "previous graph was preserved" in result["reason"]
+    assert driver.closed is True

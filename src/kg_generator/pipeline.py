@@ -11,6 +11,7 @@ from kg_generator.config import GraphBackend, PipelineConfig, Language
 from kg_generator.dedup.near_dedup import Deduplicator
 from kg_generator.dedup.quality import QualityFilter
 from kg_generator.evaluate.metrics import QualityEvaluator
+from kg_generator.evaluate.structural_audit import StructuralAuditor
 from kg_generator.export.exporter import GraphExporter
 from kg_generator.extract.entities import Entity, EntityExtractor, EnglishExtractor, VietnameseExtractor
 from kg_generator.extract.graphgen import GraphGenExtractor
@@ -119,6 +120,9 @@ class Pipeline:
 
         # --- Stage 5: Evaluate & Export ---
         self.evaluator = QualityEvaluator()
+        self.structural_auditor = StructuralAuditor(
+            entity_dedup_threshold=config.resolve_threshold,
+        )
         self.exporter = GraphExporter()
 
         # --- MongoDB document archive (optional) ---
@@ -487,6 +491,12 @@ class Pipeline:
         # ── Evaluate ──
         logger.info("Evaluating quality...")
         metrics = self.evaluator.evaluate_graph(graph, resolved_entities, all_triples)
+        # Method 1's intrinsic structural audit is useful beyond the evaluation
+        # CLI: every pipeline consumer should be able to judge whether a graph
+        # is structurally suitable for downstream SFT data generation.
+        metrics["structural_audit"] = self.structural_auditor.audit(
+            graph, resolved_entities, all_triples
+        )
         metrics["extraction"] = {
             **extraction_metadata,
             "max_gleanings": (

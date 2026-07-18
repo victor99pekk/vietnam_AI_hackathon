@@ -126,9 +126,18 @@ def test_graphgen_vietnamese_pipeline_does_not_require_underthesea(monkeypatch, 
     Pipeline(_config(_source(tmp_path), use_llm=True), output).execute()
 
     payload = json.loads((output / "knowledge_graph.json").read_text(encoding="utf-8"))
+    metrics = json.loads((output / "metrics.json").read_text(encoding="utf-8"))
     _assert_vietnamese_graph(output / "knowledge_graph.json")
     assert payload["metadata"]["extraction"]["method"] == "graphgen"
     assert payload["metadata"]["extraction"]["prompt_version"].endswith("v2")
     assert payload["metadata"]["pipeline"]["chunking"]["method"] == "fixed"
     assert payload["metadata"]["pipeline"]["deduplication"]["chunk_method"] == "minhash"
     assert payload["metadata"]["processing"]["loaded_documents"] == 1
+    assert 0 <= metrics["structural_audit"]["overall_health_score"] <= 100
+    assert {
+        "orphan_analysis",
+        "density_analysis",
+        "schema_compliance",
+        "entity_duplication",
+        "multi_hop_connectivity",
+    } <= metrics["structural_audit"].keys()

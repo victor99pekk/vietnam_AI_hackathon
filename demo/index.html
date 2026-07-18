@@ -17,41 +17,46 @@
     <header class="topbar">
       <a class="brand" href="/"><span class="mark">V</span>Viet<span>Graph</span></a>
       <nav class="views" aria-label="Demo views">
-        <button class="view active" data-view="global">Global Graph</button>
-        <button class="view" data-view="lab">Interactive Lab</button>
+        <button class="view active" data-view="global">LLM Training Graph</button>
+        <button class="view" data-view="lab">Pipeline Explorer</button>
       </nav>
       <span class="live"><i></i> PIPELINE READY</span>
     </header>
 
     <main>
       <section class="hero">
-        <p class="eyebrow">VIETNAMESE KNOWLEDGE EXTRACTION</p>
-        <h1>From text to<br><em>connected insight.</em></h1>
-        <p class="sub">Explore the global knowledge graph, then run a transparent extraction experiment with your own data.</p>
+        <p class="eyebrow">KNOWLEDGE INFRASTRUCTURE FOR VIETNAMESE LLMS</p>
+        <h1>Build connected knowledge.<br><em>Train better language models.</em></h1>
+        <p class="sub">VietGraph turns Vietnamese sources into grounded, auditable knowledge used to generate higher-quality data for LLM training.</p>
       </section>
 
       <section id="globalView" class="view-panel">
         <div class="toolbar panel">
-          <div><small class="eyebrow">01 / GLOBAL GRAPH</small><h2>Vietnamese knowledge landscape</h2></div>
+          <div><small class="eyebrow">01 / LLM TRAINING GRAPH</small><h2>A grounded knowledge layer for Vietnamese LLMs</h2></div>
           <span id="globalBadge" class="badge">Loading</span>
           <div class="actions"><label class="search">⌕ <input id="globalSearch" placeholder="Find an entity…" aria-label="Search global graph"></label><button id="globalFit">⛶ Fit</button><button id="globalReset">↺ Reset</button></div>
         </div>
-        <div class="totals" id="globalTotals"><div><b id="gNodes">—</b><small>entities</small></div><div><b id="gEdges">—</b><small>relations</small></div><div><b id="gTriples">—</b><small>triples</small></div><div class="coming">Fine-tuned LLM benchmarks <strong>coming soon</strong></div></div>
-        <div class="graph-layout"><div class="panel graph-wrap"><div id="globalGraph" class="graph"><div class="empty"><b>Loading global graph…</b></div></div><div class="legend">ENTITY TYPES <span><i class="person"></i>Person</span><span><i class="place"></i>Place</span><span><i class="org"></i>Organisation</span><span><i class="concept"></i>Concept</span></div></div><aside class="panel detail" id="globalDetail"><div class="empty"><b>Select a node to inspect</b><small>Evidence and linked facts appear here.</small></div></aside></div>
+        <div class="training-story panel">
+          <div><small class="eyebrow">WHY THIS GRAPH EXISTS</small><h3>Structured knowledge becomes training data with traceable facts.</h3><p>The global graph is our permanent knowledge base. Its entities, relationships, and source evidence can generate factual and multi-hop instruction pairs for supervised fine-tuning.</p></div>
+          <div class="training-flow" aria-label="LLM training workflow"><span>Vietnamese sources</span><i>→</i><span>Knowledge graph</span><i>→</i><span>SFT examples</span><i>→</i><span>Fine-tuned LLM</span></div>
+        </div>
+        <div class="totals" id="globalTotals"><div><b id="gNodes">—</b><small>training entities</small></div><div><b id="gEdges">—</b><small>grounded relations</small></div><div><b id="gTriples">—</b><small>candidate facts</small></div><div class="coming">Fine-tuned model evaluation <strong>benchmarks coming soon</strong></div></div>
+        <div class="graph-layout"><div class="panel graph-wrap"><div id="globalGraph" class="graph"><div class="empty"><b>Loading global graph…</b></div></div><div class="legend">GRAPH TYPES <span><i class="person"></i>Person</span><span><i class="place"></i>Place</span><span><i class="org"></i>Organisation</span><span><i class="concept"></i>Concept</span><span><i class="chunk"></i>Chunk</span><span><i class="document"></i>Document</span></div></div><aside class="panel detail" id="globalDetail"><div class="empty"><b>Select a node or relationship</b><small>Evidence and linked facts appear here.</small></div></aside></div>
       </section>
 
       <section id="labView" class="view-panel hidden">
         <div class="lab-grid">
           <aside class="panel input">
-            <small class="eyebrow">02 / INTERACTIVE LAB</small><h2>Your source</h2>
+            <small class="eyebrow">02 / PIPELINE EXPLORER</small><h2>Compare strategies</h2>
+            <p class="explorer-intro">This is not a required sequence of choices. It exposes alternative methods we investigated while building the pipeline, with our recommended configuration selected first.</p>
+            <h3 class="source-heading">Choose a source</h3>
             <div class="tabs"><button class="tab active" data-tab="sample">Sample</button><button class="tab" data-tab="paste">Paste</button><button class="tab" data-tab="upload">Upload</button></div>
             <div id="samplePane"><div class="sample"><b>Võ Nguyên Giáp · tiếng Việt</b><small>Curated demo document</small></div><button id="loadSample" class="secondary">Load sample ↗</button></div>
             <div id="pastePane" class="hidden"><textarea id="source" maxlength="20000" placeholder="Dán văn bản tiếng Việt…"></textarea><small class="count"><span id="count">0</span> / 20,000</small></div>
             <div id="uploadPane" class="hidden"><label class="drop" for="file">↑<b>Drop .txt or .jsonl</b><small>or browse files</small></label><input id="file" type="file" accept=".txt,.jsonl,text/plain" hidden><small id="filename" class="filename">No file selected</small></div>
-            <hr><h3>Pipeline settings</h3>
-            <label class="field">Extraction<select id="method" aria-describedby="extractionHelp"><option value="offline">Fast offline — Beta · fastest</option><option value="graphgen">GraphGen — Recommended · best relationships</option></select><small id="extractionHelp" class="setting-help"></small></label>
+            <hr><h3>Methods we evaluated</h3>
+            <label class="field">Knowledge extraction<select id="method" aria-describedby="extractionHelp"><option value="graphgen" selected>LLM-guided — Recommended · best relationships</option><option value="offline">Rules-based offline — Experimental beta</option></select><small id="extractionHelp" class="setting-help"></small></label>
             <label class="field">Language<select id="language"><option value="vi">Vietnamese</option><option value="en">English</option></select></label>
-            <label class="field" id="modelField">Model<select id="llmModel" aria-describedby="modelHelp"><option value="deepseek-v4-flash">DeepSeek V4 Flash — Recommended · faster</option><option value="deepseek-v4-pro">DeepSeek V4 Pro — Best quality · slower</option></select><small id="modelHelp" class="setting-help">Flash is recommended for a live demo; Pro trades speed for extraction quality.</small></label>
             <div id="optionsBox" class="settings-grid">
               <label class="field">Chunking<select id="chunkMethod" aria-describedby="chunkHelp"><option value="sentence">Sentence aligned — Recommended · balanced</option><option value="fixed">Fixed size — Fast</option><option value="none">No chunking — Fastest · short text only</option><option value="semantic">Semantic — Best context · slowest</option></select><small id="chunkHelp" class="setting-help"></small></label>
               <label class="field" id="chunkSizeField">Chunk size<input id="chunkSize" type="number" min="0" max="10000" value="500"></label>
@@ -68,15 +73,19 @@
             <div class="warn">⚠ Runs replace only the separate interactive graph after success. The global graph is read-only.</div><button id="run" class="run">▶ Run pipeline</button><div id="error" class="error hidden"></div>
           </aside>
           <section class="lab-results">
-            <div class="panel stages"><div class="stage-head"><div><small class="eyebrow">03 / PIPELINE</small><h2>Extraction in motion</h2></div><span id="elapsed">—</span></div><div class="stage-track"><span data-stage="ingest">01 Ingest</span><span data-stage="extract">02 Extract</span><span data-stage="resolve">03 Resolve</span><span data-stage="score">04 Score</span><span data-stage="ready">05 Ready</span></div></div>
+            <div class="panel stages"><div class="stage-head"><div><small class="eyebrow">03 / OUR PIPELINE</small><h2>From source to training-ready graph</h2></div><span id="elapsed">—</span></div><div class="stage-track"><span data-stage="ingest">01 Ingest</span><span data-stage="extract">02 Extract</span><span data-stage="resolve">03 Resolve</span><span data-stage="score">04 Audit</span><span data-stage="ready">05 Ready</span></div></div>
             <div class="chips" id="chips"><span>Entities —</span><span>Relations —</span><span>Quality —</span><span>Strategy: —</span></div>
-            <div class="panel graph-wrap"><div class="graph-head"><h2>Interactive graph</h2><div class="actions"><label class="search">⌕ <input id="labSearch" placeholder="Find an entity…" aria-label="Search interactive graph"></label><button id="labFit">⛶ Fit</button><button id="download">↓ JSON</button></div></div><div id="labGraph" class="graph"><div class="empty"><b>Your graph will appear here</b><small>Run the pipeline to explore extracted knowledge.</small></div></div><div class="legend">ENTITY TYPES <span><i class="person"></i>Person</span><span><i class="place"></i>Place</span><span><i class="org"></i>Organisation</span><span><i class="concept"></i>Concept</span></div></div>
-            <div class="panel detail" id="labDetail"><div class="empty"><b>Select a node to inspect</b><small>Evidence and linked facts appear here.</small></div></div>
+            <section id="metricsPanel" class="panel metrics-panel" aria-live="polite">
+              <div class="metrics-head"><div><small class="eyebrow">METHOD 1 / STRUCTURAL AUDIT</small><h2>LLM training readiness</h2></div><span class="audit-badge">Waiting for a run</span></div>
+              <div class="metrics-body empty-metrics"><div class="score-ring" style="--score:0"><strong>—</strong><small>overall health</small></div><p>Run the pipeline to audit graph structure for orphan nodes, density, schema compliance, duplicates, and multi-hop reasoning.</p></div>
+            </section>
+            <div class="panel graph-wrap"><div class="graph-head"><div><small class="eyebrow">GENERATED KNOWLEDGE</small><h2>Training graph preview</h2></div><div class="actions"><label class="search">⌕ <input id="labSearch" placeholder="Find an entity…" aria-label="Search interactive graph"></label><button id="labFit">⛶ Fit</button><button id="download">↓ JSON</button></div></div><div id="labGraph" class="graph"><div class="empty"><b>Your graph will appear here</b><small>Run a strategy to inspect its extracted knowledge and training readiness.</small></div></div><div class="legend">GRAPH TYPES <span><i class="person"></i>Person</span><span><i class="place"></i>Place</span><span><i class="org"></i>Organisation</span><span><i class="concept"></i>Concept</span><span><i class="chunk"></i>Chunk</span><span><i class="document"></i>Document</span></div></div>
+            <div class="panel detail" id="labDetail"><div class="empty"><b>Select a node or relationship</b><small>Click an edge to inspect its predicate and source evidence.</small></div></div>
           </section>
         </div>
       </section>
     </main>
-    <footer>VIETGRAPH / KNOWLEDGE GRAPH GENERATOR <span>Built for transparent AI · 2026</span></footer>
+    <footer>VIETGRAPH / FROM SOURCES TO LLM TRAINING DATA <span>Built for transparent AI · 2026</span></footer>
   </div>
   <script src="app.js"></script>
 </body>
