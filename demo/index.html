@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#091423" />
+  <title>VietGraph · Knowledge Graph Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/cytoscape@3.30.4/dist/cytoscape.min.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/"><span class="brand-mark">V</span><span>Viet<span class="brand-accent">Graph</span></span></a>
+      <div class="topbar-meta"><span class="live-dot"></span><span>OFFLINE PIPELINE</span><span class="version">v0.1 demo</span></div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">VIETNAMESE KNOWLEDGE EXTRACTION</p>
+          <h1>From Vietnamese text<br /><em>to connected insight.</em></h1>
+          <p class="hero-copy">A transparent, evidence-first pipeline for turning documents into a living knowledge graph.</p>
+        </div>
+        <div class="hero-orbit" aria-hidden="true"><span class="orbit-ring ring-one"></span><span class="orbit-ring ring-two"></span><span class="orbit-node node-a"></span><span class="orbit-node node-b"></span><span class="orbit-node node-c"></span></div>
+      </section>
+
+      <section class="workspace-grid">
+        <aside class="input-panel panel">
+          <div class="panel-heading"><div><span class="step-label">01 / INPUT</span><h2>Source document</h2></div><span class="status-pill" id="sourceStatus">READY</span></div>
+          <div class="source-tabs" role="tablist"><button class="source-tab active" data-tab="sample">Sample</button><button class="source-tab" data-tab="paste">Paste text</button><button class="source-tab" data-tab="upload">Upload</button></div>
+          <div class="tab-content" id="sampleTab"><div class="sample-card"><span class="sample-icon">✦</span><div><strong>Hồ Chí Minh · mẫu tiếng Việt</strong><p>Đoạn văn mẫu được tối ưu cho demo.</p></div></div><button class="ghost-button" id="loadSample">Load sample <span>↗</span></button></div>
+          <div class="tab-content hidden" id="pasteTab"><textarea id="sourceText" placeholder="Dán văn bản tiếng Việt vào đây…" maxlength="20000"></textarea><div class="char-count"><span id="charCount">0</span> / 20,000 ký tự</div></div>
+          <div class="tab-content hidden" id="uploadTab"><label class="dropzone" for="fileInput"><span class="upload-icon">↑</span><strong>Drop a .txt or .jsonl file</strong><small>or click to browse</small></label><input id="fileInput" type="file" accept=".txt,.jsonl,text/plain,application/json" hidden /><p class="file-name" id="fileName">No file selected</p></div>
+          <div class="input-footer"><span class="privacy-note">⌁ Runs locally · no data stored</span><button class="run-button" id="runPipeline"><span class="run-icon">▶</span> Run pipeline</button></div>
+          <div class="error-box hidden" id="errorBox"><strong>Pipeline unavailable</strong><span id="errorMessage">Please try again or load the sample.</span><button id="useFallback">Use demo result</button></div>
+        </aside>
+
+        <section class="results-panel">
+          <div class="pipeline-progress panel"><div class="panel-heading"><div><span class="step-label">02 / PIPELINE</span><h2>Extraction in motion</h2></div><span class="elapsed" id="elapsed">—</span></div><div class="stage-track"><div class="stage" data-stage="ingest"><span>01</span><b>Ingest</b><small>Clean &amp; chunk</small></div><div class="stage" data-stage="extract"><span>02</span><b>Extract</b><small>Entities &amp; relations</small></div><div class="stage" data-stage="resolve"><span>03</span><b>Resolve</b><small>Canonical identity</small></div><div class="stage" data-stage="score"><span>04</span><b>Score</b><small>Quality checks</small></div><div class="stage" data-stage="ready"><span>05</span><b>Ready</b><small>Explore graph</small></div></div></div>
+          <div class="metrics-row" id="metricsRow"><div class="metric-card"><span>ENTITIES</span><strong id="metricEntities">—</strong><small>unique nodes</small></div><div class="metric-card"><span>RELATIONS</span><strong id="metricRelations">—</strong><small>directed edges</small></div><div class="metric-card"><span>TRIPLES</span><strong id="metricTriples">—</strong><small>verified facts</small></div><div class="metric-card accent-card"><span>QUALITY SCORE</span><strong id="metricQuality">—</strong><small id="metricQualityLabel">awaiting run</small></div></div>
+          <div class="graph-panel panel"><div class="graph-toolbar"><div><span class="step-label">03 / KNOWLEDGE GRAPH</span><h2>Explore connections</h2></div><div class="graph-actions"><label class="search-box"><span>⌕</span><input id="nodeSearch" type="search" placeholder="Find an entity…" /></label><button class="icon-button" id="fitGraph" title="Fit graph">⛶</button><button class="download-button" id="downloadJson">↓ JSON</button></div></div><div class="graph-body"><div id="cy" class="cytoscape-container"><div class="empty-graph"><span class="empty-mark">◌</span><strong>Your graph will appear here</strong><p>Load the sample or paste a document to begin.</p></div></div><div class="legend"><span class="legend-title">ENTITY TYPES</span><span><i class="legend-dot person"></i>Person</span><span><i class="legend-dot place"></i>Place</span><span><i class="legend-dot org"></i>Organisation</span><span><i class="legend-dot concept"></i>Concept</span></div></div></div>
+        </section>
+      </section>
+
+      <section class="detail-panel panel" id="detailPanel"><div class="detail-empty"><span>◎</span><div><strong>Select a node to inspect</strong><p>See evidence, type and linked facts.</p></div></div></section>
+    </main>
+    <footer><span>VIETGRAPH / KNOWLEDGE GRAPH GENERATOR</span><span>Built for transparent AI · 2026</span></footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
