@@ -92,7 +92,7 @@
     const guidance = {
       extraction: {
         offline: 'Experimental beta. This rules-based baseline is fast, but its relation logic can connect too many node pairs. It is included for comparison, not as our recommended pipeline.',
-        graphgen: 'Our recommended extraction strategy. DeepSeek Pro jointly identifies meaningful entities and grounded relationships instead of linking nodes with broad rules.',
+        graphgen: 'Our recommended extraction strategy. DeepSeek Flash jointly identifies meaningful entities and grounded relationships instead of linking nodes with broad rules.',
       },
       chunk: {
         sentence: 'Recommended default: 450 target tokens with 60-token overlap. Preserves sentence boundaries at good demo speed.',
@@ -162,7 +162,7 @@
   }
 
   function selectedConfig() {
-    return { language: $('#language').value, extraction: $('#method').value, llm_model: 'deepseek-v4-pro', chunk_method: $('#chunkMethod').value, chunk_size: Number($('#chunkSize').value || 0), chunk_overlap: Number($('#chunkOverlap').value || 0), chunk_target_tokens: Number($('#chunkTargetTokens').value || 450), chunk_overlap_tokens: Number($('#chunkOverlapTokens').value || 60), semantic_chunk_threshold: Number($('#semanticChunkThreshold').value || 0.55), quality_method: $('#qualityMethod').value, document_dedup_method: $('#documentDedupMethod').value, dedup_method: $('#dedupMethod').value, document_dedup_threshold: Number($('#dedupThreshold').value || 0.85), dedup_threshold: Number($('#dedupThreshold').value || 0.85), semantic_dedup_threshold: Number($('#dedupThreshold').value || 0.92), resolve_method: $('#resolveMethod').value, resolve_threshold: 0.85, graphgen_max_gleanings: 3 };
+    return { language: $('#language').value, extraction: $('#method').value, llm_model: 'deepseek-v4-flash', chunk_method: $('#chunkMethod').value, chunk_size: Number($('#chunkSize').value || 0), chunk_overlap: Number($('#chunkOverlap').value || 0), chunk_target_tokens: Number($('#chunkTargetTokens').value || 450), chunk_overlap_tokens: Number($('#chunkOverlapTokens').value || 60), semantic_chunk_threshold: Number($('#semanticChunkThreshold').value || 0.55), quality_method: $('#qualityMethod').value, document_dedup_method: $('#documentDedupMethod').value, dedup_method: $('#dedupMethod').value, document_dedup_threshold: Number($('#dedupThreshold').value || 0.85), dedup_threshold: Number($('#dedupThreshold').value || 0.85), semantic_dedup_threshold: Number($('#dedupThreshold').value || 0.92), resolve_method: $('#resolveMethod').value, resolve_threshold: 0.85, graphgen_max_gleanings: 3 };
   }
 
   function renderLab(raw) {
