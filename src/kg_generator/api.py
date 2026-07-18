@@ -331,7 +331,8 @@ def create_run(request: RunRequest) -> dict[str, Any]:
         try:
             result = _run_nested(request)
         except Exception as error:
-            raise HTTPException(status_code=500, detail={"code": "pipeline_failed", "message": "Pipeline run failed"}) from error
+            LOGGER.exception("Pipeline run failed: %s: %s", type(error).__name__, error)
+            raise HTTPException(status_code=500, detail={"code": "pipeline_failed", "message": f"Pipeline run failed: {type(error).__name__}: {error}"}) from error
         result["persistence"] = _persist_interactive(result)
         result.setdefault("metadata", {})["elapsed_seconds"] = round(time.perf_counter() - started, 3)
         return result
@@ -494,7 +495,7 @@ def _neo4j_graph(*, scope: Literal["global", "interactive"],
 
 
 @app.get("/api/graph/global")
-def global_graph(q: str = Query(default="", max_length=120), limit: int = Query(default=150, ge=1, le=500)) -> dict[str, Any]:
+def global_graph(q: str = Query(default="", max_length=120), limit: int = Query(default=150, ge=1, le=5000)) -> dict[str, Any]:
     live = _neo4j_graph(scope="global", query=q, limit=limit)
     # An Aura instance can be reachable but empty (for example immediately
     # after creation). Keep the visual surface useful until data is uploaded.
@@ -504,7 +505,7 @@ def global_graph(q: str = Query(default="", max_length=120), limit: int = Query(
 
 
 @app.get("/api/graphs/global")
-def graphs_global(q: str = Query(default="", max_length=120), limit: int = Query(default=150, ge=1, le=500)) -> dict[str, Any]:
+def graphs_global(q: str = Query(default="", max_length=120), limit: int = Query(default=150, ge=1, le=5000)) -> dict[str, Any]:
     return global_graph(q=q, limit=limit)
 
 
@@ -520,7 +521,7 @@ def graph_node(node_id: str) -> dict[str, Any]:
 
 
 @app.get("/api/graphs/interactive")
-def graphs_interactive(q: str = Query(default="", max_length=120), limit: int = Query(default=150, ge=1, le=500)) -> dict[str, Any]:
+def graphs_interactive(q: str = Query(default="", max_length=120), limit: int = Query(default=150, ge=1, le=5000)) -> dict[str, Any]:
     return _neo4j_graph(scope="interactive", query=q, limit=limit) or {
                             "metadata": {"source": "empty", "read_only": False, "scope": "interactive"},
                             "graph": {"nodes": [], "links": []}, "stats": {"num_nodes": 0, "num_edges": 0, "num_triples": 0}}

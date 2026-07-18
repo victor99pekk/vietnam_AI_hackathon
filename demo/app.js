@@ -75,7 +75,7 @@
 
   async function loadGlobal() {
     try {
-      const result = normalize(await getJSON('/api/graphs/global?limit=500')); state.global = result;
+      const result = normalize(await getJSON('/api/graphs/global?limit=5000')); state.global = result;
       $('#globalBadge').textContent = result.metadata?.source === 'sample' ? 'DEMO DATA' : 'LIVE NEO4J';
       $('#gNodes').textContent = result.stats.entities; $('#gEdges').textContent = result.stats.relations; $('#gTriples').textContent = result.stats.triples; mount('global', result);
     } catch (error) { $('#globalBadge').textContent = 'UNAVAILABLE'; $('#globalGraph').innerHTML = '<div class="empty"><b>Global graph unavailable</b><small>Check the API connection.</small></div>'; }
