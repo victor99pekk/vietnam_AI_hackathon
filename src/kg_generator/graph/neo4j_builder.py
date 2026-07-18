@@ -228,6 +228,31 @@ class Neo4jGraphBuilder:
 
     # ── Lifecycle ──────────────────────────────────────────────────
 
+    def remove_document_chunks(self, document_id: str) -> int:
+        """Remove all ``:Chunk`` nodes (and their edges) for a given document.
+
+        Uses ``DETACH DELETE`` so that ``MENTIONS``, ``NEXT``, and ``PART_OF``
+        relationships are automatically removed.  ``:Entity`` nodes are left
+        untouched because they may be shared across documents.
+
+        Returns the number of chunks removed.
+        """
+        result = self.session.run(
+            """
+            MATCH (d:Document {id: $doc_id})
+            MATCH (c:Chunk)-[:PART_OF]->(d)
+            DETACH DELETE c
+            RETURN count(c) AS removed
+            """,
+            doc_id=document_id,
+        )
+        count = result.single()["removed"]
+        if count:
+            logger.info(
+                "Removed %d chunk(s) for document %s from Neo4j", count, document_id
+            )
+        return count
+
     def clear_database(self) -> None:
         """Delete **every** node, relationship, constraint, and index."""
         self.session.run("MATCH (n) DETACH DELETE n")

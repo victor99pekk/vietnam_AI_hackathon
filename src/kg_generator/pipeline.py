@@ -2,11 +2,12 @@
 
 import json
 import logging
+from datetime import datetime, timezone
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any
 
-from kg_generator.config import PipelineConfig, Language
+from kg_generator.config import GraphBackend, PipelineConfig, Language
 from kg_generator.dedup.near_dedup import Deduplicator
 from kg_generator.dedup.quality import QualityFilter
 from kg_generator.evaluate.metrics import QualityEvaluator
@@ -21,6 +22,7 @@ from kg_generator.identity import document_id as stable_document_id
 from kg_generator.ingest.chunker import SemanticChunker, SentenceChunker, TextChunker
 from kg_generator.ingest.cleaner import TextCleaner
 from kg_generator.ingest.loader import DataLoader
+from kg_generator.ingest.mongo_store import MongoDocumentStore
 from kg_generator.resolve.resolver import EntityResolver
 
 logger = logging.getLogger(__name__)
@@ -119,6 +121,14 @@ class Pipeline:
         self.evaluator = QualityEvaluator()
         self.exporter = GraphExporter()
 
+        # --- MongoDB document archive (optional) ---
+        self.mongo_store: MongoDocumentStore | None = None
+        if config.mongo_uri:
+            self.mongo_store = MongoDocumentStore(
+                uri=config.mongo_uri,
+                database=config.mongo_database,
+            )
+
     def _build_entity_extractor(self) -> EntityExtractor:
         if self.config.language == Language.VIETNAMESE:
             return VietnameseExtractor()
@@ -188,6 +198,47 @@ class Pipeline:
             if document.metadata.get(key) not in (None, "")
         }
 
+    def _remove_old_chunks_from_neo4j(
+        self,
+        queue: list[tuple[str, str]],
+    ) -> None:
+        """Remove old Chunk nodes from Neo4j for replaced documents."""
+        from kg_generator.graph.neo4j_builder import Neo4jGraphBuilder
+        from kg_generator.identity import document_id as _doc_id
+
+        try:
+            from neo4j import GraphDatabase
+        except ImportError:
+            logger.warning("neo4j driver not installed — cannot remove old chunks")
+            return
+
+        uri = self.config.neo4j_uri or "bolt://localhost:7687"
+        user = self.config.neo4j_user or "neo4j"
+        password = self.config.neo4j_password or ""
+        driver = GraphDatabase.driver(uri, auth=(user, password))
+
+        try:
+            with driver.session() as session:
+                builder = Neo4jGraphBuilder(session, ontology=self.config.ontology)
+                for canonical_id, old_version in queue:
+                    doc_node_id = _doc_id(
+                        canonical_id, canonical_id
+                    )
+                    removed = builder.remove_document_chunks(doc_node_id)
+                    if removed and self.mongo_store:
+                        # We don't have the old chunk data at this point,
+                        # but we record a lightweight archive entry.
+                        self.mongo_store.archived_chunks.insert_one({
+                            "canonical_id": canonical_id,
+                            "replaced_version": old_version,
+                            "chunks_removed": removed,
+                            "archived_at": datetime.now(timezone.utc).isoformat(),
+                            "note": "Chunks removed during replacement; "
+                                    "full chunk data was not captured.",
+                        })
+        finally:
+            driver.close()
+
     def execute(self) -> None:
         """Run all stages in sequence."""
         logger.info("Starting KG generation pipeline...")
@@ -199,6 +250,53 @@ class Pipeline:
         documents = self.cleaner.clean_batch(documents)
         processing["cleaned_documents"] = len(documents)
         logger.info(f"  Loaded & cleaned {len(documents)} documents")
+
+        # ── MongoDB archival (always-first, before any KG mutation) ──
+        mongo_run_id: str | None = None
+        mongo_stats = {"new": 0, "replaced": 0, "unchanged": 0}
+        neo4j_remove_queue: list[tuple[str, str]] = []  # (canonical_id, old_version)
+
+        if self.mongo_store is not None:
+            mongo_run_id = f"run-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}"
+            self.mongo_store.start_run(
+                mongo_run_id,
+                config={"input_paths": [str(p) for p in self.config.input_paths]},
+            )
+            for doc in documents:
+                # Use URL as canonical_id when available (Wikipedia, scraped, etc.)
+                canonical_id = (
+                    doc.metadata.get("url")
+                    or doc.metadata.get("id")
+                    or doc.doc_id
+                )
+                upload_date = doc.metadata.get("upload_date", "")
+
+                existed_before = self.mongo_store.document_exists(canonical_id)
+                content_hash = self.mongo_store.store_document(
+                    doc, canonical_id, upload_date=upload_date,
+                )
+
+                if not existed_before:
+                    mongo_stats["new"] += 1
+                else:
+                    latest = self.mongo_store.get_latest_version(canonical_id)
+                    if latest and latest["content_hash"] != content_hash:
+                        # Content changed — old KG chunks need removal
+                        mongo_stats["replaced"] += 1
+                        neo4j_remove_queue.append(
+                            (canonical_id, str(latest["version"]))
+                        )
+                    else:
+                        mongo_stats["unchanged"] += 1
+
+            logger.info(
+                "  MongoDB: %d new, %d replaced, %d unchanged",
+                mongo_stats["new"], mongo_stats["replaced"], mongo_stats["unchanged"],
+            )
+
+            # Remove old chunks from Neo4j for replaced documents
+            if neo4j_remove_queue and self.config.graph_backend == GraphBackend.NEO4J:
+                self._remove_old_chunks_from_neo4j(neo4j_remove_queue)
 
         # Quality and surface deduplication happen at document scope before
         # chunking, then again at chunk scope after boundaries are created.
@@ -416,6 +514,44 @@ class Pipeline:
         # Save metrics
         with open(self.output_dir / "metrics.json", "w", encoding="utf-8") as f:
             json.dump(metrics, f, indent=2, ensure_ascii=False)
+
+        # ── MongoDB KG linkage & run completion ──
+        if self.mongo_store is not None and mongo_run_id:
+            # Link chunk IDs back to their canonical documents in MongoDB
+            for doc, parent_id, _ in chunk_contexts:
+                canonical_id = (
+                    doc.metadata.get("url")
+                    or doc.metadata.get("id")
+                    or doc.doc_id
+                )
+                # Count triples involving this document's chunks
+                chunk_ids_for_doc = {
+                    cid for _, _, cid in chunk_contexts
+                    if doc.metadata.get("url") == canonical_id
+                    or doc.doc_id == canonical_id
+                }
+                doc_triple_count = sum(
+                    1 for t in all_triples
+                    if t[0] in chunk_ids_for_doc or t[4] in chunk_ids_for_doc
+                    if len(t) > 4
+                )
+                self.mongo_store.link_kg_chunks(
+                    canonical_id,
+                    list(chunk_ids_for_doc),
+                    doc_triple_count,
+                )
+
+            # Build final stats
+            final_stats = {
+                "documents_processed": len(documents),
+                "documents_new": mongo_stats["new"],
+                "documents_replaced": mongo_stats["replaced"],
+                "documents_unchanged": mongo_stats["unchanged"],
+                "chunks_created": processing.get("chunks_created", len(documents)),
+                "entities_extracted": len(resolved_entities),
+                "triples_extracted": len(all_triples),
+            }
+            self.mongo_store.complete_run(mongo_run_id, final_stats)
 
         logger.info("Pipeline complete!")
 
