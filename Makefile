@@ -65,12 +65,13 @@ help:
 	@echo "     → trains Model B (KG-structured QA pairs)"
 	@echo "     → trains Model C (raw-text QA pairs)"
 	@echo "     → benchmarks both vs. base Qwen2.5 (Model A)"
-	@echo "     → defaults to CPU — set DEVICE=cuda for GPU"
+	@echo "     → CPU: default, small model (0.5B). GPU: optimized with large model (7B)"
 	@echo ""
 	@echo "   eval-install           Install data_eval deps (deepeval, sentence-transformers)"
 	@echo "   eval-install-model     Install model_eval deps (torch, transformers, peft — for fine-tuning)"
 	@echo "   eval-method1           Run data_eval only"
 	@echo "   eval-method2           Run model_eval [model=b|c|all] (CPU by default, DEVICE=cuda for GPU)"
+	@echo "   eval-method2-gpu       Run model_eval with GPU optimization (7B models, mixed precision, faster)"
 	@echo "   eval-graphgen          Build audited k-hop subgraphs and multi-hop QA"
 	@echo "   eval-local             Run data_eval + QA dataset generation (CPU, fast)"
 	@echo "   eval-datasets          Generate QA datasets only (no fine-tuning, no benchmark)"
@@ -289,6 +290,16 @@ eval-method2:
 		*) target="-t both" ;; \
 	esac; \
 	$(VENV) && python evaluation/run_eval.py --method 2 --kg $(dataset_kg.$(dataset)) $$target --model $(MODEL) --device $(DEVICE)
+
+## eval-method2-gpu: Run Method 2 with GPU optimization (7B models, mixed precision)  [model=a|b|c|all] [dataset=small|wikipedia]
+eval-method2-gpu:
+	@case "$(model)" in \
+		a) target="--skip-finetune" ;; \
+		b) target="-t kg" ;; \
+		c) target="-t raw" ;; \
+		*) target="-t both" ;; \
+	esac; \
+	$(VENV) && python evaluation/run_eval.py --method 2 --kg $(dataset_kg.$(dataset)) $$target --model $(MODEL) --gpu
 
 ## eval-graphgen: Run GraphGen-style subgraph + QA generation [dataset=small|wikipedia]
 eval-graphgen:

@@ -65,6 +65,14 @@ except ImportError:
     FineTuneConfig = None     # type: ignore
     AblationBenchmark = None  # type: ignore
 
+# GPU fine-tuning (requires CUDA)
+try:
+    from evaluation.model_eval.finetune_gpu import GPUFineTuner, GPUFineTuneConfig, CUDA_AVAILABLE
+except (ImportError, RuntimeError):
+    GPUFineTuner = None        # type: ignore
+    GPUFineTuneConfig = None   # type: ignore
+    CUDA_AVAILABLE = False
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
@@ -95,6 +103,17 @@ def load_config(config_path: Path | None) -> dict[str, Any]:
                 config[section] = values
 
     return config
+
+
+def _auto_plot_training(output_dir: Path) -> None:
+    """Auto-generate training metrics plots (best-effort, non-fatal)."""
+    try:
+        from generate_plots.plot_training import plot_model_comparison_training
+
+        logger.info("Auto-generating training metrics plots…")
+        plot_model_comparison_training(output_dir)
+    except Exception as e:
+        logger.warning("Failed to generate training plots: %s", e)
 
 
 def _auto_plot_method1(output_dir: Path) -> None:
@@ -341,21 +360,36 @@ def run_method2(
     skip_dataset_gen: bool = False,
     skip_benchmark: bool = False,
     skip_finetune: bool = False,
+    use_gpu: bool = False,
 ) -> dict[str, Any]:
-    """Run Method 2: Fine-Tuning Ablation Study."""
+    """Run Method 2: Fine-Tuning Ablation Study.
+    
+    Args:
+        use_gpu: If True, use GPU-optimized fine-tuning (7B models, mixed precision).
+                Requires CUDA and incompatible with device='cpu'.
+    """
     from evaluation.model_eval.finetune import FineTuner, FineTuneConfig
     from evaluation.model_eval.metrics import AblationBenchmark
 
     m2_config = config.get("method2", {})
     common_config = config.get("common", {})
-    base_model = model_override or m2_config.get(
-        "base_model", "Qwen/Qwen2.5-0.5B-Instruct"
-    )
-    output_dir = output_base / "method2"
+    
+    # GPU mode: use larger models and GPU-optimized defaults
+    if use_gpu:
+        default_base_model = "Qwen/Qwen2.5-7B-Instruct"
+        output_subdir = "method2_gpu"
+    else:
+        default_base_model = "Qwen/Qwen2.5-0.5B-Instruct"
+        output_subdir = "method2"
+    
+    base_model = model_override or m2_config.get("base_model", default_base_model)
+    output_dir = output_base / output_subdir
     output_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info("=" * 60)
     logger.info("METHOD 2: Fine-Tuning Ablation Study")
+    if use_gpu:
+        logger.info("MODE: GPU-optimized (7B models, mixed precision)")
     logger.info("=" * 60)
 
     results: dict[str, Any] = {}
@@ -460,13 +494,24 @@ def run_method2(
             results["finetune"]["raw_adapter"] = str(raw_adapter_path)
     else:
         logger.info("\n--- Step 2.2: Fine-Tuning ---")
-        if not _TORCH_AVAILABLE:
-            logger.error(
-                "Fine-tuning requires torch. Install with: "
-                "uv pip install -e '.[eval-model]'"
-            )
-            logger.error("Or re-run with --skip-finetune to skip this step.")
-            raise RuntimeError("torch not installed — cannot fine-tune")
+        
+        # GPU mode requires torch but will be handled by GPUFineTuner
+        if use_gpu:
+            if not CUDA_AVAILABLE or GPUFineTuner is None:
+                logger.error(
+                    "GPU fine-tuning requires CUDA. Install with: "
+                    "uv pip install -e '.[eval-model]' and ensure CUDA is available"
+                )
+                raise RuntimeError("CUDA not available or GPU fine-tuning not available")
+            logger.info("Using GPU-optimized fine-tuning")
+        else:
+            if not _TORCH_AVAILABLE:
+                logger.error(
+                    "Fine-tuning requires torch. Install with: "
+                    "uv pip install -e '.[eval-model]'"
+                )
+                logger.error("Or re-run with --skip-finetune to skip this step.")
+                raise RuntimeError("torch not installed — cannot fine-tune")
 
         lora_config = m2_config.get("lora", {})
         training_config = m2_config.get("training", {})
@@ -474,28 +519,53 @@ def run_method2(
         logger.info("Base model: %s", base_model)
         logger.info("Fine-tune target: %s", fine_tune_target)
 
-        ft_config = FineTuneConfig(
-            base_model=base_model,
-            output_dir=output_dir,
-            device=device,
-            lora_r=lora_config.get("r", 16),
-            lora_alpha=lora_config.get("alpha", 32),
-            lora_dropout=lora_config.get("dropout", 0.05),
-            max_seq_length=training_config.get("max_seq_length", 2048),
-            per_device_train_batch_size=training_config.get("per_device_train_batch_size", 2),
-            gradient_accumulation_steps=training_config.get("gradient_accumulation_steps", 4),
-            learning_rate=training_config.get("learning_rate", 2.0e-4),
-            max_steps=training_config.get("max_steps", -1),
-            num_train_epochs=training_config.get("num_train_epochs", 3.0),
-            warmup_steps=training_config.get("warmup_steps", 0),
-            warmup_ratio=training_config.get("warmup_ratio", 0.05),
-            logging_steps=training_config.get("logging_steps", 10),
-            save_steps=training_config.get("save_steps", 100),
-            weight_decay=training_config.get("weight_decay", 0.01),
-            seed=common_config.get("seed", 42),
-        )
-
-        finetuner = FineTuner(ft_config)
+        # GPU-optimized defaults
+        if use_gpu:
+            from evaluation.model_eval.finetune_gpu import GPUFineTuneConfig
+            ft_config = GPUFineTuneConfig(
+                base_model=base_model,
+                output_dir=output_dir,
+                lora_r=lora_config.get("r", 32),  # Larger rank for bigger models
+                lora_alpha=lora_config.get("alpha", 64),
+                lora_dropout=lora_config.get("dropout", 0.05),
+                max_seq_length=training_config.get("max_seq_length", 2048),
+                per_device_train_batch_size=training_config.get("per_device_train_batch_size", 16),
+                gradient_accumulation_steps=training_config.get("gradient_accumulation_steps", 1),
+                learning_rate=training_config.get("learning_rate", 1.0e-4),
+                max_steps=training_config.get("max_steps", -1),
+                num_train_epochs=training_config.get("num_train_epochs", 3.0),
+                warmup_steps=training_config.get("warmup_steps", 0),
+                warmup_ratio=training_config.get("warmup_ratio", 0.05),
+                logging_steps=training_config.get("logging_steps", 10),
+                save_steps=training_config.get("save_steps", 100),
+                weight_decay=training_config.get("weight_decay", 0.01),
+                seed=common_config.get("seed", 42),
+            )
+            finetuner = GPUFineTuner(ft_config)
+        else:
+            # CPU-optimized defaults (original)
+            ft_config = FineTuneConfig(
+                base_model=base_model,
+                output_dir=output_dir,
+                device=device,
+                lora_r=lora_config.get("r", 16),
+                lora_alpha=lora_config.get("alpha", 32),
+                lora_dropout=lora_config.get("dropout", 0.05),
+                max_seq_length=training_config.get("max_seq_length", 2048),
+                per_device_train_batch_size=training_config.get("per_device_train_batch_size", 2),
+                gradient_accumulation_steps=training_config.get("gradient_accumulation_steps", 4),
+                learning_rate=training_config.get("learning_rate", 2.0e-4),
+                max_steps=training_config.get("max_steps", -1),
+                num_train_epochs=training_config.get("num_train_epochs", 3.0),
+                warmup_steps=training_config.get("warmup_steps", 0),
+                warmup_ratio=training_config.get("warmup_ratio", 0.05),
+                logging_steps=training_config.get("logging_steps", 10),
+                save_steps=training_config.get("save_steps", 100),
+                weight_decay=training_config.get("weight_decay", 0.01),
+                seed=common_config.get("seed", 42),
+            )
+            finetuner = FineTuner(ft_config)
+        
         results.setdefault("finetune", {})
 
         # ── Fine-tune Model B (KG-Managed) ──
@@ -593,6 +663,10 @@ def run_method2(
     with open(combined_path, "w") as f:
         json.dump(results, f, indent=2, default=str)
     logger.info("Method 2 complete → %s", combined_path)
+
+    # Auto-generate training metrics plots (if fine-tuning was run)
+    if not skip_finetune:
+        _auto_plot_training(output_dir)
 
     if fine_tune_errors:
         raise RuntimeError("; ".join(fine_tune_errors))
@@ -791,12 +865,27 @@ Examples:
         help="Run structural audit directly against Neo4j (no JSON download, no RAM limit). "
              "Uses NEO4J_URI/NEO4J_USER/NEO4J_PASSWORD from .env.",
     )
+    parser.add_argument(
+        "--gpu",
+        action="store_true",
+        help="Use GPU-optimized fine-tuning (requires CUDA). "
+             "Runs 7B models with mixed precision and larger batches. "
+             "Incompatible with --device cpu.",
+    )
     args = parser.parse_args()
 
     # Validate KG path (skip when using --neo4j)
     if not args.neo4j and not args.kg.exists():
         logger.error("KG file not found: %s", args.kg)
         logger.info("Run the pipeline first: kg-gen run -c configs/pipeline.yaml")
+        sys.exit(1)
+
+    # Validate GPU flag
+    if args.gpu and not CUDA_AVAILABLE:
+        logger.error("--gpu requires CUDA (not available on this system)")
+        sys.exit(1)
+    if args.gpu and args.device == "cpu":
+        logger.error("--gpu is incompatible with --device cpu")
         sys.exit(1)
 
     # Load config
@@ -830,6 +919,7 @@ Examples:
                 skip_dataset_gen=args.skip_dataset_gen,
                 skip_benchmark=args.skip_benchmark,
                 skip_finetune=args.skip_finetune,
+                use_gpu=args.gpu,
             )
         except Exception as e:
             logger.error("Method 2 failed: %s", e, exc_info=True)
