@@ -10,7 +10,7 @@ from click.testing import CliRunner
 
 from kg_generator import cli
 from kg_generator.export.exporter import GraphExporter
-from kg_generator.export.neo4j_upload import replace_documents
+from kg_generator.export.neo4j_upload import replace_documents, replace_documents_atomic
 
 
 def test_json_export_preserves_vietnamese_and_includes_metadata(tmp_path):
@@ -163,6 +163,48 @@ def test_replacing_document_prunes_shared_sources_and_deletes_unsupported_data()
     assert "DETACH DELETE chunk" in session.calls[2][0]
     assert "DETACH DELETE document" in session.calls[3][0]
     assert "DETACH DELETE entity" in session.calls[4][0]
+
+
+def test_atomic_graph_replacement_rolls_back_failed_write():
+    class FakeTransaction:
+        def __init__(self):
+            self.calls = []
+            self.committed = False
+            self.rolled_back = False
+
+        def run(self, query, **parameters):
+            self.calls.append((" ".join(query.split()), parameters))
+
+        def commit(self):
+            self.committed = True
+
+        def rollback(self):
+            self.rolled_back = True
+
+    class FakeSession:
+        def __init__(self):
+            self.transaction = FakeTransaction()
+
+        def begin_transaction(self):
+            return self.transaction
+
+    session = FakeSession()
+
+    def failing_writer(transaction):
+        transaction.run("CREATE (:Entity {id: 'new'})")
+        raise RuntimeError("write failed")
+
+    try:
+        replace_documents_atomic(session, [], failing_writer, clear_all=True)
+    except RuntimeError as error:
+        assert str(error) == "write failed"
+    else:
+        raise AssertionError("failed graph write should propagate")
+
+    transaction = session.transaction
+    assert transaction.calls[0][0] == "MATCH (n) DETACH DELETE n"
+    assert transaction.committed is False
+    assert transaction.rolled_back is True
 
 
 def test_incremental_cli_upload_merges_relationship_provenance(monkeypatch, tmp_path):

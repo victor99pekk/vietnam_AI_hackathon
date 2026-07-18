@@ -90,6 +90,41 @@ def replace_documents(session, document_ids: list[str]) -> None:
         )
 
 
+def replace_documents_atomic(
+    session,
+    document_ids: list[str],
+    writer,
+    *,
+    clear_all: bool = False,
+) -> None:
+    """Replace documents and write new data in one Neo4j transaction.
+
+    ``writer`` receives the transaction object and may use ``tx.run`` or pass
+    it to the streaming graph builder.  Any exception rolls back both deletion
+    and writes, leaving the previous graph intact.
+    """
+    def work(tx):
+        if clear_all:
+            tx.run("MATCH (n) DETACH DELETE n")
+        else:
+            replace_documents(tx, document_ids)
+        writer(tx)
+
+    if hasattr(session, "execute_write"):
+        session.execute_write(work)
+    elif hasattr(session, "write_transaction"):
+        session.write_transaction(work)
+    else:
+        # Small fake sessions and older drivers can expose an explicit tx API.
+        tx = session.begin_transaction()
+        try:
+            work(tx)
+            tx.commit()
+        except Exception:
+            tx.rollback()
+            raise
+
+
 def _get_connection():
     """Create and return a Neo4j driver using env vars."""
     from neo4j import GraphDatabase

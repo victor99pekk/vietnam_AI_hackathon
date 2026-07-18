@@ -67,7 +67,7 @@ class RelationExtractor:
         self,
         language: Language = Language.ENGLISH,
         use_llm: bool = False,
-        model_name: str = "gpt-4o-mini",
+        model_name: str = "deepseek-v4-flash",
     ) -> None:
         self.language = language
         self.use_llm = use_llm

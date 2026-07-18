@@ -89,7 +89,7 @@ class PipelineConfig:
     semantic_dedup_max_records: int = 5_000
 
     # Extract
-    llm_model: str = "deepseek-v4-pro"
+    llm_model: str = "deepseek-v4-flash"
     use_llm: bool = False
     spacy_model: str = "en_core_web_sm"
     graphgen_entity_types: list[str] = field(
@@ -182,7 +182,7 @@ class PipelineConfig:
             semantic_dedup_max_records=deduplication.get(
                 "max_records", pipeline.get("semantic_dedup_max_records", 5_000)
             ),
-            llm_model=extraction.get("model", pipeline.get("llm_model", "deepseek-v4-pro")),
+            llm_model=extraction.get("model", pipeline.get("llm_model", "deepseek-v4-flash")),
             use_llm=use_llm,
             spacy_model=extraction.get(
                 "spacy_model", pipeline.get("spacy_model", "en_core_web_sm")

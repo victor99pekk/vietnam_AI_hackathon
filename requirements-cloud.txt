@@ -1,0 +1,16 @@
+spacy>=3.7
+networkx>=3.2
+datasketch>=1.6
+click>=8.1
+pyyaml>=6.0
+python-dotenv>=1.0
+tqdm>=4.66
+textstat>=0.7
+pandas>=2.1
+fastapi>=0.115
+uvicorn[standard]>=0.30
+sentence-transformers>=2.2
+underthesea>=9.5,<10
+neo4j>=5.15
+openai>=1.6
+langchain>=0.1

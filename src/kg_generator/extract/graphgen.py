@@ -41,7 +41,7 @@ class GraphGenExtractor:
     def __init__(
         self,
         language: Language = Language.ENGLISH,
-        model_name: str = "deepseek-v4-pro",
+        model_name: str = "deepseek-v4-flash",
         entity_types: tuple[str, ...] = tuple(DEFAULT_GRAPHGEN_ENTITY_TYPES),
         client: Any | None = None,
         max_retries: int = 3,

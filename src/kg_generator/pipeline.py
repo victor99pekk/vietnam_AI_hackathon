@@ -307,7 +307,12 @@ class Pipeline:
         processing["documents_after_dedup"] = len(documents)
 
         # ── Chunk ──
-        chunking_enabled = self.config.chunk_method != "none" and self.config.chunk_size > 0
+        # Sentence/semantic chunkers do not use the fixed-size field. A zero
+        # fixed size remains the backwards-compatible signal to keep a
+        # document intact.
+        chunking_enabled = self.config.chunk_method != "none" and (
+            self.config.chunk_method != "fixed" or self.config.chunk_size > 0
+        )
         if chunking_enabled:
             documents = self.chunker.chunk(documents)
             logger.info(f"  Chunked into {len(documents)} pieces")
@@ -698,7 +703,9 @@ class Pipeline:
         documents = self.document_deduplicator.deduplicate(documents)
         processing["documents_after_dedup"] = len(documents)
 
-        chunking_enabled = self.config.chunk_method != "none" and self.config.chunk_size > 0
+        chunking_enabled = self.config.chunk_method != "none" and (
+            self.config.chunk_method != "fixed" or self.config.chunk_size > 0
+        )
         if chunking_enabled:
             documents = self.chunker.chunk(documents)
             logger.info(f"  Chunked into {len(documents)} pieces")
