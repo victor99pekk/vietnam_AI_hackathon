@@ -1,13 +1,68 @@
 {
-  "num_nodes": 2181,
-  "num_edges": 34933,
-  "label_distribution": {
-    "Entity": 2032,
-    "Chunk": 137,
-    "Document": 12
+  "num_nodes": 88,
+  "num_edges": 366,
+  "num_triples": 399,
+  "completeness": 0.9810606060606061,
+  "completeness_breakdown": {
+    "has_aliases": 0.9431818181818182,
+    "has_name": 1.0,
+    "has_type": 1.0
   },
+  "consistency": 1.0,
+  "duplication_level": 0.05839883800410117,
+  "entity_duplication_rate": 0.03409090909090906,
+  "triple_duplication_rate": 0.08270676691729328,
+  "missing_information": 0.056818181818181816,
+  "format_errors": 0.0,
+  "labeling_quality": 0.5681818181818182,
+  "reusability": 0.9840909090909091,
+  "overall_score": 0.9168737590730072,
   "extraction": {
+    "language": "en",
     "method": "baseline",
-    "model": null
+    "backend": "spacy",
+    "model": null,
+    "backend_version": "3.8.14",
+    "prompt_version": null,
+    "max_gleanings": 0
+  },
+  "pipeline": {
+    "chunking": {
+      "method": "fixed",
+      "size_chars": 500,
+      "overlap_chars": 100,
+      "target_tokens": null,
+      "overlap_tokens": null,
+      "semantic_threshold": null,
+      "embedding_model": null
+    },
+    "quality": {
+      "method": "heuristic"
+    },
+    "deduplication": {
+      "document_method": "none",
+      "document_threshold": 0.85,
+      "chunk_method": "ngram",
+      "chunk_threshold": 0.9,
+      "semantic_threshold": 0.92,
+      "embedding_model": "paraphrase-multilingual-MiniLM-L12-v2"
+    },
+    "extraction": {
+      "method": "offline"
+    },
+    "resolution": {
+      "method": "string",
+      "threshold": 0.85,
+      "embedding_model": null
+    }
+  },
+  "processing": {
+    "loaded_documents": 2,
+    "cleaned_documents": 2,
+    "documents_after_quality": 2,
+    "documents_after_dedup": 2,
+    "chunks_created": 5,
+    "chunks_after_quality": 5,
+    "chunks_after_dedup": 5
   }
 }
