@@ -472,7 +472,9 @@ def _neo4j_graph(*, scope: Literal["global", "interactive"],
             else:
                 nodes = [row["node"] for row in session.run(
                     "MATCH (n) WHERE $search_query='' OR toLower(coalesce(n.name,n.id,'')) CONTAINS toLower($search_query) "
-                    "RETURN n AS node LIMIT $limit", search_query=query, limit=limit,
+                    "OPTIONAL MATCH (n)-[r]-() "
+                    "RETURN n AS node, count(r) AS degree "
+                    "ORDER BY degree DESC LIMIT $limit", search_query=query, limit=limit,
                 )]
                 ids = [str(dict(node).get("id", "")) for node in nodes]
                 links = [dict(row) for row in session.run(

@@ -50,7 +50,13 @@
     const container = $(`#${which}Graph`); container.innerHTML = '';
     if (!result.graph.nodes.length || typeof cytoscape === 'undefined') { container.innerHTML = '<div class="empty"><b>No entities found</b><small>Try a longer document.</small></div>'; return; }
     const key = which === 'global' ? 'cyGlobal' : 'cyLab'; state[key]?.destroy();
-    state[key] = cytoscape({ container, elements: { nodes: result.graph.nodes.map((node) => ({ data: node })), edges: result.graph.edges.map((edge) => ({ data: edge })) }, layout: { name: 'cose', animate: false, padding: 30 }, style: graphStyle() });
+    const nodeCount = result.graph.nodes.length;
+    const largeGraph = nodeCount > 500;
+    state[key] = cytoscape({ container, elements: { nodes: result.graph.nodes.map((node) => ({ data: node })), edges: result.graph.edges.map((edge) => ({ data: edge })) },
+      layout: largeGraph
+        ? { name: 'cose', animate: false, padding: 30, nodeRepulsion: () => 8000, idealEdgeLength: () => 60, numIter: 800, coolingFactor: 0.92 }
+        : { name: 'cose', animate: false, padding: 30 },
+      style: graphStyle() });
     state[key].on('tap', 'node', (event) => showDetail(which, event.target.data()));
     state[key].on('tap', 'edge', (event) => showRelationshipDetail(which, event.target.data()));
   }
@@ -59,7 +65,8 @@
     const result = state[which]; if (!result) return;
     const links = result.graph.edges.filter((edge) => edge.source === node.id || edge.target === node.id);
     const description = node.type === 'CHUNK' ? (node.contentPreview || 'Chunk text is hidden from the graph label to keep the visualization readable.') : (node.description || `${links.length} linked fact${links.length === 1 ? '' : 's'} in this graph.`);
-    $(`#${which}Detail`).innerHTML = `<div class="detail-content"><div><span class="detail-type">${esc(node.type)}</span><h3>${esc(node.label)}</h3><p>${esc(description)}</p></div><div class="evidence"><span class="evidence-label">${node.type === 'CHUNK' ? 'CHUNK PREVIEW' : 'EVIDENCE / SOURCE SENTENCE'}</span><blockquote>“${esc(node.evidence || node.contentPreview || 'Evidence sentence not provided by the extractor.')}”</blockquote></div></div>`;
+    const descriptionHtml = which === 'global' ? '' : `<p>${esc(description)}</p>`;
+    $(`#${which}Detail`).innerHTML = `<div class="detail-content"><div><span class="detail-type">${esc(node.type)}</span><h3>${esc(node.label)}</h3>${descriptionHtml}</div><div class="evidence"><span class="evidence-label">${node.type === 'CHUNK' ? 'CHUNK PREVIEW' : 'EVIDENCE / SOURCE SENTENCE'}</span><blockquote>“${esc(node.evidence || node.contentPreview || 'Evidence sentence not provided by the extractor.')}”</blockquote></div></div>`;
   }
 
   function showRelationshipDetail(which, edge) {
@@ -73,11 +80,13 @@
 
   function search(which, value) { const cy = which === 'global' ? state.cyGlobal : state.cyLab; if (!cy) return; const query = value.toLowerCase(); cy.nodes().forEach((node) => node.style('opacity', !query || String(node.data('label')).toLowerCase().includes(query) ? 1 : 0.14)); }
 
-  async function loadGlobal() {
+  async function loadGlobal(limit = 300) {
     try {
-      const result = normalize(await getJSON('/api/graphs/global?limit=5000')); state.global = result;
+      const result = normalize(await getJSON(`/api/graphs/global?limit=${limit}`)); state.global = result;
       $('#globalBadge').textContent = result.metadata?.source === 'sample' ? 'DEMO DATA' : 'LIVE NEO4J';
-      $('#gNodes').textContent = result.stats.entities; $('#gEdges').textContent = result.stats.relations; $('#gTriples').textContent = result.stats.triples; mount('global', result);
+      $('#gNodes').textContent = result.stats.entities; $('#gEdges').textContent = result.stats.relations; $('#gTriples').textContent = result.stats.triples;
+      $('#globalFit').textContent = limit >= 5000 ? '⛶ Fit' : '⛶ Fit';
+      mount('global', result);
     } catch (error) { $('#globalBadge').textContent = 'UNAVAILABLE'; $('#globalGraph').innerHTML = '<div class="empty"><b>Global graph unavailable</b><small>Check the API connection.</small></div>'; }
   }
 
@@ -194,5 +203,6 @@
   $('#file').addEventListener('change', (event) => { const file = event.target.files[0]; if (!file) return; $('#filename').textContent = file.name; const reader = new FileReader(); reader.onload = () => { $('#source').value = String(reader.result).slice(0, 20000); $('#count').textContent = $('#source').value.length; document.querySelector('[data-tab="paste"]').click(); }; reader.readAsText(file); });
   $('#run').addEventListener('click', run); $('#globalSearch').addEventListener('input', (event) => search('global', event.target.value)); $('#labSearch').addEventListener('input', (event) => search('lab', event.target.value)); $('#globalFit').addEventListener('click', () => state.cyGlobal?.fit(undefined, 35)); $('#labFit').addEventListener('click', () => state.cyLab?.fit(undefined, 35)); $('#globalReset').addEventListener('click', () => { state.cyGlobal?.elements().removeStyle('opacity'); state.cyGlobal?.fit(undefined, 35); });
   $('#download').addEventListener('click', () => { if (!state.lab) return; const url = URL.createObjectURL(new Blob([JSON.stringify(state.lab, null, 2)], { type: 'application/json' })); const link = document.createElement('a'); link.href = url; link.download = 'vietgraph-result.json'; link.click(); URL.revokeObjectURL(url); });
+  $('#globalLoadAll').addEventListener('click', () => { $('#globalLoadAll').disabled = true; $('#globalLoadAll').textContent = 'Loading…'; loadGlobal(5000).finally(() => { $('#globalLoadAll').textContent = 'All nodes loaded'; }); });
   $('#chunkMethod').dispatchEvent(new Event('change')); updateGuidance(); loadOptions(); loadGlobal();
 })();
