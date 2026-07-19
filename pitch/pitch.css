@@ -250,6 +250,75 @@ body {
   100% { transform: scale(0.92); opacity: 0.18; }
 }
 
+/* ---- results table ---- */
+.results-table {
+  width: 100%;
+  max-width: 720px;
+  margin: 24px auto 0;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.results-table thead th {
+  background: #f5f5f5;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #333;
+  color: #1a1a1a;
+  font-size: 13px;
+}
+.results-table tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e8e8e8;
+  color: #555;
+}
+.results-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.results-table .winner {
+  font-weight: 700;
+  color: #1a1a1a;
+  background: #fafafa;
+}
+
+/* ---- footnote ---- */
+.slide-footnote {
+  font-size: 11px;
+  color: #aaa;
+  max-width: 720px;
+  margin: 18px auto 0;
+  text-align: left;
+  line-height: 1.5;
+}
+
+/* ---- KG graph SVG ---- */
+.graph-stack {
+  margin: 24px auto 14px;
+  max-width: 440px;
+}
+.kg-graph-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* ---- QA pair box ---- */
+.qa-pair {
+  max-width: 680px;
+  margin: 16px auto 0;
+  border-left: 3px solid #1565c0;
+  padding-left: 16px;
+  text-align: left;
+}
+.qa-q {
+  font-size: 13px;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+.qa-a {
+  font-size: 13px;
+  color: #2e7d32;
+}
+
 /* ---- two-column image row ---- */
 .img-row-2 {
   display: grid;
