@@ -20,6 +20,7 @@ Usage (in Colab):
 
 import json
 import logging
+import math
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -35,6 +36,7 @@ try:
         BitsAndBytesConfig,
         TrainingArguments,
         Trainer,
+        TrainerCallback,
     )
     from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, TaskType
     _TORCH_AVAILABLE = True
@@ -176,6 +178,26 @@ class _AssistantOnlyCollator:
         return batch
 
 
+class TrainingMetricsCallback(TrainerCallback):
+    """Captures per-step loss and saves the full training log history.
+
+    Produces ``training_log.json`` containing step-level loss, eval_loss,
+    learning_rate, epoch, and other metrics logged by the Trainer.
+    """
+
+    def __init__(self, output_dir: Path) -> None:
+        self.output_dir = output_dir
+
+    def on_train_end(self, args, state, control, **kwargs):
+        history_path = self.output_dir / "training_log.json"
+        with open(history_path, "w") as f:
+            json.dump(state.log_history, f, indent=2)
+        logger.info(
+            "Training log (%d entries) saved → %s",
+            len(state.log_history), history_path,
+        )
+
+
 class FineTuner:
     """LoRA fine-tuner — works on GPU (CUDA) or CPU.
 
@@ -315,6 +337,7 @@ class FineTuner:
             train_dataset=train_ds,
             eval_dataset=eval_ds,
             data_collator=_AssistantOnlyCollator(tokenizer),
+            callbacks=[TrainingMetricsCallback(adapter_dir)],
         )
 
         logger.info("Starting training: %.1f epochs (max_steps=%d) on %s",
@@ -407,6 +430,7 @@ class FineTuner:
             train_dataset=train_ds,
             eval_dataset=eval_ds,
             data_collator=_AssistantOnlyCollator(tokenizer),
+            callbacks=[TrainingMetricsCallback(adapter_dir)],
         )
 
         logger.info(
@@ -491,6 +515,7 @@ class FineTuner:
             train_dataset=train_ds,
             eval_dataset=eval_ds,
             data_collator=_AssistantOnlyCollator(tokenizer),
+            callbacks=[TrainingMetricsCallback(adapter_dir)],
         )
 
         logger.info("Starting Unsloth training: %.1f epochs (max_steps=%d) on %s",
@@ -523,6 +548,20 @@ class FineTuner:
         return dataset
 
     def _save_metadata(self, adapter_dir: Path, n_train: int, n_eval: int) -> None:
+        # Compute perplexity from the training log (perplexity = exp(loss))
+        perplexity = None
+        final_train_loss = None
+        log_path = adapter_dir / "training_log.json"
+        if log_path.exists():
+            with open(log_path) as f:
+                log_history = json.load(f)
+            train_losses = [e["loss"] for e in log_history if "loss" in e]
+            eval_losses = [e["eval_loss"] for e in log_history if "eval_loss" in e]
+            if train_losses:
+                final_train_loss = round(train_losses[-1], 4)
+            if eval_losses:
+                perplexity = round(math.exp(eval_losses[-1]), 2)
+
         metadata = {
             "base_model": self.config.base_model,
             "train_samples": n_train,
@@ -538,6 +577,8 @@ class FineTuner:
             "assistant_only_loss": True,
             "load_in_4bit": self.config.load_in_4bit,
             "gpu": torch.cuda.get_device_name(0) if self._device == "cuda" else self._device,
+            "perplexity": perplexity,
+            "final_train_loss": final_train_loss,
         }
         with open(adapter_dir / "training_metadata.json", "w") as f:
             json.dump(metadata, f, indent=2)

@@ -1,0 +1,15 @@
+{
+  "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "train_samples": 2171,
+  "eval_samples": 0,
+  "max_steps": -1,
+  "num_train_epochs": 3,
+  "effective_batch_size": 16,
+  "lora_r": 8,
+  "lora_alpha": 16,
+  "assistant_only_loss": true,
+  "load_in_4bit": true,
+  "gpu": "cpu",
+  "perplexity": null,
+  "final_train_loss": 0.461
+}

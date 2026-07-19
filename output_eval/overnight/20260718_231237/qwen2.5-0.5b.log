@@ -1,0 +1,71 @@
+Downloading bitsandbytes (57.8MiB)
+ Downloaded bitsandbytes
+Uninstalled 1 package in 1ms
+Installed 5 packages in 9ms
+23:12:43 [INFO] run_eval: KG Evaluation Pipeline
+23:12:43 [INFO] run_eval:   KG:       generated_KGs/output_wikipedia/knowledge_graph.json
+23:12:43 [INFO] run_eval:   Method:   2
+23:12:43 [INFO] run_eval:   Output:   output_eval/overnight/20260718_231237/qwen2.5-0.5b/2026-07-18_23-12-43
+23:12:43 [INFO] run_eval: ============================================================
+23:12:43 [INFO] run_eval: METHOD 2: Fine-Tuning Ablation Study
+23:12:43 [INFO] run_eval: ============================================================
+23:12:43 [INFO] run_eval: 
+--- Step 2.1: Dataset Generation ---
+23:12:43 [INFO] run_eval: Loaded KG: 4104 entities, 3936 triples
+23:12:43 [INFO] evaluation.model_eval.dataset_gen: KG-Managed dataset: 2171 train + 609 test QA pairs → output_eval/overnight/20260718_231237/qwen2.5-0.5b/2026-07-18_23-12-43/method2
+23:12:48 [INFO] evaluation.model_eval.dataset_gen: Unmanaged dataset: 6083 train + 1582 test QA pairs → output_eval/overnight/20260718_231237/qwen2.5-0.5b/2026-07-18_23-12-43/method2
+23:12:48 [INFO] run_eval: Balanced KG/raw training token volume: {'kg': {'examples': 2171, 'estimated_tokens': 37298}, 'raw': {'examples': 716, 'estimated_tokens': 37298}, 'target_estimated_tokens': {'value': 37298}}
+23:12:48 [INFO] run_eval: Dataset generation complete
+23:12:48 [INFO] run_eval: 
+--- Step 2.2: Fine-Tuning ---
+23:12:48 [INFO] run_eval: Base model: Qwen/Qwen2.5-0.5B-Instruct
+23:12:48 [INFO] run_eval: Fine-tune target: both
+23:12:48 [INFO] evaluation.model_eval.finetune: Device: CPU (fine-tuning will be slow — use a small model)
+23:12:48 [INFO] run_eval: 
+>>> Fine-tuning Model B (KG-Managed)
+23:12:48 [INFO] evaluation.model_eval.finetune: Fine-tuning 'model_b_kg': 2171 train / 0 eval examples
+23:12:48 [INFO] evaluation.model_eval.finetune: Using CPU fine-tuning (full-precision LoRA)
+23:12:48 [INFO] evaluation.model_eval.finetune: Loading Qwen/Qwen2.5-0.5B-Instruct on CPU (this may take a few minutes)...
+23:12:48 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+23:12:48 [WARNING] huggingface_hub.utils._http: Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+23:12:48 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/config.json "HTTP/1.1 200 OK"
+23:12:48 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/config.json "HTTP/1.1 200 OK"
+23:12:49 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+23:12:49 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+23:12:49 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/config.json "HTTP/1.1 200 OK"
+23:12:49 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+23:12:49 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-0.5B-Instruct/xet-read-token/7ae557604adf67be50417f59c2c2f167def9a775 "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 3581.89it/s]
+23:12:58 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+23:12:58 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/generation_config.json "HTTP/1.1 200 OK"
+23:12:58 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/generation_config.json "HTTP/1.1 200 OK"
+23:12:58 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+23:12:58 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+23:12:58 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/config.json "HTTP/1.1 200 OK"
+23:12:58 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+23:12:58 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/tokenizer_config.json "HTTP/1.1 200 OK"
+23:12:58 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/tokenizer_config.json "HTTP/1.1 200 OK"
+23:12:59 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-0.5B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+23:12:59 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-0.5B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+23:12:59 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/vocab.json "HTTP/1.1 307 Temporary Redirect"
+23:12:59 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/vocab.json "HTTP/1.1 200 OK"
+23:12:59 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/vocab.json "HTTP/1.1 200 OK"
+23:12:59 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/merges.txt "HTTP/1.1 307 Temporary Redirect"
+23:12:59 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/merges.txt "HTTP/1.1 200 OK"
+23:12:59 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/merges.txt "HTTP/1.1 200 OK"
+23:13:00 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+23:13:00 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/tokenizer.json "HTTP/1.1 200 OK"
+23:13:00 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/tokenizer.json "HTTP/1.1 200 OK"
+23:13:00 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+23:13:00 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+23:13:00 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+23:13:01 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-0.5B-Instruct "HTTP/1.1 200 OK"
+23:13:01 [WARNING] bitsandbytes.backends.cpu.ops: Failed to load CPU gemm_4bit_forward from kernels-community: No module named 'kernels'. Please make sure you already `pip install kernels` and the kernels >= 0.11.1
+[transformers] warmup_ratio is deprecated and will be removed in v5.2. Use `warmup_steps` instead.
+23:13:03 [INFO] evaluation.model_eval.finetune: Starting CPU training: 3.0 epochs (max_steps=-1)
+trainable params: 4,399,104 || all params: 498,431,872 || trainable%: 0.8826
+  0%|          | 0/408 [00:00<?, ?it/s]/home/victorpekkari/vietnam_AI_hackathon/.venv/lib/python3.13/site-packages/torch/utils/data/dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+  0%|          | 1/408 [00:04<28:49,  4.25s/it]  0%|          | 2/408 [00:08<29:22,  4.34s/it]  1%|          | 3/408 [00:13<29:19,  4.34s/it]  1%|          | 4/408 [00:17<29:34,  4.39s/it]  1%|          | 5/408 [00:21<29:36,  4.41s/it]  1%|▏         | 6/408 [00:26<28:52,  4.31s/it]  2%|▏         | 7/408 [00:30<28:30,  4.27s/it]  2%|▏         | 8/408 [00:34<28:32,  4.28s/it]  2%|▏         | 9/408 [00:38<28:19,  4.26s/it]  2%|▏         | 10/408 [00:43<28:49,  4.35s/it]                                                  2%|▏         | 10/408 [00:43<28:49,  4.35s/it]  3%|▎         | 11/408 [00:47<28:50,  4.36s/it]  3%|▎         | 12/408 [00:51<28:36,  4.34s/it]

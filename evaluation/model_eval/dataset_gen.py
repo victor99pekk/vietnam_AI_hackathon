@@ -35,9 +35,9 @@ _KG_SINGLE_HOP_TEMPLATES: dict[str, list[tuple[str, str]]] = {
         ("Who or what does {subj} {rel}?", "{subj} {rel} {obj}."),
     ],
     "vi": [
-        ("{rel} của {subj} là gì?", "{subj} {rel} {obj}."),
-        ("{subj} {rel} ai/cái gì?", "{obj}."),
-        ("{subj} có {rel} là gì?", "{subj} {rel} {obj}."),
+        ("{subj} và {obj} có mối quan hệ gì?", "{desc}"),
+        ("Mô tả mối liên hệ giữa {subj} và {obj}.", "{desc}"),
+        ("Theo văn bản, {subj} liên quan đến {obj} như thế nào?", "{desc}"),
     ],
 }
 
@@ -339,11 +339,19 @@ class QADatasetGenerator:
         for subj, pred, obj, source_text, source_chunk_id in selected_triples:
             subj_label = self._node_label(graph, subj)
             obj_label = self._node_label(graph, obj)
+            # Use the description field (source_text) as the relation meaning.
+            # GraphGen stores all predicates as "RELATION" — the actual
+            # semantic content is in the description.
+            description = source_text.strip() if source_text else f"{subj_label} liên quan đến {obj_label}"
             pred_readable = pred.replace("_", " ")
 
             for q_tmpl, a_tmpl in self._single_hop_tmpl:
-                question = q_tmpl.format(subj=subj_label, rel=pred_readable, obj=obj_label)
-                answer = a_tmpl.format(subj=subj_label, rel=pred_readable, obj=obj_label)
+                question = q_tmpl.format(
+                    subj=subj_label, rel=pred_readable, obj=obj_label, desc=description,
+                )
+                answer = a_tmpl.format(
+                    subj=subj_label, rel=pred_readable, obj=obj_label, desc=description,
+                )
                 qa_pairs.append({
                     "question": question,
                     "answer": answer,
@@ -561,24 +569,54 @@ class QADatasetGenerator:
     ) -> list[dict[str, Any]]:
         """Generate flat QA pairs from raw text using language-aware heuristics.
 
-        Strategy: extract <subject, predicate, object> patterns from
-        each sentence using language-specific regex, then template them into QA pairs.
-        This produces simpler, single-hop questions compared to the KG version.
+        Strategy: use source-grounded questions as the primary approach
+        (\"what does the text say about X?\"), supplemented by copula-based
+        definition questions where the pattern is clear.  This avoids the
+        noisy proper-noun-pairing and regex-factual approaches that produce
+        incoherent pairs for Vietnamese.
         """
         qa_pairs: list[dict[str, Any]] = []
 
         sentences = re.split(r'(?<=[.!?])\s+', text)
         for sent in sentences:
             sent = sent.strip()
-            min_len = 15 if self.language == "vi" else 20  # Vietnamese sentences can be shorter
-            if len(sent) < min_len:
+            min_len = 15 if self.language == "vi" else 20
+            if len(sent) < min_len or len(sent) > 600:
                 continue
 
-            # ── Named entity detection ─────────────────────────
-            # For English: capitalized words. For Vietnamese: any capitalized words
-            # (Vietnamese proper nouns are typically capitalized, though not all nouns are)
+            group_id = f"source:{source}"
+
+            # ── Detect candidate subjects ──────────────────────
+            # For Vietnamese we rely on the copula pattern (X là Y) and
+            # capitalized multi-word phrases as proper-noun proxies.
+            candidates: list[str] = []
+
+            # Copula pattern: extract the subject
+            is_match = re.match(self._copula_pattern, sent, re.IGNORECASE)
+            if is_match:
+                subject = is_match.group(1).strip()
+                if self.language == "vi":
+                    predicate = is_match.group(2).strip().rstrip(".")
+                else:
+                    predicate = is_match.group(4).strip().rstrip(".")
+                # Quality gate: subject must look like a real entity
+                if len(subject.split()) >= 2 or len(subject) > 12:
+                    candidates.append(subject)
+                    # Also generate a definition-style pair
+                    q_tmpl, a_tmpl = self._raw_def_tmpl
+                    qa_pairs.append({
+                        "question": q_tmpl.format(subj=subject, pred=predicate),
+                        "answer": a_tmpl.format(subj=subject, pred=predicate),
+                        "type": "definition",
+                        "hops": 1,
+                        "source": "raw_text",
+                        "source_id": source,
+                        "evidence": sent,
+                        "_group_id": group_id,
+                    })
+
+            # Proper-noun heuristic (capitalized words)
             if self.language == "vi":
-                # Vietnamese: match capitalized words (including those with diacritics)
                 proper_nouns = re.findall(
                     r'\b([A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬĐÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴ]'
                     r'[a-zàáảãạăằắẳẵặâầấẩẫậđèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ]+'
@@ -594,69 +632,16 @@ class QADatasetGenerator:
                 noun for noun in proper_nouns
                 if noun.strip().lower() not in pronouns
             ]
-            group_id = f"source:{source}"
+            # Only keep multi-word or long proper nouns as candidates
+            for noun in proper_nouns:
+                if len(noun.split()) >= 2 or len(noun) > 12:
+                    if noun not in candidates:
+                        candidates.append(noun)
 
-            # ── Copula/definition pattern (e.g. "X is Y" / "X là Y") ──
-            is_match = re.match(self._copula_pattern, sent, re.IGNORECASE)
-            if is_match and len(proper_nouns) >= 1:
-                subject = is_match.group(1).strip()
-                # For English: group 4 (after "a/an/the"). For Vietnamese: group 2 (after "là")
-                if self.language == "vi":
-                    predicate = is_match.group(2).strip().rstrip(".")
-                else:
-                    predicate = is_match.group(4).strip().rstrip(".")
-                q_tmpl, a_tmpl = self._raw_def_tmpl
-                qa_pairs.append({
-                    "question": q_tmpl.format(subj=subject, pred=predicate),
-                    "answer": a_tmpl.format(subj=subject, pred=predicate),
-                    "type": "definition",
-                    "hops": 1,
-                    "source": "raw_text",
-                    "source_id": source,
-                    "evidence": sent,
-                    "_group_id": group_id,
-                })
-
-            # ── Proper noun pair → relationship question ────────
-            if len(proper_nouns) >= 2:
-                q_tmpl, a_tmpl = self._raw_rel_tmpl
-                for i, pn1 in enumerate(proper_nouns[:3]):
-                    for pn2 in proper_nouns[i+1:][:3]:
-                        if pn1 != pn2:
-                            qa_pairs.append({
-                                "question": q_tmpl.format(e1=pn1, e2=pn2, sent=sent),
-                                "answer": a_tmpl.format(sent=sent),
-                                "type": "relationship",
-                                "hops": 1,
-                                "source": "raw_text",
-                                "source_id": source,
-                                "evidence": sent,
-                                "_group_id": group_id,
-                            })
-
-            # ── Factual patterns (e.g. "born in", "sinh tại") ──
-            for pattern, q_template in self._raw_fact_patterns:
-                match = re.search(pattern, sent, re.IGNORECASE)
-                if match:
-                    subject = match.group(1).strip()
-                    fact = match.group(2).strip().rstrip(".")
-                    if subject.lower() in pronouns:
-                        continue
-                    qa_pairs.append({
-                        "question": q_template.format(subject),
-                        "answer": fact,
-                        "type": "factual",
-                        "hops": 1,
-                        "source": "raw_text",
-                        "source_id": source,
-                        "evidence": sent,
-                        "_group_id": group_id,
-                    })
-
-            # Broad source-only control pair. This keeps Model C useful when a
-            # sentence does not match one of the narrow factual regexes.
-            if proper_nouns and len(sent) <= 600:
-                subject = proper_nouns[0]
+            # ── Source-grounded question (primary type) ─────────
+            # For each candidate entity in the sentence, generate a
+            # \"what does the source say about X?\" question.
+            for subject in candidates[:2]:  # limit to 2 candidates per sentence
                 question = (
                     f"Theo văn bản, thông tin nào được nêu về {subject}?"
                     if self.language == "vi"
@@ -680,7 +665,13 @@ class QADatasetGenerator:
     def _grouped_split(
         self, items: list[dict[str, Any]]
     ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-        """Split by provenance group so paraphrases of one fact never leak."""
+        """Split by provenance group so paraphrases of one fact never leak.
+
+        Uses two-phase assignment: first assign groups to test/train by hash,
+        then rebalance if the resulting test fraction deviates too far from
+        the configured test_split (guards against a few 'chatty' groups
+        dominating one side).
+        """
         grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for index, item in enumerate(items):
             grouped[str(item.get("_group_id", f"item:{index}"))].append(item)
@@ -688,12 +679,44 @@ class QADatasetGenerator:
         group_ids = sorted(grouped)
         if len(group_ids) <= 1:
             train_ids = set(group_ids)
+            test_ids: set[str] = set()
         else:
-            test_ids = {group_id for group_id in group_ids if self._is_test_group(group_id)}
+            test_ids = {g for g in group_ids if self._is_test_group(g)}
             if not test_ids:
                 test_ids = {max(group_ids, key=self._group_score)}
             if len(test_ids) == len(group_ids):
                 test_ids.remove(min(group_ids, key=self._group_score))
+
+            # ── Rebalance: swap groups between test/train if the split is too lopsided ──
+            total_items = len(items)
+            test_count = sum(len(grouped[g]) for g in test_ids)
+            test_frac = test_count / total_items if total_items else 0
+            tolerance = 0.15  # allow ±15% deviation from target split
+
+            if test_frac > self.test_split + tolerance:
+                # Too many items in test — move some test groups back to train
+                overflow_groups = sorted(
+                    test_ids, key=lambda g: len(grouped[g]), reverse=True,
+                )
+                for g in overflow_groups:
+                    if len(test_ids) <= 1:
+                        break
+                    test_ids.discard(g)
+                    test_count = sum(len(grouped[g2]) for g2 in test_ids)
+                    if test_count / total_items <= self.test_split + tolerance:
+                        break
+            elif test_frac < max(0.05, self.test_split - tolerance):
+                # Too few items in test — move some train groups to test
+                train_only = [g for g in group_ids if g not in test_ids]
+                need_groups = sorted(
+                    train_only, key=lambda g: len(grouped[g]),
+                )
+                for g in need_groups:
+                    test_ids.add(g)
+                    test_count = sum(len(grouped[g2]) for g2 in test_ids)
+                    if test_count / total_items >= self.test_split - tolerance:
+                        break
+
             train_ids = set(group_ids) - test_ids
 
         train: list[dict[str, Any]] = []
@@ -706,6 +729,12 @@ class QADatasetGenerator:
                 target.append(clean)
         self._rng.shuffle(train)
         self._rng.shuffle(test)
+
+        actual_test_frac = len(test) / (len(train) + len(test)) if (len(train) + len(test)) else 0
+        logger.info(
+            "Grouped split: %d train + %d test (%.1f%% test, target %.0f%%)",
+            len(train), len(test), actual_test_frac * 100, self.test_split * 100,
+        )
         return train, test
 
     def _group_score(self, group_id: str) -> float:

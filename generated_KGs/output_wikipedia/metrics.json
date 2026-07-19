@@ -1,27 +1,27 @@
 {
-  "num_nodes": 427,
-  "num_edges": 885,
-  "num_triples": 921,
-  "completeness": 0.9742990654205608,
+  "num_nodes": 4094,
+  "num_edges": 11173,
+  "num_triples": 11677,
+  "completeness": 0.9647498375568552,
   "completeness_breakdown": {
+    "has_aliases": 0.8942495126705653,
     "has_type": 1.0,
-    "has_aliases": 0.9228971962616822,
     "has_name": 1.0
   },
   "consistency": 1.0,
-  "duplication_level": 0.03823556272641482,
-  "entity_duplication_rate": 0.03738317757009346,
-  "triple_duplication_rate": 0.039087947882736174,
-  "missing_information": 0.07710280373831775,
+  "duplication_level": 0.07774560285034088,
+  "entity_duplication_rate": 0.11232943469785572,
+  "triple_duplication_rate": 0.04316177100282603,
+  "missing_information": 0.10575048732943469,
   "format_errors": 0.0,
-  "labeling_quality": 0.6915887850467289,
-  "reusability": 0.9836448598130842,
-  "overall_score": 0.9334563348308059,
+  "labeling_quality": 0.7731481481481481,
+  "reusability": 0.9783625730994152,
+  "overall_score": 0.9332520669463776,
   "structural_audit": {
     "graph_stats": {
-      "num_nodes": 427,
-      "num_edges": 885,
-      "num_triples": 921,
+      "num_nodes": 4094,
+      "num_edges": 11173,
+      "num_triples": 11677,
       "is_directed": true,
       "is_connected": true
     },
@@ -35,8 +35,8 @@
       "recommendation": ""
     },
     "density_analysis": {
-      "density": 0.004865,
-      "health_score": 9.7,
+      "density": 0.000667,
+      "health_score": 1.3,
       "flag": "red",
       "recommendation": "Graph is very sparse — relations may not capture enough context for multi-hop reasoning."
     },
@@ -49,121 +49,121 @@
     "entity_duplication": {
       "duplicate_pairs": [
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 1",
-          "similarity": 0.9259
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 1",
+          "similarity": 0.9286
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 0",
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 0",
           "similarity": 1.0
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 1",
-          "similarity": 0.9259
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 1",
+          "similarity": 0.9286
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 2",
-          "similarity": 0.9259
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 2",
+          "similarity": 0.9286
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 3",
-          "similarity": 0.9259
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 3",
+          "similarity": 0.9286
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 4",
-          "similarity": 0.9259
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 4",
+          "similarity": 0.9286
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 5",
-          "similarity": 0.9259
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 5",
+          "similarity": 0.9286
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 6",
-          "similarity": 0.9259
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 6",
+          "similarity": 0.9286
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 7",
-          "similarity": 0.9259
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 7",
+          "similarity": 0.9286
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 8",
-          "similarity": 0.9259
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 8",
+          "similarity": 0.9286
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 9",
-          "similarity": 0.9259
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 9",
+          "similarity": 0.9286
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 10",
-          "similarity": 0.8929
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 10",
+          "similarity": 0.8966
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 11",
-          "similarity": 0.8929
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 11",
+          "similarity": 0.8966
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 12",
-          "similarity": 0.8929
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 12",
+          "similarity": 0.8966
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 13",
-          "similarity": 0.8929
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 13",
+          "similarity": 0.8966
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 14",
-          "similarity": 0.8929
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 14",
+          "similarity": 0.8966
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 15",
-          "similarity": 0.8929
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 15",
+          "similarity": 0.8966
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 16",
-          "similarity": 0.8929
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 16",
+          "similarity": 0.8966
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 17",
-          "similarity": 0.8929
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 17",
+          "similarity": 0.8966
         },
         {
-          "entity_a": "wikipedia_vi_2.jsonl chunk 0",
-          "entity_b": "wikipedia_vi_2.jsonl chunk 18",
-          "similarity": 0.8929
+          "entity_a": "wikipedia_vi_10.jsonl chunk 0",
+          "entity_b": "wikipedia_vi_10.jsonl chunk 18",
+          "similarity": 0.8966
         }
       ],
-      "duplicate_pair_count": 423,
-      "duplicate_entity_count": 49,
+      "duplicate_pair_count": 41356,
+      "duplicate_entity_count": 287,
       "health_score": 0,
       "flag": "red",
-      "recommendation": "423 potential duplicate pairs — consider entity resolution."
+      "recommendation": "41356 potential duplicate pairs — consider entity resolution."
     },
     "multi_hop_connectivity": {
-      "reachable_2hop_pct": 0.0701,
-      "reachable_3hop_pct": 0.1127,
-      "health_score": 18.3,
-      "flag": "red",
-      "recommendation": "Low multi-hop connectivity — the KG may not support chain reasoning questions."
+      "reachable_2hop_pct": 0.8278,
+      "reachable_3hop_pct": 1.7731,
+      "health_score": 100,
+      "flag": "green",
+      "recommendation": ""
     },
-    "overall_health_score": 45.6,
-    "verdict": "🔶 Concerning — multiple structural issues; SFT data quality may suffer."
+    "overall_health_score": 60.3,
+    "verdict": "⚠️ Fair — some issues detected; review flagged areas before generating SFT data."
   },
   "extraction": {
     "language": "vi",
@@ -205,12 +205,12 @@
     }
   },
   "processing": {
-    "loaded_documents": 2,
-    "cleaned_documents": 2,
-    "documents_after_quality": 2,
-    "documents_after_dedup": 2,
-    "chunks_created": 33,
-    "chunks_after_quality": 33,
-    "chunks_after_dedup": 33
+    "loaded_documents": 10,
+    "cleaned_documents": 10,
+    "documents_after_quality": 10,
+    "documents_after_dedup": 10,
+    "chunks_created": 437,
+    "chunks_after_quality": 437,
+    "chunks_after_dedup": 434
   }
 }

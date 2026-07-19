@@ -1,0 +1,144 @@
+{
+  "dataset_gen": {
+    "kg_train": "output_eval/overnight/20260718_232346/qwen2.5-0.5b/2026-07-18_23-23-51/method2/test_training_data/kg_qa_train.jsonl",
+    "kg_test": "output_eval/overnight/20260718_232346/qwen2.5-0.5b/2026-07-18_23-23-51/method2/test_training_data/kg_qa_test.jsonl",
+    "raw_train": "output_eval/overnight/20260718_232346/qwen2.5-0.5b/2026-07-18_23-23-51/method2/test_training_data/raw_qa_train.jsonl",
+    "raw_test": "output_eval/overnight/20260718_232346/qwen2.5-0.5b/2026-07-18_23-23-51/method2/test_training_data/raw_qa_test.jsonl",
+    "training_balance": {
+      "kg": {
+        "examples": 2171,
+        "estimated_tokens": 37298
+      },
+      "raw": {
+        "examples": 716,
+        "estimated_tokens": 37298
+      },
+      "target_estimated_tokens": {
+        "value": 37298
+      }
+    }
+  },
+  "finetune": {
+    "kg_adapter": "output_eval/overnight/20260718_232346/qwen2.5-0.5b/2026-07-18_23-23-51/method2/model_b_kg",
+    "raw_adapter": "output_eval/overnight/20260718_232346/qwen2.5-0.5b/2026-07-18_23-23-51/method2/model_c_raw"
+  },
+  "ablation": {
+    "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "test_samples": 200,
+    "models": {
+      "A_base": {
+        "model": "A_base (Qwen/Qwen2.5-0.5B-Instruct)",
+        "total_predictions": 200,
+        "factual_accuracy": 0.0472,
+        "single_hop_accuracy": 0.0575,
+        "multi_hop_accuracy": null,
+        "true_false_accuracy": 0.0,
+        "hallucination_rate": 1.0,
+        "consistency_score": 0.8204,
+        "avg_response_length": 90.4
+      },
+      "B_kg": {
+        "model": "B_kg (KG-Managed)",
+        "total_predictions": 200,
+        "factual_accuracy": 0.4203,
+        "single_hop_accuracy": 0.415,
+        "multi_hop_accuracy": null,
+        "true_false_accuracy": 0.4444,
+        "hallucination_rate": 0.725,
+        "consistency_score": 0.2909,
+        "avg_response_length": 6.3
+      },
+      "C_raw": {
+        "model": "C_raw (Unmanaged)",
+        "total_predictions": 200,
+        "factual_accuracy": 0.1314,
+        "single_hop_accuracy": 0.1525,
+        "multi_hop_accuracy": null,
+        "true_false_accuracy": 0.0352,
+        "hallucination_rate": 0.975,
+        "consistency_score": 0.2564,
+        "avg_response_length": 26.9
+      }
+    },
+    "comparison": {
+      "winners": {
+        "factual_accuracy": {
+          "best": "B_kg",
+          "best_score": 0.4203,
+          "ranking": [
+            {
+              "model": "B_kg",
+              "score": 0.4203
+            },
+            {
+              "model": "C_raw",
+              "score": 0.1314
+            },
+            {
+              "model": "A_base",
+              "score": 0.0472
+            }
+          ]
+        },
+        "single_hop_accuracy": {
+          "best": "B_kg",
+          "best_score": 0.415,
+          "ranking": [
+            {
+              "model": "B_kg",
+              "score": 0.415
+            },
+            {
+              "model": "C_raw",
+              "score": 0.1525
+            },
+            {
+              "model": "A_base",
+              "score": 0.0575
+            }
+          ]
+        },
+        "hallucination_rate": {
+          "best": "B_kg",
+          "best_score": 0.725,
+          "ranking": [
+            {
+              "model": "B_kg",
+              "score": 0.725
+            },
+            {
+              "model": "C_raw",
+              "score": 0.975
+            },
+            {
+              "model": "A_base",
+              "score": 1.0
+            }
+          ]
+        },
+        "consistency_score": {
+          "best": "A_base",
+          "best_score": 0.8204,
+          "ranking": [
+            {
+              "model": "A_base",
+              "score": 0.8204
+            },
+            {
+              "model": "B_kg",
+              "score": 0.2909
+            },
+            {
+              "model": "C_raw",
+              "score": 0.2564
+            }
+          ]
+        }
+      },
+      "analysis": [
+        "\u2705 KG-Managed (B) has lowest hallucination \u2014 KG curation reduces fabrication.",
+        "\ud83d\udcca Overall best factual accuracy: B_kg (score: 0.420)"
+      ]
+    }
+  }
+}
