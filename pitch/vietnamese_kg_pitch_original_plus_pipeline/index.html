@@ -225,6 +225,36 @@
       </div>
     </section>
 
+    <section class="slide" data-slide="11">
+      <div class="slide-inner wide">
+        <p class="slide-subhead">KG Design Choice</p>
+        <h2 class="slide-headline">Our graph is designed for LLM SFT data generation / data storage, not GraphRAG retrieval</h2>
+        <p class="slide-body wide-body">Neo4j is our storage layer, but our knowledge graph is not a large hand-designed ontology. Similar to the GraphGen idea, we keep a small number of structural relationship types and store the meaning between entities.</p>
+        <div class="comparison-grid kg-design-grid">
+          <div class="compare-card">
+            <h3>GraphRAG-first KG</h3>
+            <p class="compare-kicker">Optimized for runtime retrieval</p>
+            <ul>
+              <li><strong>Goal:</strong> answer a user question by retrieving graph neighborhoods and text context.</li>
+              <li><strong>Schema:</strong> often many explicit relationship labels, designed for querying and traversal.</li>
+              <li><strong>Strength:</strong> great when the ontology is clear and the app needs precise graph queries.</li>
+              <li><strong>Challenge:</strong> building a rich Vietnamese predicate taxonomy is hard for us to verify manually.</li>
+            </ul>
+          </div>
+          <div class="compare-card vietnamese-card">
+            <h3>Our SFT-oriented KG</h3>
+            <p class="compare-kicker">Optimized for training examples</p>
+            <ul>
+              <li><strong>Few edge types:</strong> <code>:PART_OF</code>, <code>:NEXT</code>, <code>:MENTIONS</code>, and semantic <code>:RELATION</code>.</li>
+              <li><strong>Meaning lives in text:</strong> each entity-to-entity edge keeps a Vietnamese relationship description and evidence sentence.</li>
+              <li><strong>Sampling:</strong> subgraphs become controlled QA examples: one-hop for facts, two-hop paths for reasoning.</li>
+              <li><strong>Benefit:</strong> preserves Vietnamese nuance without forcing every fact into an English-style predicate label.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
 
     <!-- ===== ADDED: ENGLISH VS VIETNAMESE PIPELINE ===== -->
     <section class="slide" data-slide="9">
@@ -294,28 +324,7 @@
       </div>
     </section>
 
-    <!-- ===== ADDED: WHY KG FOR SFT ===== -->
-    <section class="slide" data-slide="11">
-      <div class="slide-inner wide">
-        <p class="slide-subhead">KG → SFT</p>
-        <h2 class="slide-headline">Why knowledge graphs are useful for supervised fine-tuning</h2>
-        <div class="benefit-grid">
-          <div class="benefit-card">
-            <h3>Raw text is dense but messy</h3>
-            <p>Documents contain useful facts, but also repetition, irrelevant paragraphs, and unclear boundaries between entities and events.</p>
-          </div>
-          <div class="benefit-card accent-card">
-            <h3>Graphs turn text into controllable facts</h3>
-            <p>Entities, relations, source chunks, and evidence sentences let us generate training examples with known grounding.</p>
-          </div>
-          <div class="benefit-card">
-            <h3>SFT needs targeted instructions</h3>
-            <p>Instead of training only on raw text, we can create questions that force the model to answer from specific verified graph evidence.</p>
-          </div>
-        </div>
-        <p class="slide-body wide-body"><strong>The idea:</strong> use the KG as a structured data engine for creating Vietnamese QA and reasoning examples. This gives cleaner supervision, better coverage control, and less blind dependence on unstructured web text.</p>
-      </div>
-    </section>
+
 
     <!-- ===== ADDED: GRAPH SAMPLING FOR QUESTIONS ===== -->
     <section class="slide" data-slide="12">

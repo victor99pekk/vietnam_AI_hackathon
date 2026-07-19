@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="settings.css">
+  <style>.global-note{color:var(--muted);font-size:10px;margin-left:auto;opacity:.65}</style>
   <script src="https://unpkg.com/cytoscape@3.30.4/dist/cytoscape.min.js"></script>
 </head>
 <body>
@@ -41,7 +42,7 @@
           <div class="training-flow" aria-label="LLM training workflow"><span>Vietnamese sources</span><i>→</i><span>Knowledge graph</span><i>→</i><span>SFT examples</span><i>→</i><span>Fine-tuned LLM</span></div>
         </div>
         <div class="totals" id="globalTotals"><div><b id="gNodes">—</b><small>training entities</small></div><div><b id="gEdges">—</b><small>grounded relations</small></div><div><b id="gTriples">—</b><small>candidate facts</small></div><div class="coming">Fine-tuned model evaluation <strong>benchmarks coming soon</strong></div></div>
-        <div class="graph-layout"><div class="panel graph-wrap"><div id="globalGraph" class="graph"><div class="empty"><b>Loading global graph…</b></div></div><div class="legend">GRAPH TYPES <span><i class="person"></i>Person</span><span><i class="place"></i>Place</span><span><i class="org"></i>Organisation</span><span><i class="concept"></i>Concept</span><span><i class="chunk"></i>Chunk</span><span><i class="document"></i>Document</span></div></div><aside class="panel detail" id="globalDetail"><div class="empty"><b>Select a node or relationship</b><small>Evidence and linked facts appear here.</small></div></aside></div>
+        <div class="graph-layout"><div class="panel graph-wrap"><div id="globalGraph" class="graph"><div class="empty"><b>Loading global graph…</b></div></div><div class="legend">GRAPH TYPES <span><i class="person"></i>Person</span><span><i class="place"></i>Place</span><span><i class="org"></i>Organisation</span><span><i class="concept"></i>Concept</span><span><i class="chunk"></i>Chunk</span><span><i class="document"></i>Document</span><span id="globalNodeNote" class="global-note"></span></div></div><aside class="panel detail" id="globalDetail"><div class="empty"><b>Select a node or relationship</b><small>Evidence and linked facts appear here.</small></div></aside></div>
       </section>
 
       <section id="labView" class="view-panel hidden">

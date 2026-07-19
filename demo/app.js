@@ -85,7 +85,9 @@
       const result = normalize(await getJSON(`/api/graphs/global?limit=${limit}`)); state.global = result;
       $('#globalBadge').textContent = result.metadata?.source === 'sample' ? 'DEMO DATA' : 'LIVE NEO4J';
       $('#gNodes').textContent = result.stats.entities; $('#gEdges').textContent = result.stats.relations; $('#gTriples').textContent = result.stats.triples;
-      $('#globalFit').textContent = limit >= 5000 ? '⛶ Fit' : '⛶ Fit';
+      const note = $('#globalNodeNote');
+      if (note && limit < 5000) note.textContent = `Showing top ${result.stats.entities} most-connected nodes`;
+      else if (note) note.textContent = '';
       mount('global', result);
     } catch (error) { $('#globalBadge').textContent = 'UNAVAILABLE'; $('#globalGraph').innerHTML = '<div class="empty"><b>Global graph unavailable</b><small>Check the API connection.</small></div>'; }
   }
