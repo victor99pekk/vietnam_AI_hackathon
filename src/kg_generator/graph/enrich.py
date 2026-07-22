@@ -17,23 +17,28 @@ class GraphEnricher:
         """
         Enrich the graph with external data.
 
-        Currently a stub — will add:
+        Currently not implemented. Planned features:
         - Wikidata entity linking for disambiguated nodes
         - DBpedia SPARQL queries for additional attributes
         - Cross-graph entity alignment
+
+        See docs/architecture.md for the roadmap.
         """
-        logger.info("Graph enrichment: no external sources configured — returning graph as-is")
-        return graph
+        raise NotImplementedError(
+            "External KB enrichment is not yet implemented. "
+            "See src/kg_generator/graph/enrich.py for planned features."
+        )
 
     def link_wikidata(self, graph: nx.DiGraph) -> nx.DiGraph:
-        """Link entities to Wikidata Q-IDs and import relevant attributes. (Stub)"""
-        # TODO: Implement Wikidata API lookup
-        # from qwikidata.linked_data_interface import get_entity_dict_from_api
-        logger.warning("Wikidata linking not yet implemented")
-        return graph
+        """Link entities to Wikidata Q-IDs and import relevant attributes."""
+        raise NotImplementedError(
+            "Wikidata linking not yet implemented. "
+            "Planned: use qwikidata or direct Wikidata API to resolve entity names to Q-IDs."
+        )
 
     def link_dbpedia(self, graph: nx.DiGraph) -> nx.DiGraph:
-        """Query DBpedia for additional facts about entities. (Stub)"""
-        # TODO: Implement SPARQL queries
-        logger.warning("DBpedia linking not yet implemented")
-        return graph
+        """Query DBpedia for additional facts about entities."""
+        raise NotImplementedError(
+            "DBpedia linking not yet implemented. "
+            "Planned: SPARQL queries against dbpedia.org/sparql for additional attributes."
+        )

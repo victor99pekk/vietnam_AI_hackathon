@@ -2,8 +2,8 @@
 
 import json
 
-from evaluation.graphgen.qa_generator import GraphGenQAGenerator
-from evaluation.graphgen.subgraphs import (
+from kg_generator.evaluate.graphgen.qa_generator import GraphGenQAGenerator
+from kg_generator.evaluate.graphgen.subgraphs import (
     GraphGenSubgraphSampler,
     KnowledgeEdge,
     load_graphgen_kg,

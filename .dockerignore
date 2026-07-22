@@ -3,6 +3,7 @@
 __pycache__
 *.pyc
 tests
-data
-Html
 *.egg-info
+
+# Keep sample data for demo
+!data/samples/

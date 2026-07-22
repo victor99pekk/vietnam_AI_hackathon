@@ -40,16 +40,28 @@ method1:
     # Semantic diversity: minimum unique n-gram ratio (0-1) before flagging
     min_diversity_score: 0.4
 
+  # Step 1.4 — Source Document Fact Coverage
+  coverage:
+    # Set to false to skip this step
+    enabled: true
+    # How to extract facts: "heuristic" (regex, no API) or "llm" (future)
+    extraction_mode: heuristic
+    # Max number of unique facts to sample from the source documents
+    fact_sample_size: 30
+    # Paths to source documents (directories or individual files)
+    document_paths:
+      - data/
+
 # ── Method 2: Fine-Tuning Ablation Study ─────────────────────
 method2:
   # Model to fine-tune
-  base_model: Qwen/Qwen2.5-1.5B-Instruct
+  base_model: Qwen/Qwen2.5-0.5B-Instruct
   # Alternatives: Qwen/Qwen2.5-1.5B-Instruct, Qwen/Qwen2.5-7B-Instruct
 
   # LoRA configuration
   lora:
-    r: 16
-    alpha: 32
+    r: 8
+    alpha: 16
     dropout: 0.05
     target_modules:
       - q_proj
@@ -62,12 +74,14 @@ method2:
 
   # Training hyperparameters
   training:
-    max_seq_length: 2048
+    max_seq_length: 1024
     per_device_train_batch_size: 2
-    gradient_accumulation_steps: 4
-    learning_rate: 2.0e-4
-    max_steps: 300          # Adjust based on dataset size
-    warmup_steps: 30
+    gradient_accumulation_steps: 8
+    learning_rate: 1.0e-4
+    max_steps: -1           # Epoch-based training; do not force unequal step counts
+    num_train_epochs: 3
+    warmup_steps: 0
+    warmup_ratio: 0.05
     logging_steps: 10
     save_steps: 100
     eval_steps: 100
@@ -79,15 +93,20 @@ method2:
 
   # Dataset generation
   dataset_gen:
+    # Language for QA templates: "en" | "vi"
+    language: en
     test_split: 0.2
     max_hops: 3
-    # Token volume matching: cap raw-text dataset to KG dataset size
+    max_triples: 2000
+    max_paths_per_start: 20
+    max_pairs: 10000
+    # Match final B/C training files by estimated question+answer tokens.
     match_token_volume: true
 
   # Evaluation
   benchmark:
     # Number of test QA pairs to evaluate on
-    max_test_samples: 200
+    max_test_samples: 50
     # Metrics to compute
     metrics:
       - factual_accuracy
@@ -95,3 +114,22 @@ method2:
       - hallucination_rate
       - consistency
       - perplexity
+
+# ── GraphGen-style experiment ────────────────────────────────
+# Invoked explicitly with --method graphgen. It is not included in `all`, so
+# existing evaluation behaviour and API cost remain unchanged.
+graphgen:
+  subgraphs:
+    max_depth: 2
+    max_premise_tokens: 256
+    max_extra_edges: 5
+    edge_sampling: max_loss
+    bidirectional: true
+    max_subgraphs: 50
+  qa_generation:
+    model: deepseek-v4-pro
+    provider: deepseek
+    language: English
+    temperature: 0.2
+    max_tokens: 512
+    max_questions: 20

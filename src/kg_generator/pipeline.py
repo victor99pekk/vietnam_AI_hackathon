@@ -10,8 +10,8 @@ from typing import Any
 from kg_generator.config import GraphBackend, PipelineConfig, Language
 from kg_generator.dedup.near_dedup import Deduplicator
 from kg_generator.dedup.quality import QualityFilter
-from kg_generator.evaluate.metrics import QualityEvaluator
-from kg_generator.evaluate.structural_audit import StructuralAuditor
+from kg_generator.evaluate.data_eval.metrics import QualityEvaluator
+from kg_generator.evaluate.data_eval.structural_audit import StructuralAuditor
 from kg_generator.export.exporter import GraphExporter
 from kg_generator.extract.entities import Entity, EntityExtractor, EnglishExtractor, VietnameseExtractor
 from kg_generator.extract.graphgen import GraphGenExtractor
@@ -483,7 +483,10 @@ class Pipeline:
         # ── Stage 4: Build Graph ──
         logger.info("[5/5] Building graph...")
         graph = self.graph_builder.build(resolved_entities, all_triples)
-        graph = self.enricher.enrich(graph)
+        try:
+            graph = self.enricher.enrich(graph)
+        except NotImplementedError:
+            logger.info("Graph enrichment not yet implemented — skipping")
         extraction_metadata = self._extraction_metadata()
         graph.graph["language"] = self.config.language.value
         graph.graph["extraction_method"] = extraction_metadata["method"]

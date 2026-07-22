@@ -406,7 +406,7 @@ def download_graph(output_path: str | Path) -> None:
     """Download the full knowledge graph from Neo4j and save as knowledge_graph.json.
 
     Reconstructs the format expected by the evaluation pipeline
-    (evaluation/run_eval.py) from Neo4j. Reads connection details from
+    (kg_generator/evaluate/run_eval.py) from Neo4j. Reads connection details from
     .env (NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD).
 
     Use case: generate KG locally → upload to Neo4j → download on Colab for eval.

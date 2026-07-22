@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 
-SCRIPT_PATH = Path(__file__).parents[1] / "data" / "download_data" / "wikipedia.py"
+SCRIPT_PATH = Path(__file__).parents[1] / "scripts" / "download_wikipedia.py"
 SPEC = importlib.util.spec_from_file_location("wikipedia_downloader", SCRIPT_PATH)
 assert SPEC and SPEC.loader
 wikipedia_downloader = importlib.util.module_from_spec(SPEC)

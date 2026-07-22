@@ -6,11 +6,11 @@ dataset ?= small
 # Add new datasets here
 dataset_conf.small     := configs/debug.yaml
 dataset_input.small    := -i data/debugg_sample/alan_turing.jsonl -i data/debugg_sample/marie_curie.jsonl
-dataset_kg.small       := generated_KGs/output_debug/knowledge_graph.json
+dataset_kg.small       := data/samples/sample_kg.json
 
 dataset_conf.wikipedia     := configs/pipeline.yaml
 dataset_input.wikipedia    := -i data/wikipedia/
-dataset_kg.wikipedia       := generated_KGs/output/knowledge_graph.json
+dataset_kg.wikipedia       := data/samples/sample_kg.json
 
 # ── Eval overrides ──
 MODEL   ?= Qwen/Qwen2.5-0.5B-Instruct
@@ -135,7 +135,7 @@ download:
 
 ## scrape: Scrape Vietnamese web sources into JSONL  [scrape_seed=path] [scrape_count=50] [scrape_lang=vi] [scrape_time=600] [scrape_depth=2]
 scrape:
-	$(VENV) && python data/download_data/scraper.py \
+	$(VENV) && python scripts/scraper.py \
 		--seed-file $(scrape_seed) \
 		--max-pages $(scrape_count) \
 		--language $(scrape_lang) \
@@ -150,21 +150,21 @@ scrape-standalone: scrape
 
 ## scrape-llm-discover: Use LLM to extract article URLs from listing pages  [scrape_count=50]
 scrape-llm-discover:
-	$(VENV) && python data/download_data/llm_cleaner.py discover \
+	$(VENV) && python scripts/llm_cleaner.py discover \
 		data/scraped/vn_web_$(scrape_count)/vn_web_$(scrape_count).jsonl \
 		-o data/download_data/seeds/discovered_urls.txt
 
 ## scrape-llm-clean: Score, filter, and LLM-clean scraped pages  [scrape_count=50] [llm_min_score=5]
 llm_min_score ?= 5
 scrape-llm-clean:
-	$(VENV) && python data/download_data/llm_cleaner.py clean \
+	$(VENV) && python scripts/llm_cleaner.py clean \
 		data/scraped/vn_web_$(scrape_count)/vn_web_$(scrape_count).jsonl \
 		-o data/scraped/vn_web_$(scrape_count)/vn_web_$(scrape_count)_clean.jsonl \
 		--min-score $(llm_min_score)
 
 ## scrape-full: Scrape + LLM discover article URLs + re-scrape articles + LLM clean
 scrape-full: scrape scrape-llm-discover
-	$(VENV) && python data/download_data/scraper.py \
+	$(VENV) && python scripts/scraper.py \
 		--seed-file data/download_data/seeds/discovered_urls.txt \
 		--max-pages $$(wc -l < data/download_data/seeds/discovered_urls.txt) \
 		--language $(scrape_lang) \
@@ -172,7 +172,7 @@ scrape-full: scrape scrape-llm-discover
 		--depth 0 \
 		--discovery exact \
 		--output data/scraped/vn_web_articles/ && \
-	$(VENV) && python data/download_data/llm_cleaner.py clean \
+	$(VENV) && python scripts/llm_cleaner.py clean \
 		data/scraped/vn_web_articles/vn_web_articles.jsonl \
 		-o data/scraped/vn_web_articles/vn_web_articles_clean.jsonl \
 		--min-score 3
@@ -181,7 +181,7 @@ scrape-full: scrape scrape-llm-discover
 download-wikipedia:
 	@vietnam_flag=""; \
 	if [ "$(wiki_lang)" = "vi" ]; then vietnam_flag="--vietnam-only"; fi; \
-	$(VENV) && uv pip install -e ".[data]" && python data/download_data/wikipedia.py \
+	$(VENV) && uv pip install -e ".[data]" && python scripts/download_wikipedia.py \
 		--language $(wiki_lang) \
 		--count $(wiki_count) \
 		$$vietnam_flag \
@@ -246,15 +246,15 @@ neo4j-clear:
 
 ## neo4j-eval-method1: Run structural audit directly against Neo4j (no JSON download, no RAM limit)
 neo4j-eval-method1:
-	$(VENV) && python evaluation/run_eval.py --method 1 --kg $(dataset_kg.$(dataset)) --neo4j -o output_eval/$(dataset)
+	$(VENV) && python -m kg_generator.evaluate.run_eval --method 1 --kg $(dataset_kg.$(dataset)) --neo4j -o output_eval/$(dataset)
 
 ## plots: Generate visual plots from evaluation results  [dataset=small|wikipedia]
 plots:
-	$(VENV) && python -m generate_plots
+	$(VENV) && python -m kg_generator.evaluate.plots
 
 ## LLM_plots: Generate model comparison plots from ablation results (Method 2)
 LLM_plots:
-	$(VENV) && python -m generate_plots --method 2 --ablation output_eval/small_data/method2/method2_results.json --output output_eval/small_data/method2
+	$(VENV) && python -m kg_generator.evaluate.plots --method 2 --ablation output_eval/small_data/method2/method2_results.json --output output_eval/small_data/method2
 
 ## install: Set up the project and install dependencies
 install:
@@ -279,7 +279,7 @@ eval-install-model:
 
 ## eval-method1: Run Method 1 — SFT data quality assessment  [dataset=small|wikipedia]
 eval-method1:
-	$(VENV) && python evaluation/run_eval.py --method 1 --kg $(dataset_kg.$(dataset))
+	$(VENV) && python -m kg_generator.evaluate.run_eval --method 1 --kg $(dataset_kg.$(dataset))
 
 ## eval-method2: Run Method 2  [model=a|b|c|all] [dataset=small|wikipedia] [MODEL=...] [DEVICE=cpu|cuda]
 eval-method2:
@@ -289,7 +289,7 @@ eval-method2:
 		c) target="-t raw" ;; \
 		*) target="-t both" ;; \
 	esac; \
-	$(VENV) && python evaluation/run_eval.py --method 2 --kg $(dataset_kg.$(dataset)) $$target --model $(MODEL) --device $(DEVICE)
+	$(VENV) && python -m kg_generator.evaluate.run_eval --method 2 --kg $(dataset_kg.$(dataset)) $$target --model $(MODEL) --device $(DEVICE)
 
 ## eval-method2-gpu: Run Method 2 with GPU optimization (7B models, mixed precision)  [model=a|b|c|all] [dataset=small|wikipedia]
 eval-method2-gpu:
@@ -299,20 +299,20 @@ eval-method2-gpu:
 		c) target="-t raw" ;; \
 		*) target="-t both" ;; \
 	esac; \
-	$(VENV) && python evaluation/run_eval.py --method 2 --kg $(dataset_kg.$(dataset)) $$target --model $(MODEL) --gpu
+	$(VENV) && python -m kg_generator.evaluate.run_eval --method 2 --kg $(dataset_kg.$(dataset)) $$target --model $(MODEL) --gpu
 
 ## eval-graphgen: Run GraphGen-style subgraph + QA generation [dataset=small|wikipedia]
 eval-graphgen:
-	$(VENV) && python evaluation/run_eval.py --method graphgen --kg $(dataset_kg.$(dataset))
+	$(VENV) && python -m kg_generator.evaluate.run_eval --method graphgen --kg $(dataset_kg.$(dataset))
 
 ## eval-all: Run both evaluation methods end-to-end  [dataset=small|wikipedia] [MODEL=...]
 eval-all:
-	$(VENV) && python evaluation/run_eval.py --method all --kg $(dataset_kg.$(dataset)) --model $(MODEL)
+	$(VENV) && python -m kg_generator.evaluate.run_eval --method all --kg $(dataset_kg.$(dataset)) --model $(MODEL)
 
 ## eval-local: Run Method 1 + generate QA datasets — everything you can do on a Mac CPU  [dataset=small|wikipedia]
 eval-local:
-	$(VENV) && python evaluation/run_eval.py --method all --kg $(dataset_kg.$(dataset)) --skip-finetune --skip-benchmark
+	$(VENV) && python -m kg_generator.evaluate.run_eval --method all --kg $(dataset_kg.$(dataset)) --skip-finetune --skip-benchmark
 
 ## eval-datasets: Generate QA datasets only (no evaluation, no fine-tuning) — for Colab  [dataset=small|wikipedia]
 eval-datasets:
-	$(VENV) && python evaluation/run_eval.py --method 2 --kg $(dataset_kg.$(dataset)) --skip-finetune --skip-benchmark
+	$(VENV) && python -m kg_generator.evaluate.run_eval --method 2 --kg $(dataset_kg.$(dataset)) --skip-finetune --skip-benchmark

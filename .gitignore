@@ -19,15 +19,23 @@ env/
 .env
 htmlcov/
 
-# Output
+# Output & generated artifacts
 output/
+output_eval/
+generated_KGs/
 data/external/
+
+# deepeval cache
+.deepeval/
+
+# Presentation PDFs (keep only the fitted slides)
+*.pdf
+!presentation/presentation_slides_fitted.pdf
 
 # OS
 .DS_Store
 Thumbs.db
 
-saved_sessions/armon/friday_2138.md
-.mongo/
-.mongo/
+# Session artifacts
 saved_sessions/
+.mongo/

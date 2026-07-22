@@ -766,7 +766,7 @@ def neo4j_download(
     Typical workflow:
       1. Local:  kg-gen run ... && kg-gen neo4j-upload -o output/
       2. Colab:  kg-gen neo4j-download -o generated_KGs/output/
-      3. Colab:  python evaluation/run_eval.py --method all --kg generated_KGs/output/knowledge_graph.json
+      3. Colab:  python -m kg_generator.evaluate.run_eval --method all --kg generated_KGs/output/knowledge_graph.json
     """
     import os
 
