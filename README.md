@@ -12,11 +12,7 @@ Turn unstructured text into structured knowledge graphs, then into high-quality 
 <!-- - [Polygraph: KG-Grounded SFT Data for LLMs](#polygraph-kg-grounded-sft-data-for-llms)
   - [Contents](#contents)
     - [About the Project](#about-the-project) -->
-  - __[Quick Start](#quick-start):__ [Scraping](#scraping), [Knowledge Graph Generation](#knowledge-graph-generation), [Fine-Tuning](#fine-tuning)
-  - __[Results](#results)__
-  - __[Project Structure](#project-structure)__
-  - __[Contributing](#contributing)__
-  - __[License](#license)__
+__(i) [Quick Start](#quick-start):__ [Scraping](#scraping), [Knowledge Graph Generation](#knowledge-graph-generation), [Fine-Tuning](#fine-tuning). __(ii) [Results](#results)__. __ (iii) [Project Structure](#project-structure)__
 
 ### About the Project
 
