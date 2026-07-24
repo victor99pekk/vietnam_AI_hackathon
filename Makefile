@@ -2,138 +2,119 @@ SHELL   := /bin/bash
 VENV    := source .venv/bin/activate
 dataset ?= small
 
-# ── Dataset configs ──
-# Add new datasets here
-dataset_conf.small     := configs/debug.yaml
-dataset_input.small    := -i data/debugg_sample/alan_turing.jsonl -i data/debugg_sample/marie_curie.jsonl
-dataset_kg.small       := data/samples/sample_kg.json
+# ═══════════════════════════════════════════════════════════
+# Config & Variables
+# ═══════════════════════════════════════════════════════════
 
-dataset_conf.wikipedia     := configs/pipeline.yaml
-dataset_input.wikipedia    := -i data/wikipedia/
-dataset_kg.wikipedia       := data/samples/sample_kg.json
+# ── Dataset presets ──
+dataset_conf.small      := configs/debug.yaml
+dataset_input.small     := -i data/debugg_sample/alan_turing.jsonl -i data/debugg_sample/marie_curie.jsonl
+dataset_kg.small        := data/samples/sample_kg.json
 
-# ── Eval overrides ──
-MODEL   ?= Qwen/Qwen2.5-0.5B-Instruct
-model   ?= all
-DEVICE  ?= cpu
-wiki_count ?= 100
-wiki_lang  ?= en
+dataset_conf.wikipedia   := configs/pipeline.yaml
+dataset_input.wikipedia  := -i data/wikipedia/
+dataset_kg.wikipedia     := data/samples/sample_kg.json
+
+# ── Overrides ──
+MODEL        ?= Qwen/Qwen2.5-0.5B-Instruct
+variant      ?= both
+DEVICE       ?= cpu
+wiki_count   ?= 100
+wiki_lang    ?= en
 scrape_seed  ?= data/download_data/seeds/vietnamese_sources.txt
 scrape_count ?= 50
 scrape_lang  ?= vi
 scrape_time  ?= 600
 scrape_depth ?= 2
 
-.PHONY: help test ingest upload download download-wikipedia scrape scrape-standalone new-graph add plots LLM_plots install clean \
-        neo4j-new-graph neo4j-add neo4j-add-file neo4j-clear \
-        neo4j-eval-method1 \
-        eval-install eval-install-model eval-method1 eval-method2 eval-graphgen eval-all \
-        eval-local eval-datasets
+.PHONY: help test install clean
+.PHONY: scrape scrape-llm-discover scrape-llm-clean scrape-full
+.PHONY: download-wikipedia
+.PHONY: ingest upload download new-graph add
+.PHONY: neo4j-new-graph neo4j-add neo4j-add-file neo4j-clear neo4j-eval-method1
+.PHONY: eval-install eval-install-model eval eval-finetune eval-graphgen eval-full eval-datasets
+.PHONY: plots plots-llm
 
 help:
-	@echo "Usage: make <target> [dataset=<name>] [MODEL=<model>]"
+	@echo "Usage: make <target> [dataset=small|wikipedia] [DEVICE=cpu|cuda] [MODEL=...]"
 	@echo ""
-	@echo "── Pipeline (networkx — in-memory, no external services) ─"
-	@echo "   test             Run the test suite"
-	@echo "   ingest           Run the KG generation pipeline"
-	@echo "   new-graph        Build KG from data and upload to Neo4j [dataset=small|wikipedia]"
-	@echo "   add              Add all .jsonl files from data/add/ to the Neo4j graph"
-	@echo "   upload           Replace Neo4j contents with the generated graph"
-	@echo "   download         Download graph from Neo4j → knowledge_graph.json"
-	@echo "   download-wikipedia  Download Wikipedia articles as JSONL [wiki_count=100] [wiki_lang=en]"
-	@echo "   install          Set up the project and install dependencies"
+	@echo "── Setup ────────────────────────────────────────────"
+	@echo "   install          Create venv and install all dependencies"
 	@echo "   clean            Remove generated output folders"
 	@echo ""
-	@echo "── Pipeline (neo4j — on-disk, incremental, scales beyond RAM) ─"
-	@echo "   neo4j-new-graph  Build KG directly in Neo4j (clears existing) [dataset=small|wikipedia]"
-	@echo "   neo4j-add        Incrementally add files from data/add/ to Neo4j"
+	@echo "── Data Acquisition ─────────────────────────────────"
+	@echo "   scrape           Scrape web pages into JSONL (Vietnamese by default)"
+	@echo "   scrape-llm-discover  Use LLM to extract article URLs from listing pages"
+	@echo "   scrape-llm-clean     Score, filter, and LLM-clean scraped pages"
+	@echo "   scrape-full      Full scrape → discover → re-scrape → clean"
+	@echo "   download-wikipedia   Download Wikipedia articles [wiki_count=100] [wiki_lang=en|vi]"
+	@echo ""
+	@echo "── Pipeline (NetworkX — in-memory, no external services) ─"
+	@echo "   ingest           Run the full KG generation pipeline"
+	@echo "   upload           Upload generated graph to Neo4j"
+	@echo "   download         Download graph from Neo4j → JSON"
+	@echo "   new-graph        Build KG + upload to Neo4j (clears existing)"
+	@echo "   add              Add data/add/*.jsonl files to Neo4j"
+	@echo ""
+	@echo "── Pipeline (Neo4j — direct-to-database, scales beyond RAM) ─"
+	@echo "   neo4j-new-graph  Build KG directly in Neo4j (clears existing)"
+	@echo "   neo4j-add        Incrementally add data/add/*.jsonl to Neo4j"
 	@echo "   neo4j-add-file   Add a single file to Neo4j [FILE=path/to/file.jsonl]"
 	@echo "   neo4j-clear      Delete everything in Neo4j"
-	@echo "   neo4j-eval-method1  Run structural audit directly against Neo4j [dataset=small|wikipedia]"
+	@echo "   neo4j-eval-method1  Run structural audit directly against Neo4j"
 	@echo ""
-	@echo "── Visualization ────────────────────────────────────────"
+	@echo "── Evaluation ───────────────────────────────────────"
+	@echo "   eval-install     Install data quality deps (deepeval, sentence-transformers)"
+	@echo "   eval-install-model   Install fine-tuning deps (torch, transformers, peft)"
+	@echo ""
+	@echo "   eval             KG health check + SFT quality scoring → \"Is my graph any good?\""
+	@echo "   eval-datasets    Generate QA training pairs → \"Give me training data\""
+	@echo "   eval-finetune    Train & benchmark KG vs raw models [variant=kg|raw|both] → \"Prove KG data works\""
+	@echo "   eval-graphgen    Subgraph + multi-hop QA generation"
+	@echo "   eval-full        Quality → datasets → finetune → benchmark → \"Do everything\""
+	@echo ""
+	@echo "── Visualization ────────────────────────────────────"
 	@echo "   plots            Generate PNG plots from evaluation results"
-	@echo "   LLM_plots        Generate model comparison plots from ablation results"
+	@echo "   plots-llm        Generate model comparison plots from ablation results"
 	@echo ""
-	@echo "── Evaluation ──────────────────────────────────────────"
+	@echo "── Dev ──────────────────────────────────────────────"
+	@echo "   test             Run the test suite"
 	@echo ""
-	@echo "   data_eval — SFT data quality check (fast, ~seconds, runs locally)"
-	@echo "     → audits graph health (orphans, density, schema, dups)"
-	@echo "     → generates & scores SFT training pairs via deepeval + DeepSeek"
+	@echo "── Variables ────────────────────────────────────────"
+	@echo "   dataset   = small | wikipedia           (default: small)"
+	@echo "   variant   = kg | raw | both             (default: both)"
+	@echo "   MODEL     = Qwen/Qwen2.5-{0.5B,1.5B,3B,7B}-Instruct"
+	@echo "   DEVICE    = cpu | cuda                  (default: cpu)"
 	@echo ""
-	@echo "   model_eval — Fine-tuning ablation study (CPU or GPU)"
-	@echo "     → trains Model B (KG-structured QA pairs)"
-	@echo "     → trains Model C (raw-text QA pairs)"
-	@echo "     → benchmarks both vs. base Qwen2.5 (Model A)"
-	@echo "     → CPU: default, small model (0.5B). GPU: optimized with large model (7B)"
-	@echo ""
-	@echo "   eval-install           Install data_eval deps (deepeval, sentence-transformers)"
-	@echo "   eval-install-model     Install model_eval deps (torch, transformers, peft — for fine-tuning)"
-	@echo "   eval-method1           Run data_eval only"
-	@echo "   eval-method2           Run model_eval [model=b|c|all] (CPU by default, DEVICE=cuda for GPU)"
-	@echo "   eval-method2-gpu       Run model_eval with GPU optimization (7B models, mixed precision, faster)"
-	@echo "   eval-graphgen          Build audited k-hop subgraphs and multi-hop QA"
-	@echo "   eval-local             Run data_eval + QA dataset generation (CPU, fast)"
-	@echo "   eval-datasets          Generate QA datasets only (no fine-tuning, no benchmark)"
-	@echo "   eval-all               Run data_eval + model_eval end-to-end"
-	@echo ""
-	@echo "── Variables ───────────────────────────────────────────"
-	@echo "   dataset  = small | wikipedia          (default: small)"
-	@echo "   model    = b | c | all                (default: all)"
-	@echo "              b = KG-managed (Model B)"
-	@echo "              c = raw-text (Model C)"
-	@echo "              a = benchmark only (skip fine-tuning)"
-	@echo "   MODEL    = Qwen/Qwen2.5-{0.5B,1.5B,3B,7B}-Instruct"
-	@echo "             (default: Qwen2.5-0.5B — small enough for CPU)"
-	@echo "   DEVICE   = cpu | cuda                 (default: cpu)"
-	@echo "   wiki_count = 100                      (articles to download)"
-	@echo "   wiki_lang  = en | vi                  (Wikipedia language)"
-	@echo "   scrape_count = 50                     (pages to scrape)"
-	@echo "   scrape_lang  = vi                     (scraping language)"
-	@echo "   scrape_time  = 600                    (max seconds, 0=no limit)"
-	@echo "   scrape_depth = 2                      (crawl link depth, 1=landing pages only)"
-	@echo "   scrape_seed  = data/download_data/seeds/vietnamese_sources.txt"
-	@echo ""
-	@echo "── Examples ────────────────────────────────────────────"
-	@echo "   # Classic pipeline (networkx in-memory → JSON → upload)"
-	@echo "   make scrape                                       # scrape 50 pages from Vietnamese sources"
-	@echo "   make scrape scrape_count=100 scrape_time=300       # 100 pages or 5 min"
-	@echo "   make new-graph dataset=wikipedia                  # build KG + upload to Neo4j"
-	@echo "   make add                                          # add data/add/*.jsonl to Neo4j"
-	@echo ""
-	@echo "   # Neo4j-native pipeline (direct-to-database, scales beyond RAM)"
-	@echo "   make neo4j-new-graph dataset=wikipedia            # build KG directly in Neo4j"
-	@echo "   make neo4j-add                                    # incrementally add data/add/*.jsonl"
-	@echo "   make neo4j-add-file FILE=data/new_article.jsonl   # add a single file"
-	@echo "   make neo4j-eval-method1 dataset=small             # audit graph directly in Neo4j"
-	@echo ""
-	@echo "   make download-wikipedia wiki_count=500            # download 500 en articles"
-	@echo "   make eval-method1                                 # quick KG health check"
-	@echo "   make eval-local                                  # full local eval: audit + QA datasets"
-	@echo "   make eval-datasets                               # generate QA datasets for Colab"
-	@echo "   make eval-method2 model=b                        # fine-tune KG model (CPU)"
-	@echo "   make eval-method2 model=b DEVICE=cuda             # fine-tune KG model (GPU)"
-	@echo "   make eval-method2 model=b MODEL=Qwen/Qwen2.5-1.5B-Instruct"
+	@echo "── Quick Start ──────────────────────────────────────"
+	@echo "   make install                                  # one-time setup"
+	@echo "   make test                                     # verify everything works"
+	@echo "   make eval                                     # quick KG quality check"
+	@echo "   make eval-datasets                            # generate QA pairs for fine-tuning"
+	@echo "   make eval-finetune variant=kg                 # prove KG data improves models (CPU)"
+	@echo "   make eval-finetune variant=kg DEVICE=cuda     # same, on GPU"
+	@echo "   make eval-full                                # run everything end-to-end"
 
-## test: Run the test suite
-test:
-	$(VENV) && python -m pytest tests/ -v
+# ═══════════════════════════════════════════════════════════
+# Setup
+# ═══════════════════════════════════════════════════════════
 
-## ingest: Run the pipeline  [dataset=small|wikipedia]
-ingest:
-	$(VENV) && uv pip install -e ".[curation,neo4j,data,mongo,embeddings]" && \
-	python -m spacy download en_core_web_lg && \
-	kg-gen run -v -c $(dataset_conf.$(dataset)) $(dataset_input.$(dataset)) -o ./generated_KGs/output_$(dataset)
+## install: Set up the project and install dependencies
+install:
+	uv venv; \
+	$(VENV) && uv pip install -e ".[curation,dev,neo4j,data,mongo,embeddings]" && \
+	python -m spacy download en_core_web_sm && \
+	python -m spacy download en_core_web_lg
 
-## upload: Clear Neo4j, then upload the generated graph  [dataset=small|wikipedia]
-upload:
-	$(VENV) && kg-gen neo4j-upload -o ./generated_KGs/output_$(dataset) --clear
+## clean: Remove generated output folders
+clean:
+	rm -rf generated_KGs/
 
-## download: Download the graph from Neo4j (e.g., for Colab evaluation)  [dataset=small|wikipedia]
-download:
-	$(VENV) && kg-gen neo4j-download -o ./generated_KGs/output_$(dataset)/knowledge_graph.json
+# ═══════════════════════════════════════════════════════════
+# Data Acquisition
+# ═══════════════════════════════════════════════════════════
 
-## scrape: Scrape Vietnamese web sources into JSONL  [scrape_seed=path] [scrape_count=50] [scrape_lang=vi] [scrape_time=600] [scrape_depth=2]
+## scrape: Scrape web pages into JSONL  [scrape_seed=path] [scrape_count=50] [scrape_lang=vi] [scrape_depth=2]
 scrape:
 	$(VENV) && python scripts/scraper.py \
 		--seed-file $(scrape_seed) \
@@ -144,9 +125,6 @@ scrape:
 		--min-unique-chars 120 \
 		--discovery auto \
 		--output data/scraped/vn_web_$(scrape_count)/
-
-## scrape-standalone: Run scraper directly (alias for scrape — same behavior)
-scrape-standalone: scrape
 
 ## scrape-llm-discover: Use LLM to extract article URLs from listing pages  [scrape_count=50]
 scrape-llm-discover:
@@ -187,6 +165,25 @@ download-wikipedia:
 		$$vietnam_flag \
 		--output data/wikipedia/wikipedia_$(wiki_lang)_$(wiki_count).jsonl
 
+# ═══════════════════════════════════════════════════════════
+# Pipeline (NetworkX — in-memory)
+# ═══════════════════════════════════════════════════════════
+
+## ingest: Run the full KG generation pipeline  [dataset=small|wikipedia]
+ingest:
+	$(VENV) && kg-gen run -v \
+		-c $(dataset_conf.$(dataset)) \
+		$(dataset_input.$(dataset)) \
+		-o ./generated_KGs/output_$(dataset)
+
+## upload: Clear Neo4j, then upload the generated graph  [dataset=small|wikipedia]
+upload:
+	$(VENV) && kg-gen neo4j-upload -o ./generated_KGs/output_$(dataset) --clear
+
+## download: Download the graph from Neo4j → JSON  [dataset=small|wikipedia]
+download:
+	$(VENV) && kg-gen neo4j-download -o ./generated_KGs/output_$(dataset)/knowledge_graph.json
+
 ## new-graph: Build KG from data and upload to Neo4j (clears existing graph)  [dataset=small|wikipedia]
 new-graph: ingest upload
 
@@ -208,7 +205,7 @@ add:
 		-o ./generated_KGs/output_$(dataset)_add
 
 # ═══════════════════════════════════════════════════════════
-# Neo4j-native pipeline (direct-to-database, scales beyond RAM)
+# Pipeline (Neo4j — direct-to-database)
 # ═══════════════════════════════════════════════════════════
 
 ## neo4j-new-graph: Build KG directly in Neo4j (clears existing graph first)  [dataset=small|wikipedia]
@@ -246,73 +243,62 @@ neo4j-clear:
 
 ## neo4j-eval-method1: Run structural audit directly against Neo4j (no JSON download, no RAM limit)
 neo4j-eval-method1:
-	$(VENV) && python -m kg_generator.evaluate.run_eval --method 1 --kg $(dataset_kg.$(dataset)) --neo4j -o output_eval/$(dataset)
+	$(VENV) && python -m kg_generator.evaluate.run_eval --method quality --kg $(dataset_kg.$(dataset)) --neo4j -o output_eval/$(dataset)
 
-## plots: Generate visual plots from evaluation results  [dataset=small|wikipedia]
-plots:
-	$(VENV) && python -m kg_generator.evaluate.plots
+# ═══════════════════════════════════════════════════════════
+# Evaluation
+# ═══════════════════════════════════════════════════════════
 
-## LLM_plots: Generate model comparison plots from ablation results (Method 2)
-LLM_plots:
-	$(VENV) && python -m kg_generator.evaluate.plots --method 2 --ablation output_eval/small_data/method2/method2_results.json --output output_eval/small_data/method2
-
-## install: Set up the project and install dependencies
-install:
-	uv venv; \
-	$(VENV) && uv pip install -e ".[curation,dev,neo4j,data,mongo,embeddings]" && \
-	python -m spacy download en_core_web_sm && \
-	python -m spacy download en_core_web_lg
-
-## clean: Remove generated output folders
-clean:
-	rm -rf generated_KGs/
-
-# ── Evaluation ────────────────────────────────────────────────
-
-## eval-install: Install data_eval deps (deepeval + sentence-transformers)
+## eval-install: Install data quality deps (deepeval + sentence-transformers)
 eval-install:
 	$(VENV) && uv pip install -e ".[eval-data]"
 
-## eval-install-model: Install model_eval deps (transformers, peft, accelerate — for fine-tuning)
+## eval-install-model: Install fine-tuning deps (torch, transformers, peft)
 eval-install-model:
 	$(VENV) && uv pip install -e ".[eval-model]"
 
-## eval-method1: Run Method 1 — SFT data quality assessment  [dataset=small|wikipedia]
-eval-method1:
-	$(VENV) && python -m kg_generator.evaluate.run_eval --method 1 --kg $(dataset_kg.$(dataset))
+## eval: KG health check + SFT quality scoring  [dataset=small|wikipedia]
+eval:
+	$(VENV) && python -m kg_generator.evaluate.run_eval --method quality --kg $(dataset_kg.$(dataset))
 
-## eval-method2: Run Method 2  [model=a|b|c|all] [dataset=small|wikipedia] [MODEL=...] [DEVICE=cpu|cuda]
-eval-method2:
-	@case "$(model)" in \
-		a) target="--skip-finetune" ;; \
-		b) target="-t kg" ;; \
-		c) target="-t raw" ;; \
-		*) target="-t both" ;; \
+## eval-finetune: Train & benchmark KG vs raw models  [variant=kg|raw|both] [dataset=small|wikipedia] [MODEL=...] [DEVICE=cpu|cuda]
+eval-finetune:
+	@case "$(variant)" in \
+		benchmark) target="--skip-finetune" ;; \
+		kg)        target="-t kg" ;; \
+		raw)       target="-t raw" ;; \
+		*)         target="-t both" ;; \
 	esac; \
-	$(VENV) && python -m kg_generator.evaluate.run_eval --method 2 --kg $(dataset_kg.$(dataset)) $$target --model $(MODEL) --device $(DEVICE)
+	$(VENV) && python -m kg_generator.evaluate.run_eval --method ablation --kg $(dataset_kg.$(dataset)) $$target --model $(MODEL) --device $(DEVICE)
 
-## eval-method2-gpu: Run Method 2 with GPU optimization (7B models, mixed precision)  [model=a|b|c|all] [dataset=small|wikipedia]
-eval-method2-gpu:
-	@case "$(model)" in \
-		a) target="--skip-finetune" ;; \
-		b) target="-t kg" ;; \
-		c) target="-t raw" ;; \
-		*) target="-t both" ;; \
-	esac; \
-	$(VENV) && python -m kg_generator.evaluate.run_eval --method 2 --kg $(dataset_kg.$(dataset)) $$target --model $(MODEL) --gpu
-
-## eval-graphgen: Run GraphGen-style subgraph + QA generation [dataset=small|wikipedia]
+## eval-graphgen: Subgraph + multi-hop QA generation  [dataset=small|wikipedia]
 eval-graphgen:
 	$(VENV) && python -m kg_generator.evaluate.run_eval --method graphgen --kg $(dataset_kg.$(dataset))
 
-## eval-all: Run both evaluation methods end-to-end  [dataset=small|wikipedia] [MODEL=...]
-eval-all:
-	$(VENV) && python -m kg_generator.evaluate.run_eval --method all --kg $(dataset_kg.$(dataset)) --model $(MODEL)
+## eval-full: Quality → datasets → finetune → benchmark  [dataset=small|wikipedia] [MODEL=...] [DEVICE=cpu|cuda]
+eval-full:
+	$(VENV) && python -m kg_generator.evaluate.run_eval --method full --kg $(dataset_kg.$(dataset)) --model $(MODEL) --device $(DEVICE)
 
-## eval-local: Run Method 1 + generate QA datasets — everything you can do on a Mac CPU  [dataset=small|wikipedia]
-eval-local:
-	$(VENV) && python -m kg_generator.evaluate.run_eval --method all --kg $(dataset_kg.$(dataset)) --skip-finetune --skip-benchmark
-
-## eval-datasets: Generate QA datasets only (no evaluation, no fine-tuning) — for Colab  [dataset=small|wikipedia]
+## eval-datasets: Generate QA training pairs only (no evaluation, no fine-tuning)  [dataset=small|wikipedia]
 eval-datasets:
-	$(VENV) && python -m kg_generator.evaluate.run_eval --method 2 --kg $(dataset_kg.$(dataset)) --skip-finetune --skip-benchmark
+	$(VENV) && python -m kg_generator.evaluate.run_eval --method ablation --kg $(dataset_kg.$(dataset)) --skip-finetune --skip-benchmark
+
+# ═══════════════════════════════════════════════════════════
+# Visualization
+# ═══════════════════════════════════════════════════════════
+
+## plots: Generate PNG plots from evaluation results  [dataset=small|wikipedia]
+plots:
+	$(VENV) && python -m kg_generator.evaluate.plots
+
+## plots-llm: Generate model comparison plots from ablation results (Method 2)
+plots-llm:
+	$(VENV) && python -m kg_generator.evaluate.plots --method 2 --ablation output_eval/small_data/method2/method2_results.json --output output_eval/small_data/method2
+
+# ═══════════════════════════════════════════════════════════
+# Dev
+# ═══════════════════════════════════════════════════════════
+
+## test: Run the test suite
+test:
+	$(VENV) && python -m pytest tests/ -v

@@ -29,35 +29,42 @@ For Docker:
 docker build -t kg-gen .
 ```
 
-## CLI
+## Quick Start
 
 All commands are driven through `make`. Run `make help` for the full list.
 
 ```bash
-make ingest                         # Run the full KG generation pipeline
-make new-graph dataset=wikipedia    # Build KG and upload to Neo4j
-make neo4j-new-graph                # Build KG directly in Neo4j (scales beyond RAM)
-make eval-method1                   # Quick KG health check
-make eval-all                       # Full evaluation end-to-end
+make install                        # One-time: set up venv and all dependencies
+make test                           # Verify everything works
+
+# Data acquisition
+make scrape                         # Scrape web pages into JSONL
 make download-wikipedia wiki_lang=vi wiki_count=500
-make test                           # Run the test suite
+
+# Pipeline
+make ingest                         # Run the full KG generation pipeline
+make new-graph dataset=wikipedia    # Build KG and upload to Neo4j (classic)
+make neo4j-new-graph                # Build KG directly in Neo4j (scales beyond RAM)
+
+# Evaluation
+make eval                           # "Is my graph any good?" — quality check
+make eval-datasets                  # "Give me training data" — generate QA pairs
+make eval-finetune model=b DEVICE=cuda  # "Prove KG data works" — train & benchmark
+make eval-full                      # "Do everything" — quality → datasets → finetune
 ```
 
 See [docs/usage.md](docs/usage.md) for the full command reference.
 
 ## Evaluation
 
-The evaluation suite provides two complementary assessments:
+The evaluation suite answers three questions about your training data:
 
-| Method | What it measures | Runtime |
-|---|---|---|
-| **Method 1 — Data Quality** | Graph health (orphans, density, schema, duplicates), SFT pair quality (faithfulness, relevancy), fact coverage | Seconds (CPU) |
-| **Method 2 — Model Ablation** | Does KG-structured training data produce a better model? Fine-tunes base → KG-managed → raw-text and benchmarks all three | Hours (GPU recommended) |
-
-```bash
-make eval-method1                   # Quick data quality check
-make eval-all                       # Full ablation study
-```
+| Command | Question it answers | What it does | Runtime |
+|---|---|---|---|
+| `make eval` | Is my graph any good? | Structural audit, SFT pair quality, fact coverage | Seconds (CPU) |
+| `make eval-datasets` | Give me training data | Generate QA pairs from the knowledge graph | Minutes (CPU) |
+| `make eval-finetune variant=kg` | Prove KG data works | Fine-tune base → KG-managed → raw-text and benchmark all three | Hours (GPU recommended) |
+| `make eval-full` | Do everything | Quality → datasets → finetune → benchmark end-to-end | Hours (GPU recommended) |
 
 See [docs/evaluation.md](docs/evaluation.md) for details.
 

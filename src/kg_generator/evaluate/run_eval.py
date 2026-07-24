@@ -2,30 +2,31 @@
 """
 KG → LLM Evaluation Pipeline Orchestrator
 
-Runs both evaluation methods:
-  Method 1: SFT Data Quality Assessment
-    1.1 — Structural audit (graph health)
-    1.2 — SFT pair generation (LLM-powered)
-    1.3 — SFT quality evaluation (deepeval or heuristic)
+Runs evaluation modes:
+  quality  — SFT Data Quality Assessment
+    • Structural audit (graph health)
+    • SFT pair generation (LLM-powered)
+    • SFT quality evaluation (deepeval or heuristic)
 
-  Method 2: Fine-Tuning Ablation Study
-    2.1 — Dataset generation (KG-structured QA vs. raw-text QA)
-    2.2 — LoRA fine-tuning (Unsloth or transformers+PEFT)
-    2.3 — Ablation benchmark (A/B/C model comparison)
-  GraphGen: Paper-inspired subgraph organization and multi-hop QA synthesis
+  ablation — Fine-Tuning Ablation Study
+    • Dataset generation (KG-structured QA vs. raw-text QA)
+    • LoRA fine-tuning (Unsloth or transformers+PEFT)
+    • Ablation benchmark (A/B/C model comparison)
+
+  graphgen — Paper-inspired subgraph organization and multi-hop QA synthesis
 
 Usage:
-    # Method 1 only (fast check)
-    python scripts/run_eval.py --method 1 --kg output/knowledge_graph.json
+    # Quality check only (fast)
+    python scripts/run_eval.py --method quality --kg output/knowledge_graph.json
 
-    # Method 2 only (requires fine-tuning)
-    python scripts/run_eval.py --method 2 --kg output/knowledge_graph.json
+    # Ablation study only (requires fine-tuning)
+    python scripts/run_eval.py --method ablation --kg output/knowledge_graph.json
 
     # Everything
-    python scripts/run_eval.py --method all --kg output/knowledge_graph.json
+    python scripts/run_eval.py --method full --kg output/knowledge_graph.json
 
     # With custom config
-    python scripts/run_eval.py --method all --kg output/knowledge_graph.json -c configs/eval_override.yaml
+    python scripts/run_eval.py --method full --kg output/knowledge_graph.json -c configs/eval_override.yaml
 """
 
 import argparse
@@ -790,18 +791,18 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python scripts/run_eval.py --method 1 --kg output/knowledge_graph.json
-  python scripts/run_eval.py --method 2 --kg output/knowledge_graph.json
-  python scripts/run_eval.py --method all --kg output/knowledge_graph.json
+  python scripts/run_eval.py --method quality --kg output/knowledge_graph.json
+  python scripts/run_eval.py --method ablation --kg output/knowledge_graph.json
+  python scripts/run_eval.py --method full --kg output/knowledge_graph.json
   python scripts/run_eval.py --method graphgen --kg output/knowledge_graph.json --sample-only
-  python scripts/run_eval.py --method 1 --kg output/knowledge_graph.json -c my_config.yaml
+  python scripts/run_eval.py --method quality --kg output/knowledge_graph.json -c my_config.yaml
         """,
     )
     parser.add_argument(
         "--method", "-m",
-        choices=["1", "2", "graphgen", "all"],
-        default="all",
-        help="Which evaluation method to run (default: all)",
+        choices=["quality", "ablation", "graphgen", "full"],
+        default="full",
+        help="Which evaluation mode to run: quality, ablation, graphgen, or full (default: full)",
     )
     parser.add_argument(
         "--kg", "-k",
@@ -902,14 +903,14 @@ Examples:
 
     failed = False
 
-    if args.method in ("1", "all"):
+    if args.method in ("quality", "full"):
         try:
             run_method1(args.kg, config, output_base, neo4j=args.neo4j)
         except Exception as e:
-            logger.error("Method 1 failed: %s", e, exc_info=True)
+            logger.error("Quality evaluation failed: %s", e, exc_info=True)
             failed = True
 
-    if args.method in ("2", "all"):
+    if args.method in ("ablation", "full"):
         try:
             run_method2(
                 args.kg, config, output_base,
