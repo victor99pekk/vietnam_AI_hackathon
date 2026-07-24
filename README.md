@@ -1,13 +1,15 @@
-# Knowledge Graph Generator
+# Polygraph: KG-Grounded SFT Data for LLMs
 
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-End-to-end pipeline for supervised fine tuning of LLMs. From legal webscraping, Knowledge graph generation, to Question-Answer pair generation used in the SFT of a LLM.
+🌐 Find raw documents → 🧠 Build knowledge graph → 💬 Generate QA pairs → 🎯 Fine-tune LLM
+
+Turn unstructured text into structured knowledge graphs, then into high-quality QA pairs that measurably improve LLM performance.
 
 ## About the Project
 
-Polygraph began as a hackathon project at the **[Vietnam AI Innovation Challenge](https://www.vietnamaichallenge.com)** — Vietnam's first 100% AI-native hackathon, co-organized by the National Innovation Center (NIC), Meta, and the AI for Vietnam Foundation. Built over 48 hours, it took on the real-world problem of generating high-quality, fact-grounded training data for Vietnamese LLMs.
+Polygraph began as a hackathon project at the **[Vietnam AI Innovation Challenge](https://www.vietnamaichallenge.com)** co-organized by the National Innovation Center (NIC), Meta, and the AI for Vietnam Foundation. Built over 48 hours, it took on the real-world problem of generating high-quality, fact-grounded training data for Vietnamese LLMs.
 
 The project won the **$5,000 USD Meta Prize** and was subsequently developed further as a research initiative under the **[AI for Vietnam Foundation](https://aiforvietnam.org)** — a non-profit dedicated to accelerating Vietnam's AI ecosystem through open datasets, training, and applied research.
 
