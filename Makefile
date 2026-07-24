@@ -31,7 +31,7 @@ scrape_depth ?= 2
 .PHONY: scrape scrape-llm-discover scrape-llm-clean scrape-full
 .PHONY: download-wikipedia
 .PHONY: ingest upload download new-graph add
-.PHONY: neo4j-add neo4j-add-file neo4j-clear neo4j-eval-method1
+.PHONY: neo4j-clear neo4j-upload neo4j-merge neo4j-eval-method1
 .PHONY: eval-install eval-install-model eval eval-finetune eval-graphgen eval-full eval-datasets
 .PHONY: plots plots-llm
 
@@ -53,9 +53,10 @@ help:
 	@echo "   new-graph        Build KG [mode=local|neo4j] [dataset=...]"
 	@echo "                    mode=local:  NetworkX in-memory → saves to disk"
 	@echo "                    mode=neo4j:  direct to Neo4j (scales beyond RAM)"
-	@echo "   neo4j-add        Incrementally add data/add/*.jsonl to Neo4j"
-	@echo "   neo4j-add-file   Add a single file to Neo4j [FILE=path/to/file.jsonl]"
-	@echo "   neo4j-clear      Delete everything in Neo4j"
+	@echo "   upload           Upload a locally-built graph to Neo4j [dataset=...]"
+	@echo "   neo4j-clear      Remove all nodes and edges from Neo4j"
+	@echo "   neo4j-upload     Wipe Neo4j, then upload a locally-built KG [dataset=...]"
+	@echo "   neo4j-merge      Add a KG into an existing Neo4j graph (no wipe) [dataset=...]"
 	@echo "   neo4j-eval-method1  Run structural audit directly against Neo4j"
 	@echo ""
 	@echo "── Evaluation ───────────────────────────────────────"
@@ -180,53 +181,24 @@ new-graph:
 			-c $(dataset_conf.$(dataset)) \
 			$(dataset_input.$(dataset)) \
 			-o ./generated_KGs/output_$(dataset); \
-		$(VENV) && kg-gen neo4j-upload -o ./generated_KGs/output_$(dataset) --clear; \
+		$(MAKE) neo4j-upload dataset=$(dataset); \
 	fi
 
-## add: Add all .jsonl files from data/add/ to the existing Neo4j graph  [dataset=small|wikipedia]
-add:
-	@files=$$(find data/add -name '*.jsonl' -type f 2>/dev/null); \
-	if [ -z "$$files" ]; then \
-		echo "ERROR: no .jsonl files found in data/add/"; \
-		exit 1; \
-	fi; \
-	echo "Adding files:"; \
-	echo "$$files" | sed 's/^/  /'; \
-	input_args=$$(echo "$$files" | sed 's/^/-i /' | tr '\n' ' '); \
-	$(VENV) && kg-gen run -v \
-		-c $(dataset_conf.$(dataset)) \
-		$$input_args \
-		-o ./generated_KGs/output_$(dataset)_add; \
-	$(VENV) && kg-gen neo4j-upload \
-		-o ./generated_KGs/output_$(dataset)_add
-
 # ═══════════════════════════════════════════════════════════
-# Pipeline (Neo4j — direct-to-database)
+# Neo4j Operations
 # ═══════════════════════════════════════════════════════════
 
-## neo4j-add: Incrementally add all .jsonl files from data/add/ to the existing Neo4j graph
-neo4j-add:
-	@files=$$(find data/add -name '*.jsonl' -type f 2>/dev/null); \
-	if [ -z "$$files" ]; then \
-		echo "ERROR: no .jsonl files found in data/add/"; \
-		exit 1; \
-	fi; \
-	echo "Adding files:"; \
-	echo "$$files" | sed 's/^/  /'; \
-	input_args=$$(echo "$$files" | sed 's/^/-i /' | tr '\n' ' '); \
-	$(VENV) && kg-gen add-doc -v \
-		-c $(dataset_conf.$(dataset)) \
-		$$input_args \
-		-o ./generated_KGs/output_$(dataset)
-
-## neo4j-add-file: Add a single file to Neo4j (usage: make neo4j-add-file FILE=data/new_article.jsonl)
-neo4j-add-file:
-	@test -f "$(FILE)" || { echo "ERROR: $(FILE) not found"; exit 1; }
-	$(VENV) && kg-gen add-doc -v -c $(dataset_conf.$(dataset)) -i "$(FILE)" -o ./generated_KGs/output_$(dataset)
-
-## neo4j-clear: Delete everything in Neo4j
+## neo4j-clear: Delete all nodes and edges from Neo4j
 neo4j-clear:
 	$(VENV) && kg-gen neo4j-clear --yes
+
+## neo4j-upload: Wipe Neo4j, then upload a locally-built KG  [dataset=small|wikipedia]
+neo4j-upload:
+	$(VENV) && kg-gen neo4j-upload -o ./generated_KGs/output_$(dataset) --clear
+
+## neo4j-merge: Add a locally-built KG into an existing Neo4j graph (no wipe — runs entity resolution to link old and new nodes)  [dataset=small|wikipedia]
+neo4j-merge:
+	$(VENV) && kg-gen neo4j-upload -o ./generated_KGs/output_$(dataset)
 
 ## neo4j-eval-method1: Run structural audit directly against Neo4j (no JSON download, no RAM limit)
 neo4j-eval-method1:

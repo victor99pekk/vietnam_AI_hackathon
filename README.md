@@ -42,6 +42,11 @@ make new-graph dataset=wikipedia    # Build KG (default mode=local: NetworkX →
 make new-graph dataset=wikipedia mode=neo4j  # Build KG directly in Neo4j (scales beyond RAM)
 make eval                           # Structural audit, SFT pair quality, fact coverage — runs in seconds
 
+# Neo4j
+make neo4j-clear                    # Remove all nodes and edges
+make neo4j-upload dataset=wikipedia # Wipe Neo4j, then upload a locally-built KG
+make neo4j-merge dataset=wikipedia  # Add a KG into an existing Neo4j graph (no wipe)
+
 # Fine-Tuning
 make eval-datasets                  # Generate QA training pairs from the knowledge graph
 make eval-finetune variant=kg       # Fine-tune base → KG-managed → raw-text and benchmark all three (CPU)
