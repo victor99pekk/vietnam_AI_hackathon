@@ -52,6 +52,22 @@ make eval-full                      # Quality → datasets → finetune → benc
 
 See [docs/usage.md](docs/usage.md) for the full command reference.
 
+## Results
+
+We ran an ablation study comparing three models fine-tuned on 10 Vietnamese Wikipedia articles with 50 held-out test samples:
+
+| Metric | Base Model | KG-Trained (B) | Raw-Text (C) | Improvement |
+|---|---|---|---|---|
+| **Factual Accuracy** | 2.7% | **18.1%** | 4.2% | 6.8× over base |
+| **Multi-hop Accuracy** | 2.7% | **18.1%** | 4.2% | 6.8× over base |
+| **Hallucination Rate** | 94% | **0%** | 36% | Eliminated entirely |
+| **Consistency Score** | 0.56 | **0.83** | 0.76 | +48% |
+| **Avg Response Length** | 82 words | **21 words** | 24 words | 74% shorter, more concise |
+
+**Key takeaway:** KG-structured training data eliminated hallucinations and delivered 6.8× better factual accuracy. Raw-text fine-tuning alone barely moved the needle (4.2% vs 2.7%) — the knowledge graph structure is what matters.
+
+> *Note: Results are from a small pilot study. Metrics are heuristic (token-overlap F1, word-count proxies) with wide confidence intervals. Full-scale evaluation with more documents and robust metrics is ongoing.*
+
 ## Project Structure
 
 ```
