@@ -13,9 +13,6 @@ Turn unstructured text into structured knowledge graphs, then into high-quality 
   - [Contents](#contents)
     - [About the Project](#about-the-project)
   - [Quick Start](#quick-start)
-    - [Scraping](#scraping)
-    - [Knowledge Graph Generation](#knowledge-graph-generation)
-    - [Fine-Tuning](#fine-tuning)
   - [Results](#results)
   - [Project Structure](#project-structure)
 
@@ -34,28 +31,19 @@ All commands are driven through `make`. Run `make help` for the full list.
 ```bash
 make install                        # One-time: set up venv and all dependencies
 make test                           # Verify everything works
-```
 
-### Scraping
-
-```bash
+# Scraping
 make scrape                         # Scrape web pages into JSONL
 make download-wikipedia wiki_lang=vi wiki_count=500
 make scrape-full                    # Full scrape → discover → re-scrape → clean
-```
 
-### Knowledge Graph Generation
-
-```bash
+# Knowledge Graph Generation
 make ingest                         # Run the full KG generation pipeline
 make new-graph dataset=wikipedia    # Build KG and upload to Neo4j (classic)
 make neo4j-new-graph                # Build KG directly in Neo4j (scales beyond RAM)
 make eval                           # Structural audit, SFT pair quality, fact coverage — runs in seconds
-```
 
-### Fine-Tuning
-
-```bash
+# Fine-Tuning
 make eval-datasets                  # Generate QA training pairs from the knowledge graph
 make eval-finetune variant=kg       # Fine-tune base → KG-managed → raw-text and benchmark all three (CPU)
 make eval-finetune variant=kg DEVICE=cuda  # Same, on GPU
