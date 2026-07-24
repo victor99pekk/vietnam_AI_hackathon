@@ -31,7 +31,7 @@ scrape_depth ?= 2
 .PHONY: scrape scrape-llm-discover scrape-llm-clean scrape-full
 .PHONY: download-wikipedia
 .PHONY: ingest upload download new-graph add
-.PHONY: neo4j-new-graph neo4j-add neo4j-add-file neo4j-clear neo4j-eval-method1
+.PHONY: neo4j-add neo4j-add-file neo4j-clear neo4j-eval-method1
 .PHONY: eval-install eval-install-model eval eval-finetune eval-graphgen eval-full eval-datasets
 .PHONY: plots plots-llm
 
@@ -49,15 +49,10 @@ help:
 	@echo "   scrape-full      Full scrape → discover → re-scrape → clean"
 	@echo "   download-wikipedia   Download Wikipedia articles [wiki_count=100] [wiki_lang=en|vi]"
 	@echo ""
-	@echo "── Pipeline (NetworkX — in-memory, no external services) ─"
-	@echo "   ingest           Run the full KG generation pipeline"
-	@echo "   upload           Upload generated graph to Neo4j"
-	@echo "   download         Download graph from Neo4j → JSON"
-	@echo "   new-graph        Build KG + upload to Neo4j (clears existing)"
-	@echo "   add              Add data/add/*.jsonl files to Neo4j"
-	@echo ""
-	@echo "── Pipeline (Neo4j — direct-to-database, scales beyond RAM) ─"
-	@echo "   neo4j-new-graph  Build KG directly in Neo4j (clears existing)"
+	@echo "── Pipeline (single command) ────────────────────────"
+	@echo "   new-graph        Build KG [mode=local|neo4j] [dataset=...]"
+	@echo "                    mode=local:  NetworkX in-memory → saves to disk"
+	@echo "                    mode=neo4j:  direct to Neo4j (scales beyond RAM)"
 	@echo "   neo4j-add        Incrementally add data/add/*.jsonl to Neo4j"
 	@echo "   neo4j-add-file   Add a single file to Neo4j [FILE=path/to/file.jsonl]"
 	@echo "   neo4j-clear      Delete everything in Neo4j"
@@ -169,23 +164,24 @@ download-wikipedia:
 # Pipeline (NetworkX — in-memory)
 # ═══════════════════════════════════════════════════════════
 
-## ingest: Run the full KG generation pipeline  [dataset=small|wikipedia]
-ingest:
-	$(VENV) && kg-gen run -v \
-		-c $(dataset_conf.$(dataset)) \
-		$(dataset_input.$(dataset)) \
-		-o ./generated_KGs/output_$(dataset)
-
-## upload: Clear Neo4j, then upload the generated graph  [dataset=small|wikipedia]
-upload:
-	$(VENV) && kg-gen neo4j-upload -o ./generated_KGs/output_$(dataset) --clear
-
-## download: Download the graph from Neo4j → JSON  [dataset=small|wikipedia]
-download:
-	$(VENV) && kg-gen neo4j-download -o ./generated_KGs/output_$(dataset)/knowledge_graph.json
-
-## new-graph: Build KG from data and upload to Neo4j (clears existing graph)  [dataset=small|wikipedia]
-new-graph: ingest upload
+## new-graph: Build KG and store it  [dataset=small|wikipedia] [mode=local|neo4j]
+##   mode=local  — in-memory (NetworkX), saves to disk
+##   mode=neo4j  — direct to Neo4j (scales beyond RAM, clears existing graph)
+new-graph:
+	@if [ "$(mode)" = "neo4j" ]; then \
+		$(VENV) && kg-gen run -v \
+			-c $(dataset_conf.$(dataset)) \
+			$(dataset_input.$(dataset)) \
+			-o ./generated_KGs/output_$(dataset) \
+			--backend neo4j \
+			--clear; \
+	else \
+		$(VENV) && kg-gen run -v \
+			-c $(dataset_conf.$(dataset)) \
+			$(dataset_input.$(dataset)) \
+			-o ./generated_KGs/output_$(dataset); \
+		$(VENV) && kg-gen neo4j-upload -o ./generated_KGs/output_$(dataset) --clear; \
+	fi
 
 ## add: Add all .jsonl files from data/add/ to the existing Neo4j graph  [dataset=small|wikipedia]
 add:
@@ -207,15 +203,6 @@ add:
 # ═══════════════════════════════════════════════════════════
 # Pipeline (Neo4j — direct-to-database)
 # ═══════════════════════════════════════════════════════════
-
-## neo4j-new-graph: Build KG directly in Neo4j (clears existing graph first)  [dataset=small|wikipedia]
-neo4j-new-graph:
-	$(VENV) && kg-gen run -v \
-		-c $(dataset_conf.$(dataset)) \
-		$(dataset_input.$(dataset)) \
-		-o ./generated_KGs/output_$(dataset) \
-		--backend neo4j \
-		--clear
 
 ## neo4j-add: Incrementally add all .jsonl files from data/add/ to the existing Neo4j graph
 neo4j-add:

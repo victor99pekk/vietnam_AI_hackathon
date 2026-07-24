@@ -38,9 +38,8 @@ make download-wikipedia wiki_lang=vi wiki_count=500
 make scrape-full                    # Full scrape → discover → re-scrape → clean
 
 # Knowledge Graph Generation
-make ingest                         # Run the full KG generation pipeline
-make new-graph dataset=wikipedia    # Build KG and upload to Neo4j (classic)
-make neo4j-new-graph                # Build KG directly in Neo4j (scales beyond RAM)
+make new-graph dataset=wikipedia    # Build KG (default mode=local: NetworkX → save to disk)
+make new-graph dataset=wikipedia mode=neo4j  # Build KG directly in Neo4j (scales beyond RAM)
 make eval                           # Structural audit, SFT pair quality, fact coverage — runs in seconds
 
 # Fine-Tuning
