@@ -7,14 +7,16 @@
 
 Turn unstructured text into structured knowledge graphs, then into high-quality QA pairs for SFT fine tuning of LLMs. This repository implements the full pipeline from Legal data scraping, to measuring the benefits of supervised fine tuning with QA-pairs generated from KG-data as opposed to unstructured processed texts.
 
-## Contents
+<details>
+<summary><strong>📑 Contents</strong></summary>
 
 - [Polygraph: KG-Grounded SFT Data for LLMs](#polygraph-kg-grounded-sft-data-for-llms)
-  - [Contents](#contents)
   - [About the Project](#about-the-project)
   - [Quick Start](#quick-start)
   - [Results](#results)
   - [Project Structure](#project-structure)
+
+</details>
 
 ## About the Project
 
