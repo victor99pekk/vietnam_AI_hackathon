@@ -11,12 +11,12 @@ Turn unstructured text into structured knowledge graphs, then into high-quality 
 
 - [Polygraph: KG-Grounded SFT Data for LLMs](#polygraph-kg-grounded-sft-data-for-llms)
   - [Contents](#contents)
-    - [About the Project](#about-the-project)
+  - [About the Project](#about-the-project)
   - [Quick Start](#quick-start)
   - [Results](#results)
   - [Project Structure](#project-structure)
 
-### About the Project
+## About the Project
 
 <img src="figures/meta_award.png" alt="Meta Award" width="350" align="right"/>
 
