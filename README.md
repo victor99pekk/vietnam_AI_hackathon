@@ -15,20 +15,6 @@ Polygraph began as a hackathon project at the **[Vietnam AI Innovation Challenge
 
 The project won the **$5,000 USD Meta Prize** and was subsequently developed further as a research initiative under the **[AI for Vietnam Foundation](https://aiforvietnam.org)**, a non-profit dedicated to accelerating Vietnam's AI ecosystem through open datasets, training, and applied research.
 
-## Installation
-
-```bash
-make install
-```
-
-This sets up a virtual environment with `uv`, installs the package with all core extras (curation, Neo4j, embeddings, dev tools), and downloads the required spaCy models.
-
-For Docker:
-
-```bash
-docker build -t kg-gen .
-```
-
 ## Quick Start
 
 All commands are driven through `make`. Run `make help` for the full list.
@@ -36,20 +22,31 @@ All commands are driven through `make`. Run `make help` for the full list.
 ```bash
 make install                        # One-time: set up venv and all dependencies
 make test                           # Verify everything works
+```
 
-# Data acquisition
+### Scraping
+
+```bash
 make scrape                         # Scrape web pages into JSONL
 make download-wikipedia wiki_lang=vi wiki_count=500
+make scrape-full                    # Full scrape → discover → re-scrape → clean
+```
 
-# Pipeline
+### Knowledge Graph Generation
+
+```bash
 make ingest                         # Run the full KG generation pipeline
 make new-graph dataset=wikipedia    # Build KG and upload to Neo4j (classic)
 make neo4j-new-graph                # Build KG directly in Neo4j (scales beyond RAM)
-
-# Evaluation
 make eval                           # "Is my graph any good?" — quality check
+```
+
+### Fine-Tuning
+
+```bash
 make eval-datasets                  # "Give me training data" — generate QA pairs
-make eval-finetune model=b DEVICE=cuda  # "Prove KG data works" — train & benchmark
+make eval-finetune variant=kg       # "Prove KG data works" — train & benchmark (CPU)
+make eval-finetune variant=kg DEVICE=cuda  # Same, on GPU
 make eval-full                      # "Do everything" — quality → datasets → finetune
 ```
 
