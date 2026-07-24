@@ -9,7 +9,7 @@ Turn unstructured text into structured knowledge graphs, then into high-quality 
 
 ### About the Project
 
-<img src="figures/meta_award.png" alt="Meta Award" width="250" align="right"/>
+<img src="figures/meta_award.png" alt="Meta Award" width="350" align="right"/>
 
 Polygraph began as a hackathon project at the **[Vietnam AI Innovation Challenge](https://www.vietnamaichallenge.com)** co-organized by the National Innovation Center (NIC), Meta, and the AI for Vietnam Foundation. Built over 48 hours, it took on the real-world problem of generating high-quality, fact-grounded training data for Vietnamese LLMs.
 
