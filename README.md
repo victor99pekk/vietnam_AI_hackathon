@@ -2,55 +2,38 @@
 
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![CI](https://github.com/vietnam-ai-challenge/kg-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/vietnam-ai-challenge/kg-generator/actions/workflows/ci.yml)
 
-A modular pipeline for converting raw text into structured knowledge graphs — built for LLM training, dataset curation, and Graph RAG workflows. Supports English and Vietnamese with a pluggable extraction backend (spaCy, `underthesea`, or LLM-powered GraphGen).
+Knowledge graph generator for 
 
-## Architecture
 
-```mermaid
-flowchart LR
-    A[Ingest<br/>+ Clean] --> B[Dedup<br/>+ Quality]
-    B --> C[Extract<br/>Entities + Relations]
-    C --> D[Resolve<br/>Entities]
-    D --> E[Graph<br/>Build + Enrich]
-    E --> F[Evaluate]
-    E --> G[Export]
-    G --> H[JSON / GraphML / Neo4j / RDF / Cytoscape]
-```
 
-## Quick Start
-
-```bash
-# Using uv (recommended)
-uv venv && source .venv/bin/activate
-uv pip install -e "."
-python -m spacy download en_core_web_sm
-
-# Run with defaults on sample data
-kg-gen quick -i data/debugg_sample/ -o output/demo
-```
 
 ## Installation
 
-| Method | Command |
-|---|---|
-| **pip (basic)** | `pip install -e "."` |
-| **uv (recommended)** | `uv pip install -e "."` |
-| **+ embeddings** | `uv pip install -e ".[embeddings]"` |
-| **+ Vietnamese** | `uv pip install -e ".[vi]"` |
-| **+ Neo4j** | `uv pip install -e ".[neo4j]"` |
-| **+ LLM extraction** | `uv pip install -e ".[llm]"` |
-| **+ everything** | `uv pip install -e ".[all]"` |
-| **Docker** | `docker build -t kg-gen .` |
+```bash
+make install
+```
+
+This sets up a virtual environment with `uv`, installs the package with all core extras (curation, Neo4j, embeddings, dev tools), and downloads the required spaCy models.
+
+For Docker:
+
+```bash
+docker build -t kg-gen .
+```
 
 ## CLI
 
+All commands are driven through `make`. Run `make help` for the full list.
+
 ```bash
-kg-gen run -c configs/pipeline.yaml -i data/input/ -o output/
-kg-gen curate -i data/raw/ -m configs/example_source_manifest.yaml -o output/curated/
-kg-gen neo4j-upload -o output/ --clear
-kg-gen evaluate --kg data/samples/sample_kg.json
+make ingest                         # Run the full KG generation pipeline
+make new-graph dataset=wikipedia    # Build KG and upload to Neo4j
+make neo4j-new-graph                # Build KG directly in Neo4j (scales beyond RAM)
+make eval-method1                   # Quick KG health check
+make eval-all                       # Full evaluation end-to-end
+make download-wikipedia wiki_lang=vi wiki_count=500
+make test                           # Run the test suite
 ```
 
 See [docs/usage.md](docs/usage.md) for the full command reference.
@@ -80,11 +63,8 @@ The evaluation suite provides two complementary assessments:
 | **Method 2 — Model Ablation** | Does KG-structured training data produce a better model? Fine-tunes base → KG-managed → raw-text and benchmarks all three | Hours (GPU recommended) |
 
 ```bash
-# Quick data quality check
-python -m kg_generator.evaluate.run_eval --method 1 --kg data/samples/sample_kg.json
-
-# Full ablation study
-python -m kg_generator.evaluate.run_eval --method all --kg data/samples/sample_kg.json
+make eval-method1                   # Quick data quality check
+make eval-all                       # Full ablation study
 ```
 
 See [docs/evaluation.md](docs/evaluation.md) for details.
