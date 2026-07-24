@@ -13,7 +13,7 @@ Each line in a `.jsonl` file is a single, complete JSON object. Every object **m
 | `id`     | string | ✅ Yes   | Unique identifier for the document. Must be stable across pipeline runs (used for deduplication and version tracking). |
 | `text`   | string | ✅ Yes   | Full body text of the document. Must be non-empty and UTF-8 encoded. |
 | `title`  | string | ✅ Yes   | Human-readable title or heading of the document. Used for entity linking and graph node labels. |
-| `url`    | string | ✅ Yes   | Source URL or canonical reference. Used for provenance tracking and metadata management (see [Problem Description — Component 3](Problem_description.md#3-labeling--metadata-management)). |
+| `url`    | string | ✅ Yes   | Source URL or canonical reference. Used for provenance tracking. |
 
 ### Example
 
@@ -99,6 +99,4 @@ Before running the pipeline, verify that every `.jsonl` file:
 
 ## Related Documents
 
-- [Problem Description — Component 3: Labeling & Metadata Management](Problem_description.md#3-labeling--metadata-management)
-- [Wikipedia Dataset Documentation](wikipedia_dataset.md)
 - [Pipeline Configuration Reference](../configs/pipelines/debug.yaml)

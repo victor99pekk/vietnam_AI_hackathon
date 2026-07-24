@@ -265,7 +265,6 @@ def test_curate_cli_wires_requested_configuration(monkeypatch, tmp_path):
     assert config.device == "cpu"
 
 
-@pytest.mark.integration
 @pytest.mark.skipif(
     os.getenv("RUN_CURATION_GPU_TEST") != "1",
     reason="Set RUN_CURATION_GPU_TEST=1 on a CUDA worker to download and run BGE-M3.",

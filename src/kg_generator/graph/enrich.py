@@ -21,8 +21,6 @@ class GraphEnricher:
         - Wikidata entity linking for disambiguated nodes
         - DBpedia SPARQL queries for additional attributes
         - Cross-graph entity alignment
-
-        See docs/architecture.md for the roadmap.
         """
         raise NotImplementedError(
             "External KB enrichment is not yet implemented. "

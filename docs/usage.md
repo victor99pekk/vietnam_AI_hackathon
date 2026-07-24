@@ -3,7 +3,7 @@
 ## Quick Start
 
 ```bash
-# Using uv (recommended — see docs/UV_SETUP.md if you're new to uv)
+# Using uv
 uv venv
 source .venv/bin/activate
 uv pip install -e "."
@@ -52,7 +52,7 @@ uv pip install -e ".[curation]"
 kg-gen curate -i raw_data/ -m manifest.yaml -o output/curated_datasets --device cuda
 ```
 
-The manifest declares `en` or `vi`. Curate applies exact and MinHash deletion, BGE-M3 semantic review, sentence-safe 2,048-token records, and deterministic training shards. See [dataset curation](dataset_curation.md) for options and review procedure.
+The manifest declares `en` or `vi`. Curate applies exact and MinHash deletion, BGE-M3 semantic review, sentence-safe 2,048-token records, and deterministic training shards. See `src/kg_generator/curate/README.md` for details.
 
 ### `kg-gen scrape`
 
