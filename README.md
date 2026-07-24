@@ -5,16 +5,18 @@
 
 🌐 Find raw documents → 🧠 Build knowledge graph → 💬 Generate QA pairs → 🎯 Fine-tune LLM
 
-Turn unstructured text into structured knowledge graphs, then into high-quality QA pairs that measurably improve LLM performance.
+Turn unstructured text into structured knowledge graphs, then into high-quality QA pairs for SFT fine tuning of LLMs. This repository implements the full pipeline from Legal data scraping, to measuring the benefits of supervised fine tuning with QA-pairs generated from KG-data as opposed to unstructured processed texts.
 
 ## Contents
 
-<!-- - [Polygraph: KG-Grounded SFT Data for LLMs](#polygraph-kg-grounded-sft-data-for-llms)
+- [Polygraph: KG-Grounded SFT Data for LLMs](#polygraph-kg-grounded-sft-data-for-llms)
   - [Contents](#contents)
-    - [About the Project](#about-the-project) -->
-__(i) [Quick Start](#quick-start):__ [Scraping](#scraping), [Knowledge Graph Generation](#knowledge-graph-generation), [Fine-Tuning](#fine-tuning). __(ii) [Results](#results)__. __ (iii) [Project Structure](#project-structure)__
+  - [About the Project](#about-the-project)
+  - [Quick Start](#quick-start)
+  - [Results](#results)
+  - [Project Structure](#project-structure)
 
-### About the Project
+## About the Project
 
 <img src="figures/meta_award.png" alt="Meta Award" width="350" align="right"/>
 
@@ -29,28 +31,19 @@ All commands are driven through `make`. Run `make help` for the full list.
 ```bash
 make install                        # One-time: set up venv and all dependencies
 make test                           # Verify everything works
-```
 
-### Scraping
-
-```bash
+# Scraping
 make scrape                         # Scrape web pages into JSONL
 make download-wikipedia wiki_lang=vi wiki_count=500
 make scrape-full                    # Full scrape → discover → re-scrape → clean
-```
 
-### Knowledge Graph Generation
-
-```bash
+# Knowledge Graph Generation
 make ingest                         # Run the full KG generation pipeline
 make new-graph dataset=wikipedia    # Build KG and upload to Neo4j (classic)
 make neo4j-new-graph                # Build KG directly in Neo4j (scales beyond RAM)
 make eval                           # Structural audit, SFT pair quality, fact coverage — runs in seconds
-```
 
-### Fine-Tuning
-
-```bash
+# Fine-Tuning
 make eval-datasets                  # Generate QA training pairs from the knowledge graph
 make eval-finetune variant=kg       # Fine-tune base → KG-managed → raw-text and benchmark all three (CPU)
 make eval-finetune variant=kg DEVICE=cuda  # Same, on GPU
@@ -104,12 +97,12 @@ tests/                      pytest test suite (71 tests)
 demo/                       Interactive web demo
 presentation/               Project presentation deck
 ```
-
+<!-- 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions, code style, and PR guidelines.
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT — see [LICENSE](LICENSE) for details. -->
 
