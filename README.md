@@ -5,13 +5,13 @@
 
 🌐 Find raw documents → 🧠 Build knowledge graph → 💬 Generate QA pairs → 🎯 Fine-tune LLM
 
-Turn unstructured text into structured knowledge graphs, then into high-quality QA pairs that measurably improve LLM performance.
+Turn unstructured text into structured knowledge graphs, then into high-quality QA pairs for SFT of LLMs. This repository implements the whole pipeline, from scraping legal data, to measuring the effects of LLM SFT on KG-data as opposed to flat data.
 
 ## Contents
 
 - [Polygraph: KG-Grounded SFT Data for LLMs](#polygraph-kg-grounded-sft-data-for-llms)
   - [Contents](#contents)
-    - [About the Project](#about-the-project)
+  - [About the Project](#about-the-project)
   - [Quick Start](#quick-start)
     - [Scraping](#scraping)
     - [Knowledge Graph Generation](#knowledge-graph-generation)
@@ -19,7 +19,7 @@ Turn unstructured text into structured knowledge graphs, then into high-quality 
   - [Results](#results)
   - [Project Structure](#project-structure)
 
-### About the Project
+## About the Project
 
 <img src="figures/meta_award.png" alt="Meta Award" width="350" align="right"/>
 
