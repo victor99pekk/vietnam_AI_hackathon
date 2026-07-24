@@ -38,32 +38,19 @@ make scrape-full                    # Full scrape → discover → re-scrape →
 make ingest                         # Run the full KG generation pipeline
 make new-graph dataset=wikipedia    # Build KG and upload to Neo4j (classic)
 make neo4j-new-graph                # Build KG directly in Neo4j (scales beyond RAM)
-make eval                           # "Is my graph any good?" — quality check
+make eval                           # Structural audit, SFT pair quality, fact coverage — runs in seconds
 ```
 
 ### Fine-Tuning
 
 ```bash
-make eval-datasets                  # "Give me training data" — generate QA pairs
-make eval-finetune variant=kg       # "Prove KG data works" — train & benchmark (CPU)
+make eval-datasets                  # Generate QA training pairs from the knowledge graph
+make eval-finetune variant=kg       # Fine-tune base → KG-managed → raw-text and benchmark all three (CPU)
 make eval-finetune variant=kg DEVICE=cuda  # Same, on GPU
-make eval-full                      # "Do everything" — quality → datasets → finetune
+make eval-full                      # Quality → datasets → finetune → benchmark end-to-end
 ```
 
 See [docs/usage.md](docs/usage.md) for the full command reference.
-
-## Evaluation
-
-The evaluation suite answers three questions about your training data:
-
-| Command | Question it answers | What it does | Runtime |
-|---|---|---|---|
-| `make eval` | Is my graph any good? | Structural audit, SFT pair quality, fact coverage | Seconds (CPU) |
-| `make eval-datasets` | Give me training data | Generate QA pairs from the knowledge graph | Minutes (CPU) |
-| `make eval-finetune variant=kg` | Prove KG data works | Fine-tune base → KG-managed → raw-text and benchmark all three | Hours (GPU recommended) |
-| `make eval-full` | Do everything | Quality → datasets → finetune → benchmark end-to-end | Hours (GPU recommended) |
-
-See [docs/evaluation.md](docs/evaluation.md) for details.
 
 ## Project Structure
 
