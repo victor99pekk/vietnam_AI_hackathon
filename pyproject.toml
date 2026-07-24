@@ -62,9 +62,9 @@ llm = [
     "openai>=1.6",
     "langchain>=0.1",
 ]
-# All extras
-all = [
-    "kg-generator[embeddings,curation,vi,data,scraper,neo4j,llm,dev,eval-data,eval-model]",
+# MongoDB document archive (permanent store for all document versions)
+mongo = [
+    "pymongo>=4.6",
 ]
 # Evaluation — data_eval: SFT data quality (lightweight, works everywhere)
 eval-data = [
@@ -79,6 +79,10 @@ eval-model = [
     "accelerate>=0.34",
     "bitsandbytes>=0.44",
     "torch>=2.4",
+]
+# All extras
+all = [
+    "kg-generator[embeddings,curation,vi,data,scraper,neo4j,llm,mongo,dev,eval-data,eval-model]",
 ]
 
 [project.scripts]
