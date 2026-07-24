@@ -7,14 +7,16 @@
 
 Turn unstructured text into structured knowledge graphs, then into high-quality QA pairs for SFT fine tuning of LLMs. This repository implements the full pipeline from Legal data scraping, to measuring the benefits of supervised fine tuning with QA-pairs generated from KG-data as opposed to unstructured processed texts.
 
-## Contents
+<details>
+<summary><strong>📑 Contents</strong></summary>
 
 - [Polygraph: KG-Grounded SFT Data for LLMs](#polygraph-kg-grounded-sft-data-for-llms)
-  - [Contents](#contents)
   - [About the Project](#about-the-project)
   - [Quick Start](#quick-start)
   - [Results](#results)
   - [Project Structure](#project-structure)
+
+</details>
 
 ## About the Project
 
@@ -38,10 +40,14 @@ make download-wikipedia wiki_lang=vi wiki_count=500
 make scrape-full                    # Full scrape → discover → re-scrape → clean
 
 # Knowledge Graph Generation
-make ingest                         # Run the full KG generation pipeline
-make new-graph dataset=wikipedia    # Build KG and upload to Neo4j (classic)
-make neo4j-new-graph                # Build KG directly in Neo4j (scales beyond RAM)
+make new-graph dataset=wikipedia    # Build KG (default mode=local: NetworkX → save to disk)
+make new-graph dataset=wikipedia mode=neo4j  # Build KG directly in Neo4j (scales beyond RAM)
 make eval                           # Structural audit, SFT pair quality, fact coverage — runs in seconds
+
+# Neo4j
+make neo4j-clear                    # Remove all nodes and edges
+make neo4j-upload dataset=wikipedia # Wipe Neo4j, then upload a locally-built KG
+make neo4j-merge dataset=wikipedia  # Add a KG into an existing Neo4j graph (no wipe)
 
 # Fine-Tuning
 make eval-datasets                  # Generate QA training pairs from the knowledge graph
