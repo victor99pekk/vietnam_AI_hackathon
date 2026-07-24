@@ -9,13 +9,11 @@ Turn unstructured text into structured knowledge graphs, then into high-quality 
 
 ### About the Project
 
+<img src="figures/meta_award.png" alt="Meta Award" width="180" align="right"/>
+
 Polygraph began as a hackathon project at the **[Vietnam AI Innovation Challenge](https://www.vietnamaichallenge.com)** co-organized by the National Innovation Center (NIC), Meta, and the AI for Vietnam Foundation. Built over 48 hours, it took on the real-world problem of generating high-quality, fact-grounded training data for Vietnamese LLMs.
 
-The project won the **$5,000 USD Meta Prize** and was subsequently developed further as a research initiative under the **[AI for Vietnam Foundation](https://aiforvietnam.org)** — a non-profit dedicated to accelerating Vietnam's AI ecosystem through open datasets, training, and applied research.
-
-<p align="center">
-  <img src="figures/meta_award.png" alt="Meta Award" width="400"/>
-</p>
+The project won the **$5,000 USD Meta Prize** and was subsequently developed further as a research initiative under the **[AI for Vietnam Foundation](https://aiforvietnam.org)**, a non-profit dedicated to accelerating Vietnam's AI ecosystem through open datasets, training, and applied research.
 
 ## Installation
 
