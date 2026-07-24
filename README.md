@@ -18,8 +18,6 @@ Turn unstructured text into structured knowledge graphs, then into high-quality 
     - [Fine-Tuning](#fine-tuning)
   - [Results](#results)
   - [Project Structure](#project-structure)
-  - [Contributing](#contributing)
-  - [License](#license)
 
 ### About the Project
 
@@ -111,12 +109,12 @@ tests/                      pytest test suite (71 tests)
 demo/                       Interactive web demo
 presentation/               Project presentation deck
 ```
-
+<!-- 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions, code style, and PR guidelines.
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT — see [LICENSE](LICENSE) for details. -->
 
