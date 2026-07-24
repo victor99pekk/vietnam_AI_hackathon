@@ -7,6 +7,20 @@
 
 Turn unstructured text into structured knowledge graphs, then into high-quality QA pairs that measurably improve LLM performance.
 
+## Contents
+
+- [Polygraph: KG-Grounded SFT Data for LLMs](#polygraph-kg-grounded-sft-data-for-llms)
+  - [Contents](#contents)
+    - [About the Project](#about-the-project)
+  - [Quick Start](#quick-start)
+    - [Scraping](#scraping)
+    - [Knowledge Graph Generation](#knowledge-graph-generation)
+    - [Fine-Tuning](#fine-tuning)
+  - [Results](#results)
+  - [Project Structure](#project-structure)
+  - [Contributing](#contributing)
+  - [License](#license)
+
 ### About the Project
 
 <img src="figures/meta_award.png" alt="Meta Award" width="350" align="right"/>
@@ -54,7 +68,7 @@ See [docs/usage.md](docs/usage.md) for the full command reference.
 
 ## Results
 
-We ran an ablation study comparing three models fine-tuned on 10 Vietnamese Wikipedia articles with 50 held-out test samples:
+We fine-tuned [Qwen2.5-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct) and ran an ablation study comparing three model variants on 10 Vietnamese Wikipedia articles with 50 held-out test samples:
 
 | Metric | Base Model | KG-Trained (B) | Raw-Text (C) | Improvement |
 |---|---|---|---|---|
