@@ -101,4 +101,4 @@ Before running the pipeline, verify that every `.jsonl` file:
 
 - [Problem Description — Component 3: Labeling & Metadata Management](Problem_description.md#3-labeling--metadata-management)
 - [Wikipedia Dataset Documentation](wikipedia_dataset.md)
-- [Pipeline Configuration Reference](../configs/debug.yaml)
+- [Pipeline Configuration Reference](../configs/pipelines/debug.yaml)

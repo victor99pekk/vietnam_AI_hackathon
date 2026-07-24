@@ -6,7 +6,7 @@
 #   MONGO_URI, MONGO_DATABASE
 #
 # Override input_paths per immutable batch with:
-#   kg-gen run -c configs/vietnamese_global_quality.yaml -i PATH/TO/BATCH.jsonl
+#   kg-gen run -c configs/pipelines/vietnamese_global_quality.yaml -i PATH/TO/BATCH.jsonl
 
 pipeline:
   language: vi

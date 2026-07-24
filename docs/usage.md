@@ -13,7 +13,7 @@ python -m spacy download en_core_web_sm
 kg-gen quick -i data/sample/
 
 # Run with config
-kg-gen run -c configs/pipeline.yaml
+kg-gen run -c configs/pipelines/default.yaml
 ```
 
 ## CLI Commands
@@ -95,7 +95,7 @@ kg-gen evaluate -i output/knowledge_graph.json
 
 ## Configuration
 
-See `configs/pipeline.yaml` for all options and `configs/default_ontology.yaml` for entity/relation schema.
+See `configs/pipelines/default.yaml` for all options and `configs/default_ontology.yaml` for entity/relation schema.
 
 Strategy configuration supports nested YAML while retaining the old flat keys:
 
@@ -136,11 +136,10 @@ kg-gen run -l vi --llm -i vietnamese_data/
 kg-gen run -l vi --no-llm -i vietnamese_data/
 
 # Ready-to-run example configuration
-kg-gen run -c configs/vietnamese.yaml
+kg-gen run -c configs/pipelines/vietnamese.yaml
 
-# Alternative Vietnamese presets
-kg-gen run -c configs/vietnamese_fast.yaml
-kg-gen run -c configs/vietnamese_quality.yaml
+# Fast, dependency-light alternative
+kg-gen run -c configs/pipelines/vietnamese_fast.yaml
 ```
 
 Vietnamese names, descriptions, evidence, and source text remain Vietnamese.
@@ -167,6 +166,6 @@ kg-gen run --llm -i data/
 
 ```bash
 uv pip install -e ".[neo4j]"
-# Update configs/pipeline.yaml: graph_backend: neo4j
-kg-gen run -c configs/pipeline.yaml
+# Update configs/pipelines/default.yaml: graph_backend: neo4j
+kg-gen run -c configs/pipelines/default.yaml
 ```

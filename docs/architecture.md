@@ -47,7 +47,16 @@ hackathon/
 │
 ├── configs/                           # YAML configuration files
 │   ├── default_ontology.yaml          #   Entity types, relationship types, attributes
-│   └── pipeline.yaml                  #   Pipeline settings (language, dedup method, etc.)
+│   ├── *_manifest.yaml                #   Source manifests for curation
+│   ├── pipelines/                     #   Pipeline presets
+│   │   ├── debug.yaml                 #     Fast debug run on small sample
+│   │   ├── default.yaml               #     English Wikipedia preset
+│   │   ├── vietnamese.yaml            #     Vietnamese best quality
+│   │   ├── vietnamese_fast.yaml       #     Vietnamese dependency-light
+│   │   └── vietnamese_global_quality.yaml  # Vietnamese Neo4j global graph
+│   └── evaluation/                    #   Evaluation configs
+│       ├── overnight_vi.yaml          #     Fairness ablation preset
+│       └── vietnamese_global_eval.yaml #    GraphGen QA eval preset
 │
 ├── tests/                             # Pytest test suite
 │   ├── test_ingest.py                 #   Loader & cleaner tests

@@ -1,5 +1,5 @@
 # Pipeline Configuration
-# Use: kg-gen run -c configs/pipeline.yaml
+# Use: kg-gen run -c configs/pipelines/default.yaml
 
 pipeline:
   language: en                     # en | vi

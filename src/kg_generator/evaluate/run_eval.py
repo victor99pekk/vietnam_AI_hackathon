@@ -878,7 +878,7 @@ Examples:
     # Validate KG path (skip when using --neo4j)
     if not args.neo4j and not args.kg.exists():
         logger.error("KG file not found: %s", args.kg)
-        logger.info("Run the pipeline first: kg-gen run -c configs/pipeline.yaml")
+        logger.info("Run the pipeline first: kg-gen run -c configs/pipelines/default.yaml")
         sys.exit(1)
 
     # Validate GPU flag

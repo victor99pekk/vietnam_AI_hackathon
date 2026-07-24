@@ -99,7 +99,7 @@ kg-gen quick -i data/sample/
 ### Run with a config file
 
 ```bash
-kg-gen run -c configs/pipeline.yaml
+kg-gen run -c configs/pipelines/default.yaml
 ```
 
 ### Run tests

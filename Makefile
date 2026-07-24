@@ -7,11 +7,11 @@ dataset ?= small
 # ═══════════════════════════════════════════════════════════
 
 # ── Dataset presets ──
-dataset_conf.small      := configs/debug.yaml
+dataset_conf.small      := configs/pipelines/debug.yaml
 dataset_input.small     := -i data/debugg_sample/alan_turing.jsonl -i data/debugg_sample/marie_curie.jsonl
 dataset_kg.small        := data/samples/sample_kg.json
 
-dataset_conf.wikipedia   := configs/pipeline.yaml
+dataset_conf.wikipedia   := configs/pipelines/default.yaml
 dataset_input.wikipedia  := -i data/wikipedia/
 dataset_kg.wikipedia     := data/samples/sample_kg.json
 

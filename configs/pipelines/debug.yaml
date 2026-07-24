@@ -1,0 +1,47 @@
+# Debug Pipeline Configuration — fast run with small data
+# Use: kg-gen run -c configs/pipelines/debug.yaml
+
+pipeline:
+  language: en
+  graph_backend: networkx
+
+  input_paths:
+    - data/debugg_sample/
+  file_formats:
+    - jsonl
+
+  # Fast token-based chunking — no model download
+  chunking:
+    method: fixed
+    target_tokens: 450
+    overlap_tokens: 60
+
+  quality:
+    method: heuristic
+
+  # Lower threshold to exercise dedup logic on small sample
+  deduplication:
+    document_method: ngram
+    document_threshold: 0.90
+    chunk_method: ngram
+    chunk_threshold: 0.90
+
+  # Small spaCy model for speed; no LLM
+  extraction:
+    method: offline
+    spacy_model: en_core_web_sm
+    model: deepseek-v4-pro
+    max_gleanings: 3
+
+  # String similarity — no model download required
+  resolution:
+    method: string
+    threshold: 0.85
+
+  # MongoDB document archive
+  mongo_uri: "mongodb://localhost:27017"
+  mongo_database: "kg_documents"
+
+  export_formats:
+    - json
+    - graphml

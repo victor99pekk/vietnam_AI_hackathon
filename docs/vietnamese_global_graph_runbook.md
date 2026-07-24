@@ -162,14 +162,14 @@ merges are more damaging than duplicate nodes, so prioritize merge precision.
 Configuration:
 
 ```text
-configs/vietnamese_global_quality.yaml
+configs/pipelines/vietnamese_global_quality.yaml
 ```
 
 Initial build only:
 
 ```bash
 kg-gen run \
-  -c configs/vietnamese_global_quality.yaml \
+  -c configs/pipelines/vietnamese_global_quality.yaml \
   -i data/global_vi_batches/batch-00000.jsonl \
   -o output/global-vi/batch-00000 \
   --clear
@@ -179,7 +179,7 @@ Every later batch, without `--clear`:
 
 ```bash
 kg-gen run \
-  -c configs/vietnamese_global_quality.yaml \
+  -c configs/pipelines/vietnamese_global_quality.yaml \
   -i data/global_vi_batches/batch-00001.jsonl \
   -o output/global-vi/batch-00001
 ```
@@ -231,7 +231,7 @@ uv run python evaluation/run_eval.py \
   --method graphgen \
   --sample-only \
   --kg PATH_TO_EXPORTED_KNOWLEDGE_GRAPH.json \
-  -c configs/vietnamese_global_eval.yaml \
+  -c configs/evaluation/vietnamese_global_eval.yaml \
   -o output_eval/global-vi
 ```
 
@@ -241,7 +241,7 @@ Review `subgraphs.jsonl` and `sampling_audit.jsonl`. Then generate QA:
 uv run python evaluation/run_eval.py \
   --method graphgen \
   --kg PATH_TO_EXPORTED_KNOWLEDGE_GRAPH.json \
-  -c configs/vietnamese_global_eval.yaml \
+  -c configs/evaluation/vietnamese_global_eval.yaml \
   -o output_eval/global-vi
 ```
 

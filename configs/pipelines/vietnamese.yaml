@@ -1,7 +1,7 @@
 # Vietnamese KG pipeline — optimized for best extraction quality.
 #
-# Fast path (no LLM):  kg-gen run -c configs/vietnamese.yaml --no-llm
-# Full quality path:   kg-gen run -c configs/vietnamese.yaml
+# Fast path (no LLM):  kg-gen run -c configs/pipelines/vietnamese.yaml --no-llm
+# Full quality path:   kg-gen run -c configs/pipelines/vietnamese.yaml
 # Add to Neo4j:        kg-gen run ... && kg-gen neo4j-upload -o generated_KGs/output_vi
 
 pipeline:
