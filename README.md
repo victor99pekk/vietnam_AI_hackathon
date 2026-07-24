@@ -3,10 +3,17 @@
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-Knowledge graph generator for 
+End-to-end pipeline for supervised fine tuning of LLMs. From legal webscraping, Knowledge graph generation, to Question-Answer pair generation used in the SFT of a LLM.
 
+## About the Project
 
+Polygraph began as a hackathon project at the **[Vietnam AI Innovation Challenge](https://www.vietnamaichallenge.com)** — Vietnam's first 100% AI-native hackathon, co-organized by the National Innovation Center (NIC), Meta, and the AI for Vietnam Foundation. Built over 48 hours, it took on the real-world problem of generating high-quality, fact-grounded training data for Vietnamese LLMs.
 
+The project won the **$5,000 USD Meta Prize** and was subsequently developed further as a research initiative under the **[AI for Vietnam Foundation](https://aiforvietnam.org)** — a non-profit dedicated to accelerating Vietnam's AI ecosystem through open datasets, training, and applied research.
+
+<p align="center">
+  <img src="figures/meta_award.png" alt="Meta Award" width="400"/>
+</p>
 
 ## Installation
 
@@ -37,21 +44,6 @@ make test                           # Run the test suite
 ```
 
 See [docs/usage.md](docs/usage.md) for the full command reference.
-
-## Core Features
-
-- **Modular pipeline** — ingest → dedup → extract → resolve → graph → evaluate → export
-- **Multi-format input** — JSONL, CSV, TXT, JSON
-- **Layered deduplication** — MinHash, SimHash, n-gram, semantic (document-level + chunk-level)
-- **Quality filtering** — heuristic scoring for noisy web text
-- **Entity extraction** — spaCy (English), `underthesea` (Vietnamese), or LLM-powered GraphGen
-- **Entity resolution** — string-similarity and embedding-based
-- **Graph backends** — NetworkX (in-memory) or Neo4j (on-disk, production-ready)
-- **Multi-format export** — JSON, GraphML, Neo4j CSV, RDF/Turtle, Cytoscape.js
-- **Evaluation suite** — structural audit, SFT data quality scoring, fact coverage, model ablation benchmarking
-- **Dataset curation** — provenance tracking, audit reports, token-budget training shards
-- **Vietnamese pipeline** — tokenization, NER, chunking, and GraphGen prompts for Vietnamese text
-- **Web demo** — FastAPI backend + interactive frontend (`demo/`)
 
 ## Evaluation
 
